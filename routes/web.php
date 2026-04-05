@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\Settings;
 use App\Http\Controllers\UserController;
@@ -52,6 +53,15 @@ Route::middleware(['auth'])->group(function () {
     Route::get('users/{user}/edit', [UserController::class, 'edit'])->name('users.edit')->middleware('permission:edit-users');
     Route::put('users/{user}', [UserController::class, 'update'])->name('users.update')->middleware('permission:edit-users');
     Route::delete('users/{user}', [UserController::class, 'destroy'])->name('users.destroy')->middleware('permission:delete-users');
+    
+    // Products Management - dengan permission check
+    Route::get('products', [ProductController::class, 'index'])->name('products.index')->middleware('permission:view-products');
+    Route::get('products/create', [ProductController::class, 'create'])->name('products.create')->middleware('permission:create-products');
+    Route::post('products', [ProductController::class, 'store'])->name('products.store')->middleware('permission:create-products');
+    Route::get('products/{product}', [ProductController::class, 'show'])->name('products.show')->middleware('permission:show-products');
+    Route::get('products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit')->middleware('permission:edit-products');
+    Route::put('products/{product}', [ProductController::class, 'update'])->name('products.update')->middleware('permission:edit-products');
+    Route::delete('products/{product}', [ProductController::class, 'destroy'])->name('products.destroy')->middleware('permission:delete-products');
 });
 
 require __DIR__.'/auth.php';
