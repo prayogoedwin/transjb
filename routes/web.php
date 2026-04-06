@@ -7,9 +7,14 @@ use App\Http\Controllers\Settings;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
+// Route::get('/', function () {
+//     return view('welcome');
+// })->name('dashboard');
+
 Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+    // Redirect langsung ke URL
+    return redirect('/dashboard');
+});
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
@@ -62,6 +67,23 @@ Route::middleware(['auth'])->group(function () {
     Route::get('products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit')->middleware('permission:edit-products');
     Route::put('products/{product}', [ProductController::class, 'update'])->name('products.update')->middleware('permission:edit-products');
     Route::delete('products/{product}', [ProductController::class, 'destroy'])->name('products.destroy')->middleware('permission:delete-products');
+
+
+
+
+
+    Route::get('nasabah', function() {
+        return view('nasabah.index');
+    })->name('nasabah.index');
+    Route::get('simpan_pinjam', function() {
+        return view('simpan_pinjam.index');
+    })->name('simpan_pinjam.index');
+    Route::get('pembelian', function() {
+        return view('pembelian.index');
+    })->name('pembelian.index');
+    Route::get('laporan', function() {
+        return view('laporan.index');
+    })->name('laporan.index');
 });
 
 require __DIR__.'/auth.php';

@@ -17,7 +17,7 @@
         <div class="flex gap-2">
             @if(auth()->user()->hasPermission('create-products'))
                 <a href="{{ route('products.create') }}">
-                    <x-button type="primary">{{ __('Create Product') }}</x-button>
+                    <x-button type="primary">{{ __('TambahProduk') }}</x-button>
                 </a>
             @endif
         </div>

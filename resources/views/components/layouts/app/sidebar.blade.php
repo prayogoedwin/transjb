@@ -10,6 +10,10 @@
 
                             <x-layouts.sidebar-link href="{{ route('products.index') }}" icon='fas-box'
                                 :active="request()->routeIs('products*')">Produk</x-layouts.sidebar-link>
+                            <x-layouts.sidebar-link href="{{ route('nasabah.index') }}" icon='fas-user' :active="request()->routeIs('nasabah*')">Nasabah</x-layouts.sidebar-link>
+                            <x-layouts.sidebar-link href="{{ route('simpan_pinjam.index') }}" icon='fas-piggy-bank' :active="request()->routeIs('simpan_pinjam*')">Simpan & Pinjam</x-layouts.sidebar-link>
+                            <x-layouts.sidebar-link href="{{ route('pembelian.index') }}" icon='fas-cart-shopping' :active="request()->routeIs('pembelian*')">Pembelian</x-layouts.sidebar-link>
+                            <x-layouts.sidebar-link href="{{ route('laporan.index') }}" icon='fas-chart-bar' :active="request()->routeIs('laporan*')">Laporan/Rekap</x-layouts.sidebar-link>
 
                             <x-layouts.sidebar-two-level-link-parent title="User Management" icon="fas-users"
                                 :active="request()->routeIs('users*') || request()->routeIs('roles*') || request()->routeIs('permissions*')">
