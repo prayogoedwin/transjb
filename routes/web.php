@@ -5,6 +5,9 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\Settings;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\NasabahController;
+use App\Http\Controllers\SimpanPinjamController;
+use App\Http\Controllers\PembelianController;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/', function () {
@@ -72,15 +75,33 @@ Route::middleware(['auth'])->group(function () {
 
 
 
-    Route::get('nasabah', function() {
-        return view('nasabah.index');
-    })->name('nasabah.index');
-    Route::get('simpan_pinjam', function() {
-        return view('simpan_pinjam.index');
-    })->name('simpan_pinjam.index');
-    Route::get('pembelian', function() {
-        return view('pembelian.index');
-    })->name('pembelian.index');
+    // Nasabah Management - dengan permission check
+    Route::get('nasabah', [NasabahController::class, 'index'])->name('nasabah.index')->middleware('permission:view-nasabah');
+    Route::get('nasabah/create', [NasabahController::class, 'create'])->name('nasabah.create')->middleware('permission:create-nasabah');
+    Route::post('nasabah', [NasabahController::class, 'store'])->name('nasabah.store')->middleware('permission:create-nasabah');
+    Route::get('nasabah/{nasabah}', [NasabahController::class, 'show'])->name('nasabah.show')->middleware('permission:show-nasabah');
+    Route::get('nasabah/{nasabah}/edit', [NasabahController::class, 'edit'])->name('nasabah.edit')->middleware('permission:edit-nasabah');
+    Route::put('nasabah/{nasabah}', [NasabahController::class, 'update'])->name('nasabah.update')->middleware('permission:edit-nasabah');
+    Route::delete('nasabah/{nasabah}', [NasabahController::class, 'destroy'])->name('nasabah.destroy')->middleware('permission:delete-nasabah');
+    
+    // Simpan Pinjam Management - dengan permission check
+    Route::get('simpan_pinjam', [SimpanPinjamController::class, 'index'])->name('simpan_pinjam.index')->middleware('permission:view-simpan-pinjam');
+    Route::get('simpan_pinjam/create', [SimpanPinjamController::class, 'create'])->name('simpan_pinjam.create')->middleware('permission:create-simpan-pinjam');
+    Route::post('simpan_pinjam', [SimpanPinjamController::class, 'store'])->name('simpan_pinjam.store')->middleware('permission:create-simpan-pinjam');
+    Route::get('simpan_pinjam/{simpanPinjam}', [SimpanPinjamController::class, 'show'])->name('simpan_pinjam.show')->middleware('permission:show-simpan-pinjam');
+    Route::get('simpan_pinjam/{simpanPinjam}/edit', [SimpanPinjamController::class, 'edit'])->name('simpan_pinjam.edit')->middleware('permission:edit-simpan-pinjam');
+    Route::put('simpan_pinjam/{simpanPinjam}', [SimpanPinjamController::class, 'update'])->name('simpan_pinjam.update')->middleware('permission:edit-simpan-pinjam');
+    Route::delete('simpan_pinjam/{simpanPinjam}', [SimpanPinjamController::class, 'destroy'])->name('simpan_pinjam.destroy')->middleware('permission:delete-simpan-pinjam');
+    
+    // Pembelian Management - dengan permission check
+    Route::get('pembelian', [PembelianController::class, 'index'])->name('pembelian.index')->middleware('permission:view-pembelian');
+    Route::get('pembelian/create', [PembelianController::class, 'create'])->name('pembelian.create')->middleware('permission:create-pembelian');
+    Route::post('pembelian', [PembelianController::class, 'store'])->name('pembelian.store')->middleware('permission:create-pembelian');
+    Route::get('pembelian/{pembelian}', [PembelianController::class, 'show'])->name('pembelian.show')->middleware('permission:show-pembelian');
+    Route::get('pembelian/{pembelian}/edit', [PembelianController::class, 'edit'])->name('pembelian.edit')->middleware('permission:edit-pembelian');
+    Route::put('pembelian/{pembelian}', [PembelianController::class, 'update'])->name('pembelian.update')->middleware('permission:edit-pembelian');
+    Route::delete('pembelian/{pembelian}', [PembelianController::class, 'destroy'])->name('pembelian.destroy')->middleware('permission:delete-pembelian');
+    
     Route::get('laporan', function() {
         return view('laporan.index');
     })->name('laporan.index');
