@@ -30,7 +30,7 @@ class ProductController extends Controller
                     $actions = '';
                     
                     if (auth()->user()->hasPermission('show-products')) {
-                        $actions .= '<a href="' . route('products.show', $product) . '" class="text-green-600 dark:text-green-400 hover:underline mr-3">View</a>';
+                        $actions .= '<a href="' . route('products.show', $product) . '" class="text-green-600 dark:text-green-400 hover:underline mr-3">Detail</a>';
                     }
                     
                     if (auth()->user()->hasPermission('edit-products')) {
@@ -38,9 +38,9 @@ class ProductController extends Controller
                     }
                     
                     if (auth()->user()->hasPermission('delete-products')) {
-                        $actions .= '<form action="' . route('products.destroy', $product) . '" method="POST" class="inline" onsubmit="return confirm(\'Are you sure?\')">
+                        $actions .= '<form action="' . route('products.destroy', $product) . '" method="POST" class="inline" onsubmit="return confirm(\'Apa Anda yakin?\')">
                             ' . csrf_field() . method_field('DELETE') . '
-                            <button type="submit" class="text-red-600 dark:text-red-400 hover:underline">Delete</button>
+                            <button type="submit" class="text-red-600 dark:text-red-400 hover:underline">Hapus</button>
                         </form>';
                     }
                     

@@ -6,18 +6,18 @@
             stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
         </svg>
-        <span class="text-gray-500 dark:text-gray-400">{{ __('Products') }}</span>
+        <span class="text-gray-500 dark:text-gray-400">{{ __('Produk') }}</span>
     </div>
 
     <div class="mb-6 flex justify-between items-center">
         <div>
-            <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100">{{ __('Products') }}</h1>
-            <p class="text-gray-600 dark:text-gray-400 mt-1">{{ __('Manage product inventory') }}</p>
+            <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100">{{ __('Produk') }}</h1>
+            <p class="text-gray-600 dark:text-gray-400 mt-1">{{ __('Kelola produk') }}</p>
         </div>
         <div class="flex gap-2">
             @if(auth()->user()->hasPermission('create-products'))
                 <a href="{{ route('products.create') }}">
-                    <x-button type="primary">{{ __('TambahProduk') }}</x-button>
+                    <x-button type="primary">{{ __('Tambah Produk') }}</x-button>
                 </a>
             @endif
         </div>
@@ -28,12 +28,12 @@
             <table id="products-table" class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead class="bg-gray-50 dark:bg-gray-900">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('Product Name') }}</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('Nama Produk') }}</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('Satuan') }}</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('Harga Beli') }}</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('Total Stok') }}</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('Created') }}</th>
-                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('Actions') }}</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('Tanggal Dibuat') }}</th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('Aksi') }}</th>
                     </tr>
                 </thead>
             </table>
@@ -62,13 +62,19 @@
                 order: [[4, 'desc']],
                 language: {
                     search: "_INPUT_",
-                    searchPlaceholder: "Search products...",
-                    lengthMenu: "Show _MENU_ entries",
-                    info: "Showing _START_ to _END_ of _TOTAL_ products",
-                    infoEmpty: "No products found",
-                    infoFiltered: "(filtered from _MAX_ total products)",
-                    zeroRecords: "No matching products found",
-                    emptyTable: "No products available"
+                    searchPlaceholder: "Cari produk...",
+                    lengthMenu: "Tampilkan _MENU_",
+                    info: "Menampilkan _START_ \- _END_ dari _TOTAL_ produk",
+                    infoEmpty: "Produk masih kosong",
+                    infoFiltered: "(filter dari _MAX_ total produk)",
+                    zeroRecords: "Produk tidak ditemukan",
+                    emptyTable: "Produk tidak tersedia",
+                    paginate: {
+                        first: "Pertama",
+                        last: "Terakhir",
+                        next: "Berikutnya",
+                        previous: "Sebelumnya"
+                    }
                 },
                 dom: '<"flex flex-col md:flex-row justify-between items-center mb-4"lf>rt<"flex flex-col md:flex-row justify-between items-center mt-4"ip>',
                 pageLength: 10,
