@@ -30,7 +30,7 @@
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('Nama') }}</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('No. Telepon') }}</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('User') }}</th>
+                        <!-- <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('User') }}</th> -->
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('Tanggal Dibuat') }}</th>
                         <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('Aksi') }}</th>
                     </tr>
@@ -53,9 +53,9 @@
                 columns: [
                     { data: 'nama', name: 'nama' },
                     { data: 'no_telp', name: 'no_telp' },
-                    { data: 'user_name', name: 'user_name' },
+                    // { data: 'user_name', name: 'user_name' },
                     { data: 'created_at', name: 'created_at' },
-                    { data: 'actions', name: 'actions', orderable: false, searchable: false, className: 'text-right whitespace-nowrap' }
+                    { data: 'actions', name: 'actions', orderable: false, searchable: false, className: ' whitespace-nowrap' }
                 ],
                 order: [[3, 'desc']],
                 language: {

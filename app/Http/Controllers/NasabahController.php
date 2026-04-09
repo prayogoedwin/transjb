@@ -18,14 +18,14 @@ class NasabahController extends Controller
             $nasabah = Nasabah::with('user')->select('nasabah.*');
             
             return DataTables::of($nasabah)
-                ->addColumn('user_name', function ($item) {
-                    return $item->user?->name ?? '-';
-                })
+                // ->addColumn('user_name', function ($item) {
+                //     return $item->user?->name ?? '-';
+                // })
                 ->addColumn('actions', function ($item) {
                     $actions = '';
                     
                     if (auth()->user()->hasPermission('show-nasabah')) {
-                        $actions .= '<a href="' . route('nasabah.show', $item) . '" class="text-green-600 dark:text-green-400 hover:underline mr-3">View</a>';
+                        $actions .= '<a href="' . route('nasabah.show', $item) . '" class="text-green-600 dark:text-green-400 hover:underline mr-3">Detail</a>';
                     }
                     
                     if (auth()->user()->hasPermission('edit-nasabah')) {
@@ -33,16 +33,16 @@ class NasabahController extends Controller
                     }
                     
                     if (auth()->user()->hasPermission('delete-nasabah')) {
-                        $actions .= '<form action="' . route('nasabah.destroy', $item) . '" method="POST" class="inline" onsubmit="return confirm(\'Are you sure?\')">
+                        $actions .= '<form action="' . route('nasabah.destroy', $item) . '" method="POST" class="inline" onsubmit="return confirm(\'Apakah Anda yakin?\')">
                             ' . csrf_field() . method_field('DELETE') . '
-                            <button type="submit" class="text-red-600 dark:text-red-400 hover:underline">Delete</button>
+                            <button type="submit" class="text-red-600 dark:text-red-400 hover:underline">Hapus</button>
                         </form>';
                     }
                     
                     return $actions;
                 })
                 ->editColumn('created_at', function ($item) {
-                    return $item->created_at->format('M d, Y');
+                    return $item->created_at->format('d F Y H:i');
                 })
                 ->rawColumns(['actions'])
                 ->make(true);
@@ -61,14 +61,14 @@ class NasabahController extends Controller
     {
         $validated = $request->validate([
             'nama' => ['required', 'string', 'max:255'],
-            'user_id' => ['nullable', 'exists:users,id'],
+            // 'user_id' => ['nullable', 'exists:users,id'],
             'no_telp' => ['nullable', 'string', 'max:20'],
             'alamat' => ['nullable', 'string'],
         ]);
 
         Nasabah::create($validated);
 
-        return to_route('nasabah.index')->with('status', 'Nasabah created successfully.');
+        return to_route('nasabah.index')->with('status', 'Nasabah berhasil ditambahkan.');
     }
 
     public function show(Nasabah $nasabah): View
@@ -87,20 +87,20 @@ class NasabahController extends Controller
     {
         $validated = $request->validate([
             'nama' => ['required', 'string', 'max:255'],
-            'user_id' => ['nullable', 'exists:users,id'],
+            // 'user_id' => ['nullable', 'exists:users,id'],
             'no_telp' => ['nullable', 'string', 'max:20'],
             'alamat' => ['nullable', 'string'],
         ]);
 
         $nasabah->update($validated);
 
-        return to_route('nasabah.index')->with('status', 'Nasabah updated successfully.');
+        return to_route('nasabah.index')->with('status', 'Nasabah berhasil diperbarui.');
     }
 
     public function destroy(Nasabah $nasabah): RedirectResponse
     {
         $nasabah->delete();
 
-        return to_route('nasabah.index')->with('status', 'Nasabah deleted successfully.');
+        return to_route('nasabah.index')->with('status', 'Nasabah berhasil dihapus.');
     }
 }

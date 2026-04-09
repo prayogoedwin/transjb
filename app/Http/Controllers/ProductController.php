@@ -47,7 +47,7 @@ class ProductController extends Controller
                     return $actions;
                 })
                 ->editColumn('created_at', function ($product) {
-                    return $product->created_at->format('M d, Y');
+                    return $product->created_at->format('d F Y H:i');
                 })
                 ->rawColumns(['total_stock', 'actions'])
                 ->make(true);
@@ -73,7 +73,7 @@ class ProductController extends Controller
 
         Product::create($validated);
 
-        return to_route('products.index')->with('status', 'Product created successfully.');
+        return to_route('products.index')->with('status', 'Produk berhasil ditambahkan.');
     }
 
     public function show(Product $product): View
@@ -114,13 +114,13 @@ class ProductController extends Controller
 
         $product->update($validated);
 
-        return to_route('products.index')->with('status', 'Product updated successfully.');
+        return to_route('products.index')->with('status', 'Produk berhasil diperbarui.');
     }
 
     public function destroy(Product $product): RedirectResponse
     {
         $product->delete();
 
-        return to_route('products.index')->with('status', 'Product deleted successfully.');
+        return to_route('products.index')->with('status', 'Produk berhasil dihapus.');
     }
 }

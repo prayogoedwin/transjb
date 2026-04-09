@@ -7,7 +7,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
         </svg>
         <a href="{{ route('products.index') }}"
-            class="text-blue-600 dark:text-blue-400 hover:underline">{{ __('Products') }}</a>
+            class="text-blue-600 dark:text-blue-400 hover:underline">{{ __('Produk') }}</a>
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mx-2 text-gray-400" fill="none" viewBox="0 0 24 24"
             stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -17,17 +17,17 @@
 
     <div class="mb-6 flex justify-between items-center">
         <div>
-            <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100">{{ __('Product Details') }}</h1>
-            <p class="text-gray-600 dark:text-gray-400 mt-1">{{ __('View product information and stock') }}</p>
+            <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100">{{ __('Detail Produk') }}</h1>
+            <p class="text-gray-600 dark:text-gray-400 mt-1">{{ __('Detail informasi produk dan stok') }}</p>
         </div>
         <div class="flex gap-2">
             @if(auth()->user()->hasPermission('edit-products'))
                 <a href="{{ route('products.edit', $product) }}">
-                    <x-button type="primary">{{ __('Edit Product') }}</x-button>
+                    <x-button type="primary">{{ __('Edit Produk') }}</x-button>
                 </a>
             @endif
             <a href="{{ route('products.index') }}">
-                <x-button type="secondary">{{ __('Back') }}</x-button>
+                <x-button type="secondary">{{ __('Kembali') }}</x-button>
             </a>
         </div>
     </div>
@@ -71,7 +71,7 @@
                             </label>
                             <div class="text-gray-900 dark:text-gray-100">
                                 @if($product->tanggal_update_harga_beli)
-                                    {{ $product->tanggal_update_harga_beli->format('M d, Y H:i') }}
+                                    {{ $product->tanggal_update_harga_beli->format('d F Y H:i') }}
                                 @else
                                     <span class="text-gray-500 dark:text-gray-400">-</span>
                                 @endif
@@ -80,10 +80,10 @@
 
                         <div class="mb-6">
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                {{ __('Created At') }}
+                                {{ __('Tanggal Dibuat') }}
                             </label>
                             <div class="text-gray-900 dark:text-gray-100">
-                                {{ $product->created_at->format('M d, Y H:i') }}
+                                {{ $product->created_at->format('d F Y H:i') }}
                             </div>
                         </div>
                     </div>
@@ -95,11 +95,11 @@
         <div>
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
                 <div class="p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">{{ __('Stock Summary') }}</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">{{ __('Ringkasan Stok') }}</h3>
                     
                     <div class="mb-4">
                         <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
-                            {{ __('Stock In') }}
+                            {{ __('Stok Masuk') }}
                         </label>
                         <div class="text-2xl font-bold text-green-600 dark:text-green-400">
                             {{ number_format($inStock, 2) }}
@@ -109,7 +109,7 @@
 
                     <div class="mb-4">
                         <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
-                            {{ __('Stock Out') }}
+                            {{ __('Stok Keluar') }}
                         </label>
                         <div class="text-2xl font-bold text-red-600 dark:text-red-400">
                             {{ number_format($outStock, 2) }}
@@ -119,7 +119,7 @@
 
                     <div class="pt-4 border-t border-gray-200 dark:border-gray-600">
                         <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
-                            {{ __('Total Stock') }}
+                            {{ __('Stok Total') }}
                         </label>
                         <div class="text-3xl font-bold text-blue-600 dark:text-blue-400">
                             {{ number_format($totalStock, 2) }}
@@ -135,14 +135,14 @@
     @if($product->priceHistories->count() > 0)
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
             <div class="p-6">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">{{ __('Price History') }}</h3>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">{{ __('Riwayat Harga') }}</h3>
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                         <thead class="bg-gray-50 dark:bg-gray-900">
                             <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">{{ __('Harga Beli Before') }}</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">{{ __('Updated By') }}</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">{{ __('Date') }}</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">{{ __('Harga Sebelumnya') }}</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">{{ __('Diperbarui Oleh') }}</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">{{ __('Tanggal') }}</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
@@ -155,7 +155,7 @@
                                         {{ $history->createdBy->name }}
                                     </td>
                                     <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-100">
-                                        {{ $history->created_at->format('M d, Y H:i') }}
+                                        {{ $history->created_at->format('d F Y H:i') }}
                                     </td>
                                 </tr>
                             @endforeach

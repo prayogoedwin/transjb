@@ -57,7 +57,7 @@
                     { data: 'harga_beli', name: 'harga_beli', orderable: false, searchable: false },
                     { data: 'total_stock', name: 'total_stock', orderable: false, searchable: false },
                     { data: 'created_at', name: 'created_at' },
-                    { data: 'actions', name: 'actions', orderable: false, searchable: false, className: 'text-right whitespace-nowrap' }
+                    { data: 'actions', name: 'actions', orderable: false, searchable: false, className: 'whitespace-nowrap' }
                 ],
                 order: [[4, 'desc']],
                 language: {
