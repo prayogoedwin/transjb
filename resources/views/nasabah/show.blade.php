@@ -55,7 +55,7 @@
                                 {{ $nasabah->no_telp ?? '-' }}
                             </div>
                         </div>
-
+<!-- 
                         <div class="mb-6">
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 {{ __('User') }}
@@ -63,7 +63,7 @@
                             <div class="text-gray-900 dark:text-gray-100">
                                 {{ $nasabah->user?->name ?? '-' }}
                             </div>
-                        </div>
+                        </div> -->
 
                         <div class="mb-6">
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
