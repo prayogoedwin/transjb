@@ -9,6 +9,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
+use App\Exports\NasabahExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class NasabahController extends Controller
 {
@@ -102,5 +104,10 @@ class NasabahController extends Controller
         $nasabah->delete();
 
         return to_route('nasabah.index')->with('status', 'Nasabah berhasil dihapus.');
+    }
+
+    public function export()
+    {
+        return Excel::download(new NasabahExport, 'nasabah-' . date('Y-m-d') . '.xlsx');
     }
 }

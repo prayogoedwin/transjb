@@ -20,7 +20,7 @@
         <p class="text-gray-600 dark:text-gray-400 mt-1">{{ __('Tambahkan pembelian baru') }}</p>
     </div>
 
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden max-w-2xl">
         <div class="p-6">
             <form action="{{ route('pembelian.store') }}" method="POST" class="max-w-2xl" id="pembelianForm">
                 @csrf

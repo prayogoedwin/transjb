@@ -12,7 +12,7 @@
             stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
         </svg>
-        <span class="text-gray-500 dark:text-gray-400">{{ __('View') }}</span>
+        <span class="text-gray-500 dark:text-gray-400">{{ __('Detail') }}</span>
     </div>
 
     <div class="mb-6 flex justify-between items-center">
