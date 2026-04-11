@@ -43,7 +43,7 @@ class Product extends Model
      */
     public function priceHistories(): HasMany
     {
-        return $this->hasMany(ProductPriceHistory::class, 'produk_id');
+        return $this->hasMany(ProductPriceHistory::class, 'produk_id')->orderBy('created_at', 'desc');
     }
 
     /**
