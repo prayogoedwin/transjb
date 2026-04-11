@@ -54,7 +54,7 @@
     </script>
 </head>
 
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 antialiased" x-data="{
+<body class="bg-gradient-to-br from-pink-100 via-purple-100 to-blue-100 dark:bg-gradient-to-br dark:from-pink-900 dark:via-purple-900 dark:to-blue-900 text-gray-800 dark:text-gray-200 antialiased" x-data="{
     darkMode: localStorage.getItem('darkMode') === 'true',
     toggleDarkMode() {
         this.darkMode = !this.darkMode;
@@ -66,7 +66,7 @@
     <div class="min-h-screen flex flex-col">
         <!-- Main Content -->
         <main class="flex-1 flex items-center justify-center p-6">
-            <div class="w-full max-w-md">
+            <div class="w-full max-w-lg">
                 {{ $slot }}
             </div>
         </main>

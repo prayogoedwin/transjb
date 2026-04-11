@@ -1,8 +1,8 @@
 <x-layouts.auth :title="__('Login')">
     <!-- Login Card -->
     <div
-        class="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden">
-        <div class="p-6">
+        class="bg-white dark:bg-gray-800 rounded-2xl shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <div class="p-10 py-12">
             <div class="mb-3">
                 <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100 text-center">{{ __('TRANSJB') }}</h1>
             </div>
