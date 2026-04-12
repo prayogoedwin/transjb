@@ -11,6 +11,7 @@ use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
 use App\Exports\NasabahExport;
 use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class NasabahController extends Controller
 {
@@ -75,7 +76,7 @@ class NasabahController extends Controller
 
     public function show(Nasabah $nasabah): View
     {
-        $nasabah->load('user', 'simpanPinjam');
+        $nasabah->load('user', 'simpanPinjam', 'pembelian.product');
         return view('nasabah.show', compact('nasabah'));
     }
 
@@ -109,5 +110,17 @@ class NasabahController extends Controller
     public function export()
     {
         return Excel::download(new NasabahExport, 'nasabah-' . date('Y-m-d') . '.xlsx');
+    }
+
+    public function exportPdf(Nasabah $nasabah)
+    {
+        $nasabah->load('user', 'simpanPinjam', 'pembelian.product');
+        
+        $pdf = Pdf::loadView('nasabah.pdf', compact('nasabah'))
+            ->setPaper('a4')
+            ->setOption('isHtml5ParserEnabled', true)
+            ->setOption('isPhpEnabled', true);
+        
+        return $pdf->download('detail-nasabah-' . $nasabah->id . '-' . date('Y-m-d-His') . '.pdf');
     }
 }

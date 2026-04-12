@@ -19,6 +19,7 @@ class Pembelian extends Model
      * @var list<string>
      */
     protected $fillable = [
+        'nasabah_id',
         'produk_id',
         'harga_satuan_beli',
         'satuan',
@@ -52,5 +53,13 @@ class Pembelian extends Model
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'produk_id');
+    }
+
+    /**
+     * Get the nasabah associated with the pembelian.
+     */
+    public function nasabah(): BelongsTo
+    {
+        return $this->belongsTo(Nasabah::class, 'nasabah_id');
     }
 }

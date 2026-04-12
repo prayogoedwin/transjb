@@ -21,6 +21,14 @@
             <p class="text-gray-600 dark:text-gray-400 mt-1">{{ __('Lihat data nasabah') }}</p>
         </div>
         <div class="flex gap-2">
+            <a href="{{ route('nasabah.export-pdf', $nasabah) }}" target="_blank">
+                <x-button type="warning">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline mr-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M5.5 13a3.5 3.5 0 01-.369-6.98 4 4 0 117.753-1.3A4.5 4.5 0 1113.5 13H11V9.413l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13H5.5z"></path>
+                    </svg>
+                    {{ __('Cetak PDF') }}
+                </x-button>
+            </a>
             @if(auth()->user()->hasPermission('edit-nasabah'))
                 <a href="{{ route('nasabah.edit', $nasabah) }}">
                     <x-button type="primary">{{ __('Edit') }}</x-button>
@@ -32,7 +40,7 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-6">
         <!-- Nasabah Info -->
         <div class="lg:col-span-2">
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
@@ -82,20 +90,17 @@
         <div>
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
                 <div class="p-6">
-                    <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">{{ __('Informasi') }}</h3>
+                    <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">{{ __('Riwayat Penjualan') }}</h3>
                     <div class="space-y-3 text-sm">
-                        <div>
-                            <span class="text-gray-600 dark:text-gray-400">{{ __('Dibuat') }}</span>
-                            <div class="text-gray-900 dark:text-gray-100">
-                                {{ $nasabah->created_at->format('d M Y H:i') }}
-                            </div>
-                        </div>
-                        <div>
-                            <span class="text-gray-600 dark:text-gray-400">{{ __('Diperbarui') }}</span>
-                            <div class="text-gray-900 dark:text-gray-100">
-                                {{ $nasabah->updated_at->format('d M Y H:i') }}
-                            </div>
-                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                <div class="p-6">
+                    <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">{{ __('Riwayat Simpan Pinjam') }}</h3>
+                    <div class="space-y-3 text-sm">
                     </div>
                 </div>
             </div>
@@ -127,6 +132,47 @@
                                 </td>
                                 <td class="px-6 py-3 text-gray-900 dark:text-gray-100">
                                     Rp {{ number_format($item->nominal, 0, ',', '.') }}
+                                </td>
+                                <td class="px-6 py-3 text-gray-900 dark:text-gray-100">
+                                    {{ $item->created_at->format('M d, Y') }}
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    @endif
+
+    <!-- Pembelian History -->
+    @if($nasabah->pembelian->count() > 0)
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden mt-6">
+            <div class="p-6">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">{{ __('Riwayat Pembelian (Penjualan)') }}</h3>
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    <thead class="bg-gray-50 dark:bg-gray-900">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">{{ __('Produk') }}</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">{{ __('Jumlah (Kg)') }}</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">{{ __('Harga Satuan') }}</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">{{ __('Harga Akhir') }}</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">{{ __('Tanggal') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                        @foreach($nasabah->pembelian as $item)
+                            <tr>
+                                <td class="px-6 py-3 text-gray-900 dark:text-gray-100">
+                                    {{ $item->product->nama_produk ?? '-' }}
+                                </td>
+                                <td class="px-6 py-3 text-gray-900 dark:text-gray-100">
+                                    {{ number_format($item->total_berat, 2, ',', '.') }}
+                                </td>
+                                <td class="px-6 py-3 text-gray-900 dark:text-gray-100">
+                                    Rp {{ number_format($item->harga_satuan_beli, 0, ',', '.') }}
+                                </td>
+                                <td class="px-6 py-3 text-gray-900 dark:text-gray-100">
+                                    Rp {{ number_format($item->harga_akhir, 0, ',', '.') }}
                                 </td>
                                 <td class="px-6 py-3 text-gray-900 dark:text-gray-100">
                                     {{ $item->created_at->format('M d, Y') }}

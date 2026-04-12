@@ -41,4 +41,12 @@ class Nasabah extends Model
     {
         return $this->hasMany(SimpanPinjam::class, 'nasabah_id');
     }
+
+    /**
+     * Get the pembelian records for the nasabah.
+     */
+    public function pembelian(): HasMany
+    {
+        return $this->hasMany(Pembelian::class, 'nasabah_id');
+    }
 }
