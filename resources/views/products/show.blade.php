@@ -152,7 +152,7 @@
                                         Rp {{ number_format($history->harga_beli_before, 0, ',', '.') }}
                                     </td>
                                     <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-100">
-                                        {{ $history->createdBy->name }}
+                                        {{ $history->createdBy->name ?? '-' }}
                                     </td>
                                     <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-100">
                                         {{ $history->created_at->format('d F Y H:i') }}
@@ -189,17 +189,19 @@
                                             <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
                                                 {{ __('Stock In') }}
                                             </span>
-                                        @else
+                                        @elseif($stock->transaksi === 'out')
                                             <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
                                                 {{ __('Stock Out') }}
                                             </span>
+                                        @else
+                                            <span class="text-gray-500 dark:text-gray-400">{{ __('-') }}</span>
                                         @endif
                                     </td>
                                     <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-100">
                                         {{ number_format($stock->jumlah, 2) }} {{ $product->satuan }}
                                     </td>
                                     <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-100">
-                                        {{ $stock->createdBy->name }}
+                                        {{ $stock->createdBy->name ?? '-' }}
                                     </td>
                                     <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-100">
                                         {{ $stock->created_at->format('M d, Y H:i') }}

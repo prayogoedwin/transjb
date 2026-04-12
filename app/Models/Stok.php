@@ -6,11 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Stock extends Model
+class Stok extends Model
 {
     /** @use HasFactory<\Database\Factories\StockFactory> */
     use HasFactory;
 
+    protected $table = 'stok';
     /**
      * The attributes that are mass assignable.
      *
@@ -18,8 +19,10 @@ class Stock extends Model
      */
     protected $fillable = [
         'produk_id',
+        'pembelian_id',
         'transaksi',
         'jumlah',
+        'satuan',
         'created_by',
     ];
 

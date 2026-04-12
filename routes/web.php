@@ -97,7 +97,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('pembelian', [PembelianController::class, 'index'])->name('pembelian.index')->middleware('permission:view-pembelian');
     Route::get('pembelian/create', [PembelianController::class, 'create'])->name('pembelian.create')->middleware('permission:create-pembelian');
     Route::post('pembelian', [PembelianController::class, 'store'])->name('pembelian.store')->middleware('permission:create-pembelian');
+    Route::get('pembelian/export', [PembelianController::class, 'exportExcel'])->name('pembelian.export')->middleware('permission:download-pembelian');
     Route::get('pembelian/{pembelian}', [PembelianController::class, 'show'])->name('pembelian.show')->middleware('permission:show-pembelian');
+    Route::get('pembelian/{pembelian}/print', [PembelianController::class, 'printInvoice'])->name('pembelian.printInvoice')->middleware('permission:show-pembelian');
     Route::get('pembelian/{pembelian}/edit', [PembelianController::class, 'edit'])->name('pembelian.edit')->middleware('permission:edit-pembelian');
     Route::put('pembelian/{pembelian}', [PembelianController::class, 'update'])->name('pembelian.update')->middleware('permission:edit-pembelian');
     Route::delete('pembelian/{pembelian}', [PembelianController::class, 'destroy'])->name('pembelian.destroy')->middleware('permission:delete-pembelian');

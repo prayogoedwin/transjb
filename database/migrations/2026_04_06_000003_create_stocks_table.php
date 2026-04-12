@@ -11,13 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('stocks', function (Blueprint $table) {
+        Schema::create('stok', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('produk_id')->constrained('products')->onDelete('cascade');
-            $table->enum('transaksi', ['in', 'out'])->default('in');
-            $table->decimal('jumlah', 15, 4)->default(0);
-            $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
+            $table->foreignId('produk_id')->nullable();
+            $table->foreignId('pembelian_id')->nullable();
+            $table->decimal('jumlah', 15, 4);
+            $table->string('satuan', 50)->default('kg');
+            $table->enum('transaksi', ['in', 'out'])->nullable();
             $table->timestamps();
+            $table->index('produk_id');
+            $table->index('pembelian_id');
         });
     }
 
@@ -26,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('stocks');
+        Schema::dropIfExists('stok');
     }
 };

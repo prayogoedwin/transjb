@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Pembelian extends Model
@@ -61,5 +62,27 @@ class Pembelian extends Model
     public function nasabah(): BelongsTo
     {
         return $this->belongsTo(Nasabah::class, 'nasabah_id');
+    }
+
+    /**
+     * Get the stok entry associated with this pembelian.
+     */
+    public function stok(): HasOne
+    {
+        return $this->hasOne(Stok::class, 'pembelian_id');
+    }
+
+    /**
+     * Add stok dari pembelian after invoice printed.
+     */
+    public function addToStok(): Stok
+    {
+        return Stok::create([
+            'produk_id' => $this->produk_id,
+            'pembelian_id' => $this->id,
+            'jumlah' => $this->total_berat,
+            'satuan' => $this->satuan,
+            'transaksi' => 'in',
+        ]);
     }
 }

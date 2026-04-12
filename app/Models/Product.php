@@ -51,7 +51,7 @@ class Product extends Model
      */
     public function stocks(): HasMany
     {
-        return $this->hasMany(Stock::class, 'produk_id');
+        return $this->hasMany(Stok::class, 'produk_id');
     }
 
     /**
