@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\SimpanPinjam;
 use App\Models\Nasabah;
+use App\Exports\SimpanPinjamExport;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Facades\DataTables;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class SimpanPinjamController extends Controller
 {
@@ -36,6 +39,7 @@ class SimpanPinjamController extends Controller
                     
                     if (auth()->user()->hasPermission('show-simpan-pinjam')) {
                         $actions .= '<a href="' . route('simpan_pinjam.show', $item) . '" class="text-green-600 dark:text-green-400 hover:underline mr-3">View</a>';
+                        $actions .= '<a href="' . route('simpan_pinjam.printReceipt', $item) . '" target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline mr-3">Print</a>';
                     }
                     
                     if (auth()->user()->hasPermission('edit-simpan-pinjam')) {
@@ -52,7 +56,7 @@ class SimpanPinjamController extends Controller
                     return $actions;
                 })
                 ->editColumn('created_at', function ($item) {
-                    return $item->created_at->format('M d, Y');
+                    return $item->created_at->format('d M Y H:i');
                 })
                 ->rawColumns(['tipe_badge', 'actions'])
                 ->make(true);
@@ -67,15 +71,32 @@ class SimpanPinjamController extends Controller
         return view('simpan_pinjam.create', compact('nasabah'));
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
         $validated = $request->validate([
             'nasabah_id' => ['required', 'exists:nasabah,id'],
             'tipe' => ['required', 'in:simpan,pinjam'],
             'nominal' => ['required', 'numeric', 'min:0'],
+            'print_receipt' => ['sometimes', 'boolean'],
         ]);
 
-        SimpanPinjam::create($validated);
+        $simpanPinjam = SimpanPinjam::create($validated);
+
+        // Jika user memilih untuk cetak langsung dan request AJAX
+        if ($request->has('print_receipt') && $request->print_receipt && $request->wantsJson()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Simpan Pinjam record created successfully.',
+                'print_url' => route('simpan_pinjam.printReceipt', $simpanPinjam),
+                'redirect_url' => route('simpan_pinjam.index'),
+                'id' => $simpanPinjam->id,
+            ]);
+        }
+
+        // Jika regular request (non-AJAX)
+        if ($request->has('print_receipt') && $request->print_receipt) {
+            return to_route('simpan_pinjam.printReceipt', $simpanPinjam)->with('status', 'Simpan Pinjam record created successfully.');
+        }
 
         return to_route('simpan_pinjam.index')->with('status', 'Simpan Pinjam record created successfully.');
     }
@@ -110,5 +131,36 @@ class SimpanPinjamController extends Controller
         $simpanPinjam->delete();
 
         return to_route('simpan_pinjam.index')->with('status', 'Simpan Pinjam record deleted successfully.');
+    }
+
+    /**
+     * Print receipt for simpan pinjam transaction
+     */
+    public function printReceipt(SimpanPinjam $simpanPinjam)
+    {
+        $simpanPinjam->load('nasabah');
+        $pdf = Pdf::loadView('simpan_pinjam.receipt', ['simpanPinjam' => $simpanPinjam]);
+        return $pdf->download('Struk-' . $simpanPinjam->id . '-' . date('YmdHis') . '.pdf');
+    }
+
+    /**
+     * Export simpan pinjam to Excel with date filter
+     */
+    public function exportExcel(Request $request)
+    {
+        $request->validate([
+            'date_from' => ['nullable', 'date'],
+            'date_to' => ['nullable', 'date'],
+        ]);
+
+        $dateFrom = $request->date_from;
+        $dateTo = $request->date_to;
+
+        $filename = 'SimpanPinjam-' . date('YmdHis') . '.xlsx';
+        
+        return Excel::download(
+            new SimpanPinjamExport($dateFrom, $dateTo),
+            $filename
+        );
     }
 }

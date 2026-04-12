@@ -22,7 +22,7 @@
 
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
         <div class="p-6">
-            <form action="{{ route('simpan_pinjam.store') }}" method="POST" class="max-w-2xl">
+            <form id="simpan-pinjam-form" action="{{ route('simpan_pinjam.store') }}" method="POST" class="max-w-2xl">
                 @csrf
 
                 <div class="mb-4">
@@ -54,6 +54,13 @@
                     <x-forms.input label="Nominal" name="nominal" type="number" step="0.01" min="0" value="{{ old('nominal', 0) }}" required />
                 </div>
 
+                <div class="mb-6">
+                    <label class="flex items-center">
+                        <input type="checkbox" id="print_receipt" name="print_receipt" value="1" class="w-4 h-4 text-blue-600 rounded focus:ring-2 focus:ring-blue-500" {{ old('print_receipt') ? 'checked' : '' }}>
+                        <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">{{ __('Cetak struk langsung setelah simpan') }}</span>
+                    </label>
+                </div>
+
                 <div class="flex gap-3">
                     <x-button type="primary">{{ __('Simpan') }}</x-button>
                     <a href="{{ route('simpan_pinjam.index') }}">
@@ -63,4 +70,45 @@
             </form>
         </div>
     </div>
+
+    <script>
+        document.getElementById('simpan-pinjam-form').addEventListener('submit', function(e) {
+            const printCheckbox = document.getElementById('print_receipt');
+            
+            // Jika checkbox cetak dicentang
+            if (printCheckbox.checked) {
+                e.preventDefault();
+                
+                // Collect form data
+                const formData = new FormData(this);
+                
+                // Submit via AJAX dengan Accept JSON header
+                fetch(this.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json',
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.json();
+                })
+                .then(data => {
+                    // Buka PDF di tab baru
+                    window.open(data.print_url, '_blank');
+                    
+                    // Redirect halaman saat ini ke index
+                    setTimeout(() => {
+                        window.location.href = data.redirect_url;
+                    }, 500);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Terjadi kesalahan saat menyimpan data');
+                });
+            }
+            // Jika checkbox tidak dicentang, biarkan form submit normal
+        });
+    </script>
 </x-layouts.app>

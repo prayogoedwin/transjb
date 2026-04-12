@@ -6,12 +6,33 @@ use App\Models\SimpanPinjam;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\WithStyles;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class SimpanPinjamExport implements FromCollection, WithHeadings, WithMapping
+class SimpanPinjamExport implements FromCollection, WithHeadings, WithMapping, WithStyles
 {
+    private $dateFrom;
+    private $dateTo;
+
+    public function __construct($dateFrom = null, $dateTo = null)
+    {
+        $this->dateFrom = $dateFrom;
+        $this->dateTo = $dateTo;
+    }
+
     public function collection()
     {
-        return SimpanPinjam::with('nasabah')->get();
+        $query = SimpanPinjam::with('nasabah');
+
+        if ($this->dateFrom) {
+            $query->whereDate('created_at', '>=', $this->dateFrom);
+        }
+
+        if ($this->dateTo) {
+            $query->whereDate('created_at', '<=', $this->dateTo);
+        }
+
+        return $query->get();
     }
 
     public function headings(): array
@@ -33,6 +54,13 @@ class SimpanPinjamExport implements FromCollection, WithHeadings, WithMapping
             $simpanPinjam->tipe === 'simpan' ? 'Simpan' : 'Pinjam',
             $simpanPinjam->nominal,
             $simpanPinjam->created_at->format('Y-m-d H:i:s'),
+        ];
+    }
+
+    public function styles(Worksheet $sheet)
+    {
+        return [
+            1 => ['font' => ['bold' => true], 'fill' => ['fillType' => 'solid', 'startColor' => ['rgb' => 'DCE6F1']]],
         ];
     }
 }

@@ -86,7 +86,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('simpan_pinjam', [SimpanPinjamController::class, 'index'])->name('simpan_pinjam.index')->middleware('permission:view-simpan-pinjam');
     Route::get('simpan_pinjam/create', [SimpanPinjamController::class, 'create'])->name('simpan_pinjam.create')->middleware('permission:create-simpan-pinjam');
     Route::post('simpan_pinjam', [SimpanPinjamController::class, 'store'])->name('simpan_pinjam.store')->middleware('permission:create-simpan-pinjam');
+    Route::get('simpan_pinjam/export', [SimpanPinjamController::class, 'exportExcel'])->name('simpan_pinjam.export')->middleware('permission:download-simpan-pinjam');
     Route::get('simpan_pinjam/{simpanPinjam}', [SimpanPinjamController::class, 'show'])->name('simpan_pinjam.show')->middleware('permission:show-simpan-pinjam');
+    Route::get('simpan_pinjam/{simpanPinjam}/print', [SimpanPinjamController::class, 'printReceipt'])->name('simpan_pinjam.printReceipt')->middleware('permission:show-simpan-pinjam');
     Route::get('simpan_pinjam/{simpanPinjam}/edit', [SimpanPinjamController::class, 'edit'])->name('simpan_pinjam.edit')->middleware('permission:edit-simpan-pinjam');
     Route::put('simpan_pinjam/{simpanPinjam}', [SimpanPinjamController::class, 'update'])->name('simpan_pinjam.update')->middleware('permission:edit-simpan-pinjam');
     Route::delete('simpan_pinjam/{simpanPinjam}', [SimpanPinjamController::class, 'destroy'])->name('simpan_pinjam.destroy')->middleware('permission:delete-simpan-pinjam');

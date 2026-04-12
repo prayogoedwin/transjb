@@ -22,7 +22,7 @@
 
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
         <div class="p-6">
-            <form action="{{ route('simpan_pinjam.update', $simpanPinjam) }}" method="POST" class="max-w-2xl">
+            <form action="{{ route('simpan_pinjam.update', $simpanPinjam) }}" method="POST" class="max-w-lg">
                 @csrf
                 @method('PUT')
 
