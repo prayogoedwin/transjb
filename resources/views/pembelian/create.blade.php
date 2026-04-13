@@ -221,7 +221,6 @@
             document.getElementById('summary-total-price').textContent = 'Rp ' + totalHarga.toLocaleString('id-ID', {maximumFractionDigits: 0});
             document.getElementById('summary-admin-fee').textContent = 'Rp ' + biayaAdmin.toLocaleString('id-ID', {maximumFractionDigits: 0});
             document.getElementById('summary-final-price').textContent = 'Rp ' + hargaAkhir.toLocaleString('id-ID', {maximumFractionDigits: 0});
-        }
 
         document.querySelector('input[name="harga_satuan_beli"]').addEventListener('change', calculateTotals);
         document.querySelector('input[name="total_berat"]').addEventListener('change', calculateTotals);

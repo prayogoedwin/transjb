@@ -94,39 +94,52 @@ class PembelianController extends Controller
             'print_invoice' => ['sometimes', 'boolean'],
         ]);
 
-        return DB::transaction(function () use ($request, $validated) {
-            // Calculate totals
-            $validated['total_harga'] = $validated['harga_satuan_beli'] * $validated['total_berat'];
-            $validated['biaya_admin'] = ($validated['total_harga'] * $validated['biaya_admin_persen']) / 100;
-            $validated['harga_akhir'] = $validated['total_harga'] - $validated['biaya_admin'];
+        try {
+            return DB::transaction(function () use ($request, $validated) {
+                // Calculate totals
+                $validated['total_harga'] = $validated['harga_satuan_beli'] * $validated['total_berat'];
+                $validated['biaya_admin'] = ($validated['total_harga'] * $validated['biaya_admin_persen']) / 100;
+                $validated['harga_akhir'] = $validated['total_harga'] - $validated['biaya_admin'];
 
-            $product = Product::findOrFail($validated['produk_id']);
-            $validated['satuan'] = $product->satuan; // Set satuan dari produk terkait
-            
-            $pembelian = Pembelian::create($validated);
-            $pembelian->addToStok();
-
-
-            // Jika user memilih untuk cetak invoice dan request AJAX
-            if ($request->has('print_invoice') && $request->print_invoice && $request->wantsJson()) {
-                // Add to stok
+                $product = Product::findOrFail($validated['produk_id']);
+                $validated['satuan'] = $product->satuan; // Set satuan dari produk terkait
                 
+                $pembelian = Pembelian::create($validated);
+                $pembelian->addToStok();
+
+
+                // Jika user memilih untuk cetak invoice dan request AJAX
+                if ($request->has('print_invoice') && $request->print_invoice && $request->wantsJson()) {
+                    // Add to stok
+                    
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => 'Pembelian created successfully.',
+                        'print_url' => route('pembelian.printInvoice', $pembelian),
+                        'redirect_url' => route('pembelian.index'),
+                        'id' => $pembelian->id,
+                    ]);
+                }
+
+                // Jika regular request (non-AJAX)
+                if ($request->has('print_invoice') && $request->print_invoice) {
+                    return redirect()->route('pembelian.printInvoice', $pembelian)->with('status', 'Pembelian created successfully.');
+                }
+
+                return to_route('pembelian.index')->with('status', 'Pembelian created successfully.');
+            });
+        } catch (\Exception $e) {
+            $errorMessage = 'Gagal menyimpan pembelian. ' . $e->getMessage();
+            
+            if ($request->wantsJson()) {
                 return response()->json([
-                    'status' => 'success',
-                    'message' => 'Pembelian created successfully.',
-                    'print_url' => route('pembelian.printInvoice', $pembelian),
-                    'redirect_url' => route('pembelian.index'),
-                    'id' => $pembelian->id,
-                ]);
+                    'status' => 'error',
+                    'message' => $errorMessage,
+                ], 422);
             }
-
-            // Jika regular request (non-AJAX)
-            if ($request->has('print_invoice') && $request->print_invoice) {
-                return redirect()->route('pembelian.printInvoice', $pembelian)->with('status', 'Pembelian created successfully.');
-            }
-
-            return to_route('pembelian.index')->with('status', 'Pembelian created successfully.');
-        });
+            
+            return back()->withInput()->with('error', $errorMessage);
+        }
     }
 
     public function show(Pembelian $pembelian): View
