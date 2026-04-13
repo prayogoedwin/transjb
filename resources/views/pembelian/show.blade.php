@@ -40,6 +40,17 @@
                     <div class="max-w-2xl">
                         <div class="mb-6">
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                {{ __('Nasabah') }}
+                            </label>
+                            <div class="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                                <a href="{{ route('nasabah.show', $pembelian->nasabah) }}" class="text-blue-600 dark:text-blue-400 hover:underline">
+                                    {{ $pembelian->nasabah?->nama ?? '-' }}
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 {{ __('Produk') }}
                             </label>
                             <div class="text-lg font-semibold text-gray-900 dark:text-gray-100">

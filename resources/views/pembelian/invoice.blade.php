@@ -206,7 +206,7 @@
                 <span class="value"><strong>{{ number_format($pembelian->total_berat, 2, ',', '.') }} {{ $pembelian->satuan }}</strong></span>
             </div>
             
-            <div class="row">
+            <!-- <div class="row">
                 <span class="label">Status Stok:</span>
                 <span class="value">
                     @if($pembelian->stok)
@@ -215,7 +215,7 @@
                         <strong style="color: #e74c3c;">✗ Belum ditambahkan ke stok</strong>
                     @endif
                 </span>
-            </div>
+            </div> -->
         </div>
 
         <div class="footer">

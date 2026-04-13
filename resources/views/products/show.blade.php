@@ -61,7 +61,7 @@
                                 {{ __('Harga Beli') }}
                             </label>
                             <div class="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                                Rp {{ number_format($product->harga_beli, 0, ',', '.') }}
+                                {{ formatCurrency($product->harga_beli, 0) }}
                             </div>
                         </div>
 
@@ -98,39 +98,37 @@
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">{{ __('Ringkasan Stok') }}</h3>
                     
                     <div class="mb-4">
-                        <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
+                        <label class="block text-xs text-right font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
                             {{ __('Stok Masuk') }}
                         </label>
-                        <div class="text-2xl font-bold text-green-600 dark:text-green-400">
-                            {{ number_format($inStock, 2) }}
+                        <div class="text-2xl font-bold text-right text-green-600 dark:text-green-400">
+                            {{ formatDecimal($inStock) }}  <span class="text-xs text-gray-500 dark:text-gray-400">{{ $product->satuan }}</span>
                         </div>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ $product->satuan }}</p>
                     </div>
 
                     <div class="mb-4">
-                        <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
+                        <label class="block text-xs text-right font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
                             {{ __('Stok Keluar') }}
                         </label>
-                        <div class="text-2xl font-bold text-red-600 dark:text-red-400">
-                            {{ number_format($outStock, 2) }}
+                        <div class="text-2xl font-bold text-right text-red-600 dark:text-red-400">
+                            {{ formatDecimal($outStock, 2) }}  <span class="text-xs text-gray-500 dark:text-gray-400">{{ $product->satuan }}</span>
                         </div>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ $product->satuan }}</p>
                     </div>
 
-                    <div class="pt-4 border-t border-gray-200 dark:border-gray-600">
-                        <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
+                    <div class="pt-4 border-t border-gray-500 dark:border-gray-600">
+                        <label class="block text-xs text-right font-medium text-gray-700 dark:text-gray-400 uppercase tracking-wider mb-1">
                             {{ __('Stok Total') }}
                         </label>
-                        <div class="text-3xl font-bold text-blue-600 dark:text-blue-400">
-                            {{ number_format($totalStock, 2) }}
+                        <div class="text-3xl font-bold text-right text-blue-600 dark:text-blue-400">
+                            {{ formatDecimal($totalStock, 2) }}  <span class="text-xs text-gray-500 dark:text-gray-400">{{ $product->satuan }}</span>
                         </div>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ $product->satuan }}</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
     <!-- Price History -->
     @if($product->priceHistories->count() > 0)
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
@@ -148,14 +146,14 @@
                         <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                             @foreach($product->priceHistories as $history)
                                 <tr>
-                                    <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-100">
-                                        Rp {{ number_format($history->harga_beli_before, 0, ',', '.') }}
+                                    <td class="px-6 py-4 text-sm text-gray-900 text-right dark:text-gray-100">
+                                        {{ formatCurrency($history->harga_beli_before, 0) }}
                                     </td>
                                     <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-100">
                                         {{ $history->createdBy->name ?? '-' }}
                                     </td>
                                     <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-100">
-                                        {{ $history->created_at->format('d F Y H:i') }}
+                                        {{ $history->created_at->format('d M Y H:i') }}
                                     </td>
                                 </tr>
                             @endforeach
@@ -168,16 +166,16 @@
 
     <!-- Stock Transactions -->
     @if($product->stocks->count() > 0)
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden mt-6">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
             <div class="p-6">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">{{ __('Stock Transactions') }}</h3>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">{{ __('Riwayat Stok') }}</h3>
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                         <thead class="bg-gray-50 dark:bg-gray-900">
                             <tr>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">{{ __('Type') }}</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">{{ __('Quantity') }}</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">{{ __('Created By') }}</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">{{ __('Nasabah') }}</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">{{ __('Date') }}</th>
                             </tr>
                         </thead>
@@ -187,24 +185,24 @@
                                     <td class="px-6 py-4 text-sm">
                                         @if($stock->transaksi === 'in')
                                             <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                                                {{ __('Stock In') }}
+                                                {{ __('IN') }}
                                             </span>
                                         @elseif($stock->transaksi === 'out')
                                             <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
-                                                {{ __('Stock Out') }}
+                                                {{ __('OUT') }}
                                             </span>
                                         @else
                                             <span class="text-gray-500 dark:text-gray-400">{{ __('-') }}</span>
                                         @endif
                                     </td>
-                                    <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-100">
-                                        {{ number_format($stock->jumlah, 2) }} {{ $product->satuan }}
+                                    <td class="px-6 py-4 text-right text-sm text-gray-900 dark:text-gray-100">
+                                        {{ formatDecimal($stock->jumlah) }} {{ $product->satuan }}
                                     </td>
                                     <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-100">
-                                        {{ $stock->createdBy->name ?? '-' }}
+                                        {{ $stock->pembelian->nasabah->nama ?? '-' }}
                                     </td>
                                     <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-100">
-                                        {{ $stock->created_at->format('M d, Y H:i') }}
+                                        {{ $stock->created_at->format('d M Y H:i') }}
                                     </td>
                                 </tr>
                             @endforeach
@@ -214,4 +212,5 @@
             </div>
         </div>
     @endif
+    </div>
 </x-layouts.app>

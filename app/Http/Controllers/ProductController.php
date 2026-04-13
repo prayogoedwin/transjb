@@ -21,10 +21,10 @@ class ProductController extends Controller
                     $inStock = $product->stocks()->where('transaksi', 'in')->sum('jumlah');
                     $outStock = $product->stocks()->where('transaksi', 'out')->sum('jumlah');
                     $total = $inStock - $outStock;
-                    return '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">' . number_format($total, 2) . ' ' . $product->satuan . '</span>';
+                    return '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">' . formatDecimalSmart($total) . ' ' . $product->satuan . '</span>';
                 })
                 ->addColumn('harga_beli', function ($product) {
-                    return 'Rp ' . number_format($product->harga_beli, 0, ',', '.');
+                    return formatCurrencyRound($product->harga_beli);
                 })
                 ->addColumn('actions', function ($product) {
                     $actions = '';

@@ -35,7 +35,7 @@
                 </div>
 
                 <div class="mb-6">
-                    <x-forms.input label="Harga Beli" name="harga_beli" type="number" step="1000" min="0" value="{{ old('harga_beli', $product->harga_beli) }}" required />
+                    <x-forms.input label="Harga Beli" name="harga_beli" type="number" min="0" value="{{ old('harga_beli', $product->harga_beli) }}" required />
                 </div>
 
                 <div class="flex gap-3">

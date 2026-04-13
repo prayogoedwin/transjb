@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Pembelian;
 use App\Models\Product;
+use App\Models\Nasabah;
 use App\Exports\PembelianExport;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -19,23 +20,29 @@ class PembelianController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $pembelian = Pembelian::with('product')->select('pembelian.*');
+            $pembelian = Pembelian::with('product', 'nasabah')->select('pembelian.*')->orderby('created_at', 'desc');
             
             return DataTables::of($pembelian)
+                ->addColumn('nasabah_name', function ($item) {
+                    return $item->nasabah?->nama ?? '-';
+                })
                 ->addColumn('product_name', function ($item) {
                     return $item->product->nama_produk ?? '-';
                 })
                 ->addColumn('harga_satuan_beli', function ($item) {
-                    return 'Rp ' . number_format($item->harga_satuan_beli, 0, ',', '.');
+                    return formatCurrencyRound($item->harga_satuan_beli);
                 })
                 ->addColumn('total_harga', function ($item) {
-                    return 'Rp ' . number_format($item->total_harga, 0, ',', '.');
+                    return formatCurrencyRound($item->total_harga);
                 })
                 ->addColumn('biaya_admin', function ($item) {
-                    return 'Rp ' . number_format($item->biaya_admin, 0, ',', '.') . ' (' . number_format($item->biaya_admin_persen, 2) . '%)';
+                    return formatCurrencyRound($item->biaya_admin) . ' (' . number_format($item->biaya_admin_persen, 2) . '%)';
                 })
                 ->addColumn('harga_akhir', function ($item) {
-                    return '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">Rp ' . number_format($item->harga_akhir, 0, ',', '.') . '</span>';
+                    return '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">'. formatCurrencyRound($item->harga_akhir) . '</span>';
+                })
+                ->addColumn('total_berat', function ($item) {
+                    return formatDecimalSmart($item->total_berat) . ' ' . $item->satuan;
                 })
                 ->addColumn('actions', function ($item) {
                     $actions = '';
@@ -45,16 +52,16 @@ class PembelianController extends Controller
                         $actions .= '<a href="' . route('pembelian.printInvoice', $item) . '" target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline mr-3">Print</a>';
                     }
                     
-                    if (auth()->user()->hasPermission('edit-pembelian')) {
-                        $actions .= '<a href="' . route('pembelian.edit', $item) . '" class="text-blue-600 dark:text-blue-400 hover:underline mr-3">Edit</a>';
-                    }
+                    // if (auth()->user()->hasPermission('edit-pembelian')) {
+                    //     $actions .= '<a href="' . route('pembelian.edit', $item) . '" class="text-blue-600 dark:text-blue-400 hover:underline mr-3">Edit</a>';
+                    // }
                     
-                    if (auth()->user()->hasPermission('delete-pembelian')) {
-                        $actions .= '<form action="' . route('pembelian.destroy', $item) . '" method="POST" class="inline" onsubmit="return confirm(\'Are you sure?\')">
-                            ' . csrf_field() . method_field('DELETE') . '
-                            <button type="submit" class="text-red-600 dark:text-red-400 hover:underline">Delete</button>
-                        </form>';
-                    }
+                    // if (auth()->user()->hasPermission('delete-pembelian')) {
+                    //     $actions .= '<form action="' . route('pembelian.destroy', $item) . '" method="POST" class="inline" onsubmit="return confirm(\'Are you sure?\')">
+                    //         ' . csrf_field() . method_field('DELETE') . '
+                    //         <button type="submit" class="text-red-600 dark:text-red-400 hover:underline">Delete</button>
+                    //     </form>';
+                    // }
                     
                     return $actions;
                 })
@@ -71,12 +78,14 @@ class PembelianController extends Controller
     public function create(): View
     {
         $products = Product::orderBy('nama_produk')->get();
-        return view('pembelian.create', compact('products'));
+        $nasabah = Nasabah::orderBy('nama')->get();
+        return view('pembelian.create', compact('products', 'nasabah'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
+            'nasabah_id' => ['required', 'exists:nasabah,id'],
             'produk_id' => ['required', 'exists:products,id'],
             'harga_satuan_beli' => ['required', 'numeric', 'min:0'],
             'total_berat' => ['required', 'numeric', 'min:0'],
@@ -94,12 +103,12 @@ class PembelianController extends Controller
             $validated['satuan'] = $product->satuan; // Set satuan dari produk terkait
             
             $pembelian = Pembelian::create($validated);
+            $pembelian->addToStok();
 
 
             // Jika user memilih untuk cetak invoice dan request AJAX
             if ($request->has('print_invoice') && $request->print_invoice && $request->wantsJson()) {
                 // Add to stok
-                $pembelian->addToStok();
                 
                 return response()->json([
                     'status' => 'success',
@@ -112,7 +121,6 @@ class PembelianController extends Controller
 
             // Jika regular request (non-AJAX)
             if ($request->has('print_invoice') && $request->print_invoice) {
-                $pembelian->addToStok();
                 return redirect()->route('pembelian.printInvoice', $pembelian)->with('status', 'Pembelian created successfully.');
             }
 
@@ -122,19 +130,21 @@ class PembelianController extends Controller
 
     public function show(Pembelian $pembelian): View
     {
-        $pembelian->load('product');
+        $pembelian->load('product', 'nasabah');
         return view('pembelian.show', compact('pembelian'));
     }
 
     public function edit(Pembelian $pembelian): View
     {
         $products = Product::orderBy('nama_produk')->get();
-        return view('pembelian.edit', compact('pembelian', 'products'));
+        $nasabah = Nasabah::orderBy('nama')->get();
+        return view('pembelian.edit', compact('pembelian', 'products', 'nasabah'));
     }
 
     public function update(Request $request, Pembelian $pembelian): RedirectResponse
     {
         $validated = $request->validate([
+            'nasabah_id' => ['required', 'exists:nasabah,id'],
             'produk_id' => ['required', 'exists:products,id'],
             'harga_satuan_beli' => ['required', 'numeric', 'min:0'],
             'satuan' => ['required', 'string', 'max:50'],

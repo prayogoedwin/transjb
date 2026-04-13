@@ -143,7 +143,7 @@
     <div class="container">
         <div class="header">
             <h1>LAPORAN DETAIL NASABAH</h1>
-            <p>Transjaya Koperasi</p>
+            <!-- <p></p> -->
         </div>
 
         <div class="print-date">
@@ -232,8 +232,9 @@
         </div>
 
         <!-- Section: Riwayat Pembelian -->
+        <div style="page-break-after: always;"></div>
         <div class="section">
-            <div class="section-title">🛒 RIWAYAT PEMBELIAN (PENJUALAN)</div>
+            <div class="section-title" style="margin-top: 20px;">🛒 RIWAYAT PEMBELIAN (PENJUALAN)</div>
             @if($nasabah->pembelian->count() > 0)
                 <table>
                     <thead>

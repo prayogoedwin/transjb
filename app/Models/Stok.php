@@ -47,6 +47,14 @@ class Stok extends Model
     }
 
     /**
+     * Get the purchase associated with the stock.
+     */
+    public function pembelian(): BelongsTo
+    {
+        return $this->belongsTo(Pembelian::class, 'pembelian_id');
+    }
+
+    /**
      * Get the user who created the stock transaction.
      */
     public function createdBy(): BelongsTo

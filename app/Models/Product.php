@@ -30,6 +30,7 @@ class Product extends Model
      *
      * @return array<string, string>
      */
+    
     protected function casts(): array
     {
         return [

@@ -27,6 +27,19 @@
                 @method('PUT')
 
                 <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Nasabah') }} *</label>
+                    <select name="nasabah_id" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100" required>
+                        <option value="">{{ __('Pilih Nasabah') }}</option>
+                        @foreach($nasabah as $nb)
+                            <option value="{{ $nb->id }}" {{ old('nasabah_id', $pembelian->nasabah_id) == $nb->id ? 'selected' : '' }}>{{ $nb->nama }}</option>
+                        @endforeach
+                    </select>
+                    @error('nasabah_id')
+                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Produk') }} *</label>
                     <select name="produk_id" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100" required>
                         <option value="">{{ __('Pilih Produk') }}</option>

@@ -46,6 +46,7 @@
             <table id="pembelian-table" class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead class="bg-gray-50 dark:bg-gray-900">
                     <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('Nasabah') }}</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('Produk') }}</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('Harga Satuan') }}</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('Total Berat') }}</th>
@@ -72,6 +73,7 @@
                 serverSide: true,
                 ajax: "{{ route('pembelian.index') }}",
                 columns: [
+                    { data: 'nasabah_name', name: 'nasabah_name' },
                     { data: 'product_name', name: 'product_name' },
                     { data: 'harga_satuan_beli', name: 'harga_satuan_beli' },
                     { data: 'total_berat', name: 'total_berat' },
