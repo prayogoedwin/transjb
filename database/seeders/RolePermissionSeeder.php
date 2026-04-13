@@ -74,7 +74,7 @@ class RolePermissionSeeder extends Seeder
         // $userRole = Role::firstOrCreate(['name' => 'user']);
 
         $adminpermissions=Permission::whereNotIn('name', [
-            'view-users', 'show-users', 'create-users', 'edit-users', 'download-users', 'delete-users'
+            'view-users', 'show-users', 'create-users', 'edit-users', 'download-users', 'delete-users',
             'view-roles', 'show-roles', 'create-roles', 'edit-roles', 'download-roles', 'delete-roles',
             'view-permissions', 'show-permissions', 'create-permissions', 'edit-permissions', 'download-permissions', 'delete-permissions',
             'usermanagement-menu'
