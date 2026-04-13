@@ -86,8 +86,8 @@
             <div class="p-6">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-gray-600 dark:text-gray-400 text-sm">{{ __('Total Penjualan') }}</p>
-                        <p class="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-2">{{ formatCurrencyRound($stats['total_penjualan']) }}</p>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm">{{ __('Total Pembelian') }}</p>
+                        <p class="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-2">{{ formatCurrencyRound($stats['total_pembelian']) }}</p>
                     </div>
                     <div class="bg-purple-100 dark:bg-purple-900 p-3 rounded-full">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-purple-600 dark:text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">

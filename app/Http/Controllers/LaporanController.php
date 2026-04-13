@@ -63,7 +63,7 @@ class LaporanController extends Controller
             'total_nasabah' => Nasabah::count(),
             'total_produk' => Product::count(),
             'total_pembelian' => Pembelian::whereBetween('created_at', [$dateFrom, $dateTo . ' 23:59:59'])->count(),
-            'total_penjualan' => Pembelian::whereBetween('created_at', [$dateFrom, $dateTo . ' 23:59:59'])->sum('harga_akhir'),
+            'total_pembelian_nominal' => Pembelian::whereBetween('created_at', [$dateFrom, $dateTo . ' 23:59:59'])->sum('harga_akhir'),
             'total_biaya_admin' => Pembelian::whereBetween('created_at', [$dateFrom, $dateTo . ' 23:59:59'])->sum('biaya_admin'),
             'total_simpan' => SimpanPinjam::where('tipe', 'simpan')
                 ->whereBetween('created_at', [$dateFrom, $dateTo . ' 23:59:59'])
@@ -96,7 +96,7 @@ class LaporanController extends Controller
             'total_nasabah' => Nasabah::count(),
             'total_produk' => Product::count(),
             'total_pembelian' => Pembelian::whereBetween('created_at', [$dateFrom, $dateTo . ' 23:59:59'])->count(),
-            'total_penjualan' => Pembelian::whereBetween('created_at', [$dateFrom, $dateTo . ' 23:59:59'])->sum('harga_akhir'),
+            'total_pembelian_nominal' => Pembelian::whereBetween('created_at', [$dateFrom, $dateTo . ' 23:59:59'])->sum('harga_akhir'),
             'total_biaya_admin' => Pembelian::whereBetween('created_at', [$dateFrom, $dateTo . ' 23:59:59'])->sum('biaya_admin'),
             'total_simpan' => SimpanPinjam::where('tipe', 'simpan')
                 ->whereBetween('created_at', [$dateFrom, $dateTo . ' 23:59:59'])

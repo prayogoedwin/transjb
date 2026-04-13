@@ -170,8 +170,8 @@
                 <div class="value">{{ $stats['total_produk'] }}</div>
             </div>
             <div class="stat-card">
-                <h3>Total Penjualan</h3>
-                <div class="value">{{ number_format($stats['total_penjualan'], 0, ',', '.') }}</div>
+                <h3>Total Pembelian</h3>
+                <div class="value">{{ formatCurrencyRound($stats['total_pembelian_nominal']) }}</div>
             </div>
             <div class="stat-card">
                 <h3>Total Transaksi</h3>
@@ -182,22 +182,22 @@
         <!-- Summary -->
         <div class="summary-grid">
             <div class="summary-card">
-                <h3>Penjualan</h3>
+                <h3>Pembelian</h3>
                 <div class="summary-item">
                     <span>Transaksi</span>
                     <span>{{ $stats['total_pembelian'] }} x</span>
                 </div>
                 <div class="summary-item">
-                    <span>Total Penjualan</span>
-                    <span>Rp {{ number_format($stats['total_penjualan'], 0, ',', '.') }}</span>
+                    <span>Total Pembelian</span>
+                    <span>{{ formatCurrencyRound($stats['total_pembelian_nominal']) }}</span>
                 </div>
                 <div class="summary-item">
                     <span>Biaya Admin</span>
-                    <span>Rp {{ number_format($stats['total_biaya_admin'], 0, ',', '.') }}</span>
+                    <span>{{ formatCurrencyRound($stats['total_biaya_admin']) }}</span>
                 </div>
                 <!-- <div class="summary-item" style="border-top: 2px solid #d1d5db; padding-top: 10px; margin-top: 10px;">
                     <span><strong>Pendapatan Bersih</strong></span>
-                    <span><strong>Rp {{ number_format($stats['total_penjualan'] - $stats['total_biaya_admin'], 0, ',', '.') }}</strong></span>
+                    <span><strong>Rp {{ number_format($stats['total_pembelian'] - $stats['total_biaya_admin'], 0, ',', '.') }}</strong></span>
                 </div> -->
             </div>
 
@@ -205,15 +205,15 @@
                 <h3>Simpan Pinjam</h3>
                 <div class="summary-item">
                     <span>Total Simpan</span>
-                    <span>Rp {{ number_format($stats['total_simpan'], 0, ',', '.') }}</span>
+                    <span>{{ formatCurrencyRound($stats['total_simpan']) }}</span>
                 </div>
                 <div class="summary-item">
                     <span>Total Pinjam</span>
-                    <span>Rp {{ number_format($stats['total_pinjam'], 0, ',', '.') }}</span>
+                    <span>{{ formatCurrencyRound($stats['total_pinjam']) }}</span>
                 </div>
                 <div class="summary-item" style="border-top: 2px solid #d1d5db; padding-top: 10px; margin-top: 10px;">
                     <span><strong>Selisih</strong></span>
-                    <span><strong>Rp {{ number_format($stats['total_simpan'] - $stats['total_pinjam'], 0, ',', '.') }}</strong></span>
+                    <span><strong>{{ formatCurrencyRound($stats['total_simpan'] - $stats['total_pinjam']) }}</strong></span>
                 </div>
             </div>
 <!-- 
@@ -225,11 +225,11 @@
                 </div>
                 <div class="summary-item">
                     <span>Rata-rata Harian</span>
-                    <span>Rp {{ number_format($stats['total_penjualan'] / (\Carbon\Carbon::parse($dateTo)->diffInDays(\Carbon\Carbon::parse($dateFrom)) + 1), 0, ',', '.') }}</span>
+                    <span>{{ formatCurrencyRound($stats['total_pembelian'] / (\Carbon\Carbon::parse($dateTo)->diffInDays(\Carbon\Carbon::parse($dateFrom)) + 1)) }}</span>
                 </div>
                 <div class="summary-item">
                     <span>Rata-rata/Transaksi</span>
-                    <span>Rp {{ number_format($stats['total_pembelian'] > 0 ? $stats['total_penjualan'] / $stats['total_pembelian'] : 0, 0, ',', '.') }}</span>
+                    <span>{{ formatCurrencyRound($stats['total_pembelian'] > 0 ? $stats['total_pembelian'] / $stats['total_pembelian'] : 0) }}</span>
                 </div>
             </div> -->
         </div>
@@ -237,7 +237,7 @@
         <!-- Pembelian Detail -->
         @if($pembelianDetail->count() > 0)
             <div class="table-section">
-                <h3>Detail Penjualan</h3>
+                <h3>Detail Pembelian</h3>
                 <table>
                     <thead>
                         <tr>
@@ -255,9 +255,9 @@
                                 <td>{{ $item->created_at->format('d/m/Y') }}</td>
                                 <td>{{ $item->nasabah?->nama ?? '-' }}</td>
                                 <td>{{ $item->product->nama_produk }}</td>
-                                <td>{{ number_format($item->total_berat, 2, ',', '.') }} {{ $item->satuan }}</td>
-                                <td>Rp {{ number_format($item->harga_satuan_beli, 0, ',', '.') }}</td>
-                                <td>Rp {{ number_format($item->harga_akhir, 0, ',', '.') }}</td>
+                                <td style="text-align: right;">{{ formatRound($item->total_berat, 2, ',', '.') }} {{ $item->satuan }}</td>
+                                <td style="text-align: right;">{{ formatCurrencyRound($item->harga_satuan_beli) }}</td>
+                                <td style="text-align: right;">{{ formatCurrencyRound($item->harga_akhir) }}</td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -284,7 +284,7 @@
                                 <td>{{ $item->created_at->format('d/m/Y') }}</td>
                                 <td>{{ $item->nasabah?->nama ?? '-' }}</td>
                                 <td>{{ ucfirst($item->tipe) }}</td>
-                                <td>Rp {{ number_format($item->nominal, 0, ',', '.') }}</td>
+                                <td>{{ formatCurrencyRound($item->nominal) }}</td>
                             </tr>
                         @endforeach
                     </tbody>

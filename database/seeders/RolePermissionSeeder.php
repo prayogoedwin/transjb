@@ -31,6 +31,7 @@ class RolePermissionSeeder extends Seeder
             'edit-permissions',
             'download-permissions',
             'delete-permissions',
+            'usermanagement-menu',
             'view-products',
             'show-products',
             'create-products',
@@ -63,25 +64,31 @@ class RolePermissionSeeder extends Seeder
 
         $superAdminRole = Role::firstOrCreate(['name' => 'super-admin']);
         $adminRole = Role::firstOrCreate(['name' => 'admin']);
-        $editorRole = Role::firstOrCreate(['name' => 'editor']);
-        $userRole = Role::firstOrCreate(['name' => 'user']);
+        // $editorRole = Role::firstOrCreate(['name' => 'editor']);
+        // $userRole = Role::firstOrCreate(['name' => 'user']);
 
+        $adminpermissions=Permission::whereNotIn('name', [
+            'view-users', 'show-users', 'create-users', 'edit-users', 'download-users', 'delete-users'
+            'view-roles', 'show-roles', 'create-roles', 'edit-roles', 'download-roles', 'delete-roles',
+            'view-permissions', 'show-permissions', 'create-permissions', 'edit-permissions', 'download-permissions', 'delete-permissions',
+            'usermanagement-menu'
+            ])->pluck('id');
         $superAdminRole->permissions()->sync(Permission::all());
-        $adminRole->permissions()->sync(Permission::all());
+        $adminRole->permissions()->sync($adminpermissions);
 
-        $editorRole->permissions()->sync(
-            Permission::whereIn('name', [
-                'view-users', 'show-users',
-                'view-roles', 'show-roles',
-                'view-permissions', 'show-permissions'
-            ])->pluck('id')
-        );
+        // $editorRole->permissions()->sync(
+        //     Permission::whereIn('name', [
+        //         'view-users', 'show-users',
+        //         'view-roles', 'show-roles',
+        //         'view-permissions', 'show-permissions'
+        //     ])->pluck('id')
+        // );
 
         $superAdmin = User::firstOrCreate(
             ['email' => 'superadmin@example.com'],
             [
                 'name' => 'Super Admin',
-                'password' => Hash::make('password'),
+                'password' => Hash::make('passwordTransjb'),
             ]
         );
 
@@ -97,24 +104,24 @@ class RolePermissionSeeder extends Seeder
 
         $admin->roles()->sync([$adminRole->id]);
 
-        $editor = User::firstOrCreate(
-            ['email' => 'editor@example.com'],
-            [
-                'name' => 'Editor User',
-                'password' => Hash::make('password'),
-            ]
-        );
+        // $editor = User::firstOrCreate(
+        //     ['email' => 'editor@example.com'],
+        //     [
+        //         'name' => 'Editor User',
+        //         'password' => Hash::make('password'),
+        //     ]
+        // );
 
-        $editor->roles()->sync([$editorRole->id]);
+        // $editor->roles()->sync([$editorRole->id]);
 
-        $user = User::firstOrCreate(
-            ['email' => 'user@example.com'],
-            [
-                'name' => 'Regular User',
-                'password' => Hash::make('password'),
-            ]
-        );
+        // $user = User::firstOrCreate(
+        //     ['email' => 'user@example.com'],
+        //     [
+        //         'name' => 'Regular User',
+        //         'password' => Hash::make('password'),
+        //     ]
+        // );
 
-        $user->roles()->sync([$userRole->id]);
+        // $user->roles()->sync([$userRole->id]);
     }
 }

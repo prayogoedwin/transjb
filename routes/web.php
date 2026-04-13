@@ -105,9 +105,10 @@ Route::middleware(['auth'])->group(function () {
     // Route::put('pembelian/{pembelian}', [PembelianController::class, 'update'])->name('pembelian.update')->middleware('permission:edit-pembelian');
     // Route::delete('pembelian/{pembelian}', [PembelianController::class, 'destroy'])->name('pembelian.destroy')->middleware('permission:delete-pembelian');
     
-    Route::get('laporan', function() {
-        return view('laporan.index');
-    })->name('laporan.index');
+    // Laporan
+    Route::get('laporan', [LaporanController::class, 'index'])->name('laporan.index');
+    Route::get('laporan/export-pdf', [LaporanController::class, 'exportPdf'])->name('laporan.export-pdf');
+    Route::get('laporan/print', [LaporanController::class, 'print'])->name('laporan.print');
 });
 
 require __DIR__.'/auth.php';

@@ -15,6 +15,7 @@
                             <x-layouts.sidebar-link href="{{ route('pembelian.index') }}" icon='fas-cart-shopping' :active="request()->routeIs('pembelian*')">Pembelian</x-layouts.sidebar-link>
                             <x-layouts.sidebar-link href="{{ route('laporan.index') }}" icon='fas-chart-bar' :active="request()->routeIs('laporan*')">Laporan/Rekap</x-layouts.sidebar-link>
 
+                            @if(auth()->user()->hasPermission('usermanagement-menu'))
                             <x-layouts.sidebar-two-level-link-parent title="User Management" icon="fas-users"
                                 :active="request()->routeIs('users*') || request()->routeIs('roles*') || request()->routeIs('permissions*')">
                                 <x-layouts.sidebar-two-level-link href="{{ route('users.index') }}" icon='fas-user'
@@ -24,8 +25,7 @@
                                 <x-layouts.sidebar-two-level-link href="{{ route('permissions.index') }}" icon='fas-key'
                                     :active="request()->routeIs('permissions*')">Permissions</x-layouts.sidebar-two-level-link>
                             </x-layouts.sidebar-two-level-link-parent>
-
-                            
+                            @endif
                         </ul>
                     </nav>
                 </div>

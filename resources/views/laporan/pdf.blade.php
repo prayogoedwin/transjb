@@ -131,8 +131,8 @@
             <div class="value">{{ $stats['total_produk'] }}</div>
         </div>
         <div class="stat-box">
-            <label>Total Penjualan</label>
-            <div class="value">Rp {{ number_format($stats['total_penjualan'], 0, ',', '.') }}</div>
+            <label>Total Pembelian</label>
+            <div class="value"> {{ formatCurrencyRound($stats['total_pembelian_nominal']) }}</div>
         </div>
         <div class="stat-box">
             <label>Total Transaksi</label>
