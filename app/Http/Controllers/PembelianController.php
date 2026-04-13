@@ -90,6 +90,7 @@ class PembelianController extends Controller
             'harga_satuan_beli' => ['required', 'numeric', 'min:0'],
             'total_berat' => ['required', 'numeric', 'min:0'],
             'biaya_admin_persen' => ['required', 'numeric', 'min:0', 'max:100'],
+            'keterangan' => ['nullable', 'string'],
             'print_invoice' => ['sometimes', 'boolean'],
         ]);
 
@@ -150,6 +151,7 @@ class PembelianController extends Controller
             'satuan' => ['required', 'string', 'max:50'],
             'total_berat' => ['required', 'numeric', 'min:0'],
             'biaya_admin_persen' => ['required', 'numeric', 'min:0', 'max:100'],
+            'keterangan' => ['nullable', 'string'],
         ]);
 
         // Calculate totals

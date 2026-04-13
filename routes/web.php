@@ -101,11 +101,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('pembelian/export', [PembelianController::class, 'exportExcel'])->name('pembelian.export')->middleware('permission:download-pembelian');
     Route::get('pembelian/{pembelian}', [PembelianController::class, 'show'])->name('pembelian.show')->middleware('permission:show-pembelian');
     Route::get('pembelian/{pembelian}/print', [PembelianController::class, 'printInvoice'])->name('pembelian.printInvoice')->middleware('permission:show-pembelian');
+    Route::get('pembelian/{pembelian}/edit', [PembelianController::class, 'show'])->name('pembelian.edit')->middleware('permission:edit-pembelian');
+    // Route::put('pembelian/{pembelian}', [PembelianController::class, 'update'])->name('pembelian.update')->middleware('permission:edit-pembelian');
+    // Route::delete('pembelian/{pembelian}', [PembelianController::class, 'destroy'])->name('pembelian.destroy')->middleware('permission:delete-pembelian');
     
-    // Laporan
-    Route::get('laporan', [LaporanController::class, 'index'])->name('laporan.index');
-    Route::get('laporan/export-pdf', [LaporanController::class, 'exportPdf'])->name('laporan.export-pdf');
-    Route::get('laporan/print', [LaporanController::class, 'print'])->name('laporan.print');
+    Route::get('laporan', function() {
+        return view('laporan.index');
+    })->name('laporan.index');
 });
 
 require __DIR__.'/auth.php';

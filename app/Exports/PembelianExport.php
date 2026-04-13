@@ -48,6 +48,7 @@ class PembelianExport implements FromCollection, WithHeadings, WithMapping, With
             'Biaya Admin (Rp)',
             'Harga Akhir',
             'Created At',
+            'Keterangan',
         ];
     }
 
@@ -64,6 +65,7 @@ class PembelianExport implements FromCollection, WithHeadings, WithMapping, With
             $pembelian->biaya_admin,
             $pembelian->harga_akhir,
             $pembelian->created_at->format('Y-m-d H:i:s'),
+            $pembelian->keterangan,
         ];
     }
 

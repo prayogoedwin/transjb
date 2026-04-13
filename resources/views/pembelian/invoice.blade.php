@@ -206,6 +206,16 @@
                 <span class="value"><strong>{{ number_format($pembelian->total_berat, 2, ',', '.') }} {{ $pembelian->satuan }}</strong></span>
             </div>
             
+            @if($pembelian->keterangan)
+                <div class="row">
+                    <span class="label">
+                        {{ __('Keterangan') }}
+                    </span>
+                    <div class="value" style="text-align: left; margin-top: 5px; color: #555;">
+                        {{ $pembelian->keterangan }}
+                    </div>
+                </div>
+            @endif
             <!-- <div class="row">
                 <span class="label">Status Stok:</span>
                 <span class="value">

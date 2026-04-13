@@ -84,8 +84,15 @@
                     @enderror
                 </div>
 
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Keterangan') }}</label>
+                    <textarea name="keterangan" rows="3" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100" placeholder="{{ __('Catatan tambahan tentang pembelian ini') }}">{{ old('keterangan', $pembelian->keterangan) }}</textarea>
+                    @error('keterangan')
+                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                    @enderror
+                </div>
+
                 <div class="bg-blue-50 dark:bg-blue-900 p-4 rounded-lg">
-                    <h3 class="font-semibold text-blue-900 dark:text-blue-100 mb-3">{{ __('Ringkasan') }}</h3>
                     <div class="space-y-2 text-sm">
                         <div class="flex justify-between">
                             <span class="text-blue-700 dark:text-blue-300">{{ __('Total Harga') }}</span>

@@ -21,11 +21,11 @@
             <p class="text-gray-600 dark:text-gray-400 mt-1">{{ __('Lihat data pembelian') }}</p>
         </div>
         <div class="flex gap-2">
-            @if(auth()->user()->hasPermission('edit-pembelian'))
+            <!-- @if(auth()->user()->hasPermission('edit-pembelian'))
                 <a href="{{ route('pembelian.edit', $pembelian) }}">
                     <x-button type="primary">{{ __('Edit') }}</x-button>
                 </a>
-            @endif
+            @endif -->
             <a href="{{ route('pembelian.index') }}">
                 <x-button type="secondary">{{ __('Kembali') }}</x-button>
             </a>
@@ -120,6 +120,17 @@
                                 Rp {{ number_format($pembelian->harga_akhir, 0, ',', '.') }}
                             </div>
                         </div>
+
+                        @if($pembelian->keterangan)
+                            <div class="mb-6">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    {{ __('Keterangan') }}
+                                </label>
+                                <div class="text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-700 p-3 rounded">
+                                    {{ $pembelian->keterangan }}
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>

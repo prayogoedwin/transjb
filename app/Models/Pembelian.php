@@ -29,6 +29,7 @@ class Pembelian extends Model
         'biaya_admin_persen',
         'biaya_admin',
         'harga_akhir',
+        'keterangan',
     ];
 
     /**
