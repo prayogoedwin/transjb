@@ -2,17 +2,14 @@
     <div class="mb-6 flex items-center text-sm">
         <a href="{{ route('dashboard') }}"
             class="text-blue-600 dark:text-blue-400 hover:underline">{{ __('Dashboard') }}</a>
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mx-2 text-gray-400" fill="none" viewBox="0 0 24 24"
-            stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-        </svg>
-        <span class="text-gray-500 dark:text-gray-400">{{ __('Simpan & Pinjam') }}</span>
+        <x-icons.chevron-right />
+        <span class="text-gray-500 dark:text-gray-400">{{ __('Bayar & Hutang') }}</span>
     </div>
 
     <div class="mb-6 flex justify-between items-center">
         <div>
-            <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100">{{ __('Simpan Pinjam') }}</h1>
-            <p class="text-gray-600 dark:text-gray-400 mt-1">{{ __('Kelola data simpan pinjam') }}</p>
+            <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100">{{ __('Bayar & Hutang') }}</h1>
+            <p class="text-gray-600 dark:text-gray-400 mt-1">{{ __('Kelola data Bayar & Hutang') }}</p>
         </div>
         <div class="flex gap-2">
             @if(auth()->user()->hasPermission('create-simpan-pinjam'))
@@ -29,12 +26,13 @@
             <form method="GET" action="{{ route('simpan_pinjam.export') }}" class="flex gap-4 items-end flex-wrap">
                 <div class="flex-1 min-w-[200px]">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Tanggal Mulai') }}</label>
-                    <input type="date" name="date_from" value="{{ request('date_from') }}" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100">
+                    <input type="date" id="date_from" name="date_from" value="{{ request('date_from') }}" onchange="filterTable()" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100">
                 </div>
                 <div class="flex-1 min-w-[200px]">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Tanggal Akhir') }}</label>
-                    <input type="date" name="date_to" value="{{ request('date_to') }}" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100">
+                    <input type="date" id="date_to" name="date_to" value="{{ request('date_to') }}" onchange="filterTable()" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100">
                 </div>
+                <button type="button" onclick="resetFilter()" class="px-4 py-2 bg-gray-400 dark:bg-gray-600 text-white rounded-lg hover:bg-gray-500 dark:hover:bg-gray-700 transition">{{ __('Reset Filter') }}</button>
                 <x-button type="secondary" class="mt-4">{{ __('Download Excel') }}</x-button>
             </form>
         </div>
@@ -56,17 +54,25 @@
         </div>
     </div>
 
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.tailwindcss.min.css">
-    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="{{ asset('jquery.dataTables.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('dataTables.tailwindcss.min.css') }}">
+    <script src="{{ asset('jquery-3.7.0.min.js') }}"></script>
+    <script src="{{ asset('jquery.dataTables.min.js') }}"></script>
 
     <script>
+        let table;
+        
         $(document).ready(function() {
-            $('#simpan-pinjam-table').DataTable({
+            table = $('#simpan-pinjam-table').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('simpan_pinjam.index') }}",
+                ajax: {
+                    url: "{{ route('simpan_pinjam.index') }}",
+                    data: function(d) {
+                        d.date_from = $('#date_from').val();
+                        d.date_to = $('#date_to').val();
+                    }
+                },
                 columns: [
                     { data: 'nasabah_name', name: 'nasabah_name' },
                     { data: 'tipe_badge', name: 'tipe' },
@@ -97,6 +103,20 @@
                 stripeClasses: ['bg-white dark:bg-gray-800', 'bg-gray-50 dark:bg-gray-900']
             });
         });
+
+        function filterTable() {
+            if (table) {
+                table.ajax.reload();
+            }
+        }
+
+        function resetFilter() {
+            $('#date_from').val('');
+            $('#date_to').val('');
+            if (table) {
+                table.ajax.reload();
+            }
+        }
     </script>
 
     <style>

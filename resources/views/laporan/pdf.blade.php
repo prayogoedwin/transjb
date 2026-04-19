@@ -163,7 +163,7 @@
         </div>
 
         <div class="summary-box">
-            <h3>Simpan Pinjam</h3>
+            <h3>Bayar & Hutang</h3>
             <div class="summary-item">
                 <span>Total Simpan</span>
                 <span>Rp {{ number_format($stats['total_simpan'], 0, ',', '.') }}</span>
@@ -224,9 +224,9 @@
         </table>
     @endif
 
-    <!-- Simpan Pinjam Detail -->
+    <!-- Bayar & Hutang Detail -->
     @if($simpanPinjamDetail->count() > 0)
-        <div class="section-title">Detail Simpan Pinjam</div>
+        <div class="section-title">Detail Bayar & Hutang</div>
         <table class="small">
             <thead>
                 <tr>

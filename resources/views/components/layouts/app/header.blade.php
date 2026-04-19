@@ -120,7 +120,7 @@
                         </div>
                     </a>
                     <div class="border-t border-gray-200 dark:border-gray-700"></div>
-                    <form method="POST" action="{{ route('logout') }}" class="w-full">
+                    <form method="POST" action="{{ route('logout') }}" class="w-full" onsubmit="localStorage.removeItem('api_token')">
                         @csrf
                         <button type="submit"
                             class="block w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">

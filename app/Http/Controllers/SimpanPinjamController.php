@@ -38,7 +38,7 @@ class SimpanPinjamController extends Controller
                     $actions = '';
                     
                     if (auth()->user()->hasPermission('show-simpan-pinjam')) {
-                        $actions .= '<a href="' . route('simpan_pinjam.show', $item) . '" class="text-green-600 dark:text-green-400 hover:underline mr-3">View</a>';
+                        $actions .= '<a href="' . route('simpan_pinjam.show', $item) . '" class="text-green-600 dark:text-green-400 hover:underline mr-3">Detail</a>';
                         $actions .= '<a href="' . route('simpan_pinjam.printReceipt', $item) . '" target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline mr-3">Print</a>';
                     }
                     
@@ -47,9 +47,9 @@ class SimpanPinjamController extends Controller
                     }
                     
                     if (auth()->user()->hasPermission('delete-simpan-pinjam')) {
-                        $actions .= '<form action="' . route('simpan_pinjam.destroy', $item) . '" method="POST" class="inline" onsubmit="return confirm(\'Are you sure?\')">
+                        $actions .= '<form action="' . route('simpan_pinjam.destroy', $item) . '" method="POST" class="inline" onsubmit="return confirm(\'Apakah Anda yakin ingin menghapus data ini?\')">
                             ' . csrf_field() . method_field('DELETE') . '
-                            <button type="submit" class="text-red-600 dark:text-red-400 hover:underline">Delete</button>
+                            <button type="submit" class="text-red-600 dark:text-red-400 hover:underline">Hapus</button>
                         </form>';
                     }
                     
@@ -86,7 +86,7 @@ class SimpanPinjamController extends Controller
         if ($request->has('print_receipt') && $request->print_receipt && $request->wantsJson()) {
             return response()->json([
                 'status' => 'success',
-                'message' => 'Simpan Pinjam record created successfully.',
+                'message' => 'Data Bayar & Hutang berhasil dibuat.',
                 'print_url' => route('simpan_pinjam.printReceipt', $simpanPinjam),
                 'redirect_url' => route('simpan_pinjam.index'),
                 'id' => $simpanPinjam->id,
@@ -95,10 +95,10 @@ class SimpanPinjamController extends Controller
 
         // Jika regular request (non-AJAX)
         if ($request->has('print_receipt') && $request->print_receipt) {
-            return to_route('simpan_pinjam.printReceipt', $simpanPinjam)->with('status', 'Simpan Pinjam record created successfully.');
+            return to_route('simpan_pinjam.printReceipt', $simpanPinjam)->with('status', 'Data Bayar & Hutang berhasil dibuat.');
         }
 
-        return to_route('simpan_pinjam.index')->with('status', 'Simpan Pinjam record created successfully.');
+        return to_route('simpan_pinjam.index')->with('status', 'Data Bayar & Hutang berhasil dibuat.');
     }
 
     public function show(SimpanPinjam $simpanPinjam): View
@@ -123,18 +123,18 @@ class SimpanPinjamController extends Controller
 
         $simpanPinjam->update($validated);
 
-        return to_route('simpan_pinjam.index')->with('status', 'Simpan Pinjam record updated successfully.');
+        return to_route('simpan_pinjam.index')->with('status', 'Data Bayar & Hutang berhasil diperbarui.');
     }
 
     public function destroy(SimpanPinjam $simpanPinjam): RedirectResponse
     {
         $simpanPinjam->delete();
 
-        return to_route('simpan_pinjam.index')->with('status', 'Simpan Pinjam record deleted successfully.');
+        return to_route('simpan_pinjam.index')->with('status', 'Data Bayar & Hutang berhasil dihapus.');
     }
 
     /**
-     * Print receipt for simpan pinjam transaction
+     * Print receipt for Bayar & Hutang transaction
      */
     public function printReceipt(SimpanPinjam $simpanPinjam)
     {
@@ -144,7 +144,7 @@ class SimpanPinjamController extends Controller
     }
 
     /**
-     * Export simpan pinjam to Excel with date filter
+     * Export Bayar & Hutang to Excel with date filter
      */
     public function exportExcel(Request $request)
     {

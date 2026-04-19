@@ -37,7 +37,7 @@ class SimpanPinjam extends Model
     }
 
     /**
-     * Get the nasabah associated with the simpan pinjam.
+     * Get the nasabah associated with the Bayar & Hutang.
      */
     public function nasabah(): BelongsTo
     {

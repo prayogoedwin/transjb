@@ -1,0 +1,11 @@
+{
+    "backup_name": "2026-04-19_11-27-08",
+    "zip_file": "2026-04-19_11-27-08.zip",
+    "database_file": "database.sqlite",
+    "timestamp": "2026-04-19T11:27:08+07:00",
+    "date_readable": "19 Apr 2026 11:27:08",
+    "file_size": 11527,
+    "file_size_readable": "11.26 KB",
+    "description": "test",
+    "status": "success"
+}

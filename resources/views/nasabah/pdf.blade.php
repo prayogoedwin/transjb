@@ -181,7 +181,7 @@
             </div>
         </div>
 
-        <!-- Section: Riwayat Simpan Pinjam -->
+        <!-- Section: Riwayat Bayar & Hutang -->
         <div class="section">
             <div class="section-title">💰 RIWAYAT SIMPAN PINJAM</div>
             @if($nasabah->simpanPinjam->count() > 0)
@@ -227,7 +227,7 @@
                     </div>
                 </div>
             @else
-                <div class="empty-message">Tidak ada data riwayat simpan pinjam</div>
+                <div class="empty-message">Tidak ada data riwayat Bayar & Hutang</div>
             @endif
         </div>
 

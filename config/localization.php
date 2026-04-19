@@ -2,8 +2,7 @@
 
 declare(strict_types=1);
 
-use LaravelLang\Config\Constants\RouteName;
-use LaravelLang\LocaleList\Locale;
+
 
 return [
     /*
@@ -60,28 +59,28 @@ return [
         ],
 
         'locales' => [
-            Locale::French->value => [
+            'fr' => [
                 'double_quote_opener' => '«&nbsp;',
                 'double_quote_closer' => '&nbsp;»',
                 'single_quote_opener' => '‘',
                 'single_quote_closer' => '’',
             ],
 
-            Locale::Russian->value => [
+            'ru' => [
                 'double_quote_opener' => '«',
                 'double_quote_closer' => '»',
                 'single_quote_opener' => '‘',
                 'single_quote_closer' => '’',
             ],
 
-            Locale::Ukrainian->value => [
+            'uk' => [
                 'double_quote_opener' => '«',
                 'double_quote_closer' => '»',
                 'single_quote_opener' => '‘',
                 'single_quote_closer' => '’',
             ],
 
-            Locale::Belarusian->value => [
+            'be' => [
                 'double_quote_opener' => '«',
                 'double_quote_closer' => '»',
                 'single_quote_opener' => '‘',
@@ -110,11 +109,11 @@ return [
          */
 
         'names' => [
-            'parameter' => RouteName::Parameter,
-            'header'    => RouteName::Header,
-            'cookie'    => RouteName::Cookie,
-            'session'   => RouteName::Session,
-            'column'    => RouteName::Column,
+            'parameter' => 'locale',
+            'header'    => 'Accept-Language',
+            'cookie'    => 'Accept-Language',
+            'session'   => 'Accept-Language',
+            'column'    => 'column',
         ],
 
         /*
@@ -147,22 +146,11 @@ return [
             'middlewares' => [
                 // This option contains settings for routes without the prefix of the localization code.
 
-                'default' => [
-                    LaravelLang\Routes\Middlewares\LocalizationByCookie::class,
-                    LaravelLang\Routes\Middlewares\LocalizationByHeader::class,
-                    LaravelLang\Routes\Middlewares\LocalizationBySession::class,
-                    LaravelLang\Routes\Middlewares\LocalizationByModel::class,
-                ],
+                'default' => [],
 
                 // This option contains settings for routes with the prefix of the localization code.
 
-                'prefix' => [
-                    LaravelLang\Routes\Middlewares\LocalizationByParameterPrefix::class,
-                    LaravelLang\Routes\Middlewares\LocalizationByCookie::class,
-                    LaravelLang\Routes\Middlewares\LocalizationByHeader::class,
-                    LaravelLang\Routes\Middlewares\LocalizationBySession::class,
-                    LaravelLang\Routes\Middlewares\LocalizationByModel::class,
-                ],
+                'prefix' => [],
             ],
         ],
     ],

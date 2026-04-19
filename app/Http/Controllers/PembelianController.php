@@ -48,8 +48,8 @@ class PembelianController extends Controller
                     $actions = '';
                     
                     if (auth()->user()->hasPermission('show-pembelian')) {
-                        $actions .= '<a href="' . route('pembelian.show', $item) . '" class="text-green-600 dark:text-green-400 hover:underline mr-3">View</a>';
-                        $actions .= '<a href="' . route('pembelian.printInvoice', $item) . '" target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline mr-3">Print</a>';
+                        $actions .= '<a href="' . route('pembelian.show', $item) . '" class="text-green-600 dark:text-green-400 hover:underline mr-3">Detail</a>';
+                        $actions .= '<a href="' . route('pembelian.printInvoice', $item) . '" target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline mr-3">Cetak</a>';
                     }
                     
                     // if (auth()->user()->hasPermission('edit-pembelian')) {
@@ -123,13 +123,13 @@ class PembelianController extends Controller
 
                 // Jika regular request (non-AJAX)
                 if ($request->has('print_invoice') && $request->print_invoice) {
-                    return redirect()->route('pembelian.printInvoice', $pembelian)->with('status', 'Pembelian created successfully.');
+                    return redirect()->route('pembelian.printInvoice', $pembelian)->with('status', 'Data Pembelian berhasil dibuat.');
                 }
 
-                return to_route('pembelian.index')->with('status', 'Pembelian created successfully.');
+                return to_route('pembelian.index')->with('status', 'Data Pembelian berhasil dibuat.');
             });
         } catch (\Exception $e) {
-            $errorMessage = 'Gagal menyimpan pembelian. ' . $e->getMessage();
+            $errorMessage = 'Gagal menyimpan data Pembelian. ' . $e->getMessage();
             
             if ($request->wantsJson()) {
                 return response()->json([
@@ -174,14 +174,14 @@ class PembelianController extends Controller
 
         $pembelian->update($validated);
 
-        return to_route('pembelian.index')->with('status', 'Pembelian updated successfully.');
+        return to_route('pembelian.index')->with('status', 'Data Pembelian berhasil diperbarui.');
     }
 
     public function destroy(Pembelian $pembelian): RedirectResponse
     {
         $pembelian->delete();
 
-        return to_route('pembelian.index')->with('status', 'Pembelian deleted successfully.');
+        return to_route('pembelian.index')->with('status', 'Data Pembelian berhasil dihapus.');
     }
 
     /**

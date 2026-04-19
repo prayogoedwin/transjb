@@ -11,6 +11,12 @@ use App\Http\Controllers\PembelianController;
 use App\Http\Controllers\PenjualanController;
 use App\Http\Controllers\LaporanController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MaintenanceController;
+use App\Http\Controllers\Settings\BackupController;
+// Maintenance routes (admin only)
+Route::get('/clear-cache', [MaintenanceController::class, 'clearCache'])->name('maintenance.clear-cache');
+Route::get('/clear-log', [MaintenanceController::class, 'clearLog'])->name('maintenance.clear-log');
+Route::get('/clear-all', [MaintenanceController::class, 'clearAll'])->name('maintenance.clear-all');
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -20,6 +26,8 @@ Route::get('/', function () {
     // Redirect langsung ke URL
     return redirect('/dashboard');
 });
+
+
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
@@ -33,6 +41,9 @@ Route::middleware(['auth'])->group(function () {
     Route::put('settings/password', [Settings\PasswordController::class, 'update'])->name('settings.password.update');
     Route::get('settings/appearance', [Settings\AppearanceController::class, 'edit'])->name('settings.appearance.edit');
     Route::put('settings/appearance', [Settings\AppearanceController::class, 'update'])->name('settings.appearance.update');
+    Route::get('backup', function () {
+        return view('settings.backup');
+    })->name('backup.index')->middleware('role:admin');
 
     // Roles Management - dengan permission check
     Route::get('roles', [RoleController::class, 'index'])->name('roles.index')->middleware('permission:view-roles');
@@ -84,7 +95,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('nasabah/{nasabah}', [NasabahController::class, 'update'])->name('nasabah.update')->middleware('permission:edit-nasabah');
     Route::delete('nasabah/{nasabah}', [NasabahController::class, 'destroy'])->name('nasabah.destroy')->middleware('permission:delete-nasabah');
     
-    // Simpan Pinjam Management - dengan permission check
+    // Bayar & Hutang Management - dengan permission check
     Route::get('simpan_pinjam', [SimpanPinjamController::class, 'index'])->name('simpan_pinjam.index')->middleware('permission:view-simpan-pinjam');
     Route::get('simpan_pinjam/create', [SimpanPinjamController::class, 'create'])->name('simpan_pinjam.create')->middleware('permission:create-simpan-pinjam');
     Route::post('simpan_pinjam', [SimpanPinjamController::class, 'store'])->name('simpan_pinjam.store')->middleware('permission:create-simpan-pinjam');
@@ -120,6 +131,19 @@ Route::middleware(['auth'])->group(function () {
     Route::get('laporan', [LaporanController::class, 'index'])->name('laporan.index');
     Route::get('laporan/export-pdf', [LaporanController::class, 'exportPdf'])->name('laporan.export-pdf');
     Route::get('laporan/print', [LaporanController::class, 'print'])->name('laporan.print');
+    
+    Route::prefix('api/backups')->middleware('role:admin')->group(function () {
+        Route::post('/', [BackupController::class, 'backup'])->name('backups.create');
+        Route::get('/', [BackupController::class, 'list'])->name('backups.list');
+        Route::get('/history', [BackupController::class, 'history'])->name('backups.history');
+        Route::get('/restore-history', [BackupController::class, 'restoreHistory'])->name('backups.restore-history');
+        Route::get('/stats', [BackupController::class, 'stats'])->name('backups.stats');
+        Route::get('/{backupName}/metadata', [BackupController::class, 'metadata'])->name('backups.metadata');
+        Route::get('/{backupName}/download', [BackupController::class, 'download'])->name('backups.download');
+        Route::post('/restore', [BackupController::class, 'restore'])->name('backups.restore');
+        Route::delete('/', [BackupController::class, 'delete'])->name('backups.delete');
+    });
 });
+
 
 require __DIR__.'/auth.php';

@@ -202,7 +202,7 @@
             </div>
 
             <div class="summary-card">
-                <h3>Simpan Pinjam</h3>
+                <h3>Bayar & Hutang</h3>
                 <div class="summary-item">
                     <span>Total Simpan</span>
                     <span>{{ formatCurrencyRound($stats['total_simpan']) }}</span>
@@ -265,10 +265,10 @@
             </div>
         @endif
 
-        <!-- Simpan Pinjam Detail -->
+        <!-- Bayar & Hutang Detail -->
         @if($simpanPinjamDetail->count() > 0)
             <div class="table-section">
-                <h3>Detail Simpan Pinjam</h3>
+                <h3>Detail Bayar & Hutang</h3>
                 <table>
                     <thead>
                         <tr>

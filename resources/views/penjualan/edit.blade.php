@@ -2,16 +2,10 @@
     <div class="mb-6 flex items-center text-sm">
         <a href="{{ route('dashboard') }}"
             class="text-blue-600 dark:text-blue-400 hover:underline">{{ __('Dashboard') }}</a>
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mx-2 text-gray-400" fill="none" viewBox="0 0 24 24"
-            stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-        </svg>
+        <x-icons.chevron-right />
         <a href="{{ route('penjualan.index') }}"
             class="text-blue-600 dark:text-blue-400 hover:underline">{{ __('Penjualan') }}</a>
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mx-2 text-gray-400" fill="none" viewBox="0 0 24 24"
-            stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-        </svg>
+        <x-icons.chevron-right />
         <span class="text-gray-500 dark:text-gray-400">{{ __('Edit') }}</span>
     </div>
 
@@ -127,7 +121,7 @@
                 <input type="text" name="details[INDEX][satuan]" class="satuan w-full px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded bg-gray-100 dark:bg-gray-500 dark:text-gray-100" readonly>
             </div>
             <div class="w-20">
-                <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Qty') }}</label>
+                <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Jumlah') }}</label>
                 <input type="number" name="details[INDEX][jumlah]" class="jumlah w-full px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-600 dark:text-gray-100" step="0.0001" min="0">
             </div>
             <div class="w-24">

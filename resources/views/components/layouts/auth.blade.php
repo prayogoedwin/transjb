@@ -14,17 +14,13 @@
             ->take(3)
             ->implode('');
     @endphp
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,
-        %3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E
-            %3Crect width='100' height='100' rx='20' fill='%232563eb'/%3E
-            %3Ctext x='50' y='50' text-anchor='middle' dy='0.35em' font-family='Arial, sans-serif' font-size='45' font-weight='bold' fill='white'%3E{{ $initials }}%3C/text%3E
-        %3C/svg%3E">
+    <link rel="icon" type="image/svg+xml" href="{{ asset('minicon.svg') }}">
     
     <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="{{ asset('tailwind.js') }}"></script>
     
     <!-- Alpine.js CDN -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="{{ asset('alpine.js') }}"></script>
     
     <!-- Tailwind Config -->
     <script>

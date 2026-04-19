@@ -35,7 +35,7 @@ class Nasabah extends Model
     }
 
     /**
-     * Get the simpan pinjam records for the nasabah.
+     * Get the Bayar & Hutang records for the nasabah.
      */
     public function simpanPinjam(): HasMany
     {

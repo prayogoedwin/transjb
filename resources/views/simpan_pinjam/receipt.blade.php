@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Struk Simpan/Pinjam</title>
+    <title>Struk Bayar & Hutang</title>
     <style>
         * {
             margin: 0;
@@ -120,7 +120,7 @@
     <div class="receipt-container">
         <div class="receipt-header">
             <h1>STRUK</h1>
-            <p>Transaksi Simpan/Pinjam</p>
+            <p>Transaksi Bayar & Hutang</p>
         </div>
 
         <div class="receipt-content">

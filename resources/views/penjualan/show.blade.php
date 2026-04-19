@@ -2,16 +2,10 @@
     <div class="mb-6 flex items-center text-sm">
         <a href="{{ route('dashboard') }}"
             class="text-blue-600 dark:text-blue-400 hover:underline">{{ __('Dashboard') }}</a>
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mx-2 text-gray-400" fill="none" viewBox="0 0 24 24"
-            stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-        </svg>
+        <x-icons.chevron-right />
         <a href="{{ route('penjualan.index') }}"
             class="text-blue-600 dark:text-blue-400 hover:underline">{{ __('Penjualan') }}</a>
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mx-2 text-gray-400" fill="none" viewBox="0 0 24 24"
-            stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-        </svg>
+        <x-icons.chevron-right />
         <span class="text-gray-500 dark:text-gray-400">{{ __('Lihat') }}</span>
     </div>
 
@@ -113,7 +107,7 @@
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('Produk') }}</th>
                         <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('Harga') }}</th>
-                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('Qty') }}</th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('Jumlah') }}</th>
                         <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('Satuan') }}</th>
                         <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('Total') }}</th>
                     </tr>
@@ -143,7 +137,7 @@
                         <span class="font-medium text-gray-900 dark:text-white">{{ $penjualan->details->count() }}</span>
                     </div>
                     <div class="flex justify-between mb-4 pb-4 border-b border-gray-200 dark:border-gray-600 text-sm">
-                        <span class="text-gray-700 dark:text-gray-300">{{ __('Total Qty:') }}</span>
+                        <span class="text-gray-700 dark:text-gray-300">{{ __('Total Jumlah:') }}</span>
                         <span class="font-medium text-gray-900 dark:text-white">{{ formatDecimalSmart($penjualan->details->sum('jumlah')) }}</span>
                     </div>
                     <div class="flex justify-between text-lg">

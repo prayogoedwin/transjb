@@ -2,10 +2,7 @@
     <div class="mb-6 flex items-center text-sm">
         <a href="{{ route('dashboard') }}"
             class="text-blue-600 dark:text-blue-400 hover:underline">{{ __('Dashboard') }}</a>
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mx-2 text-gray-400" fill="none" viewBox="0 0 24 24"
-            stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-        </svg>
+        <x-icons.chevron-right />
         <span class="text-gray-500 dark:text-gray-400">{{ __('Roles') }}</span>
     </div>
 
@@ -47,10 +44,10 @@
         </div>
     </div>
 
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.tailwindcss.min.css">
-    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="{{ asset('jquery.dataTables.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('dataTables.tailwindcss.min.css') }}">
+    <script src="{{ asset('jquery-3.7.0.min.js') }}"></script>
+    <script src="{{ asset('jquery.dataTables.min.js') }}"></script>
 
     <script>
         $(document).ready(function() {

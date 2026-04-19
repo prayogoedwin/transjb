@@ -20,15 +20,11 @@
             %3Ctext x='50' y='50' text-anchor='middle' dy='0.35em' font-family='Arial, sans-serif' font-size='45' font-weight='bold' fill='white'%3E{{ $initials }}%3C/text%3E
         %3C/svg%3E">
 
-    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
-    
-    <!-- Alpine.js CDN -->
-    <!-- <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script> -->
     
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     
     <!-- FontAwesome CDN for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" href="{{ asset('tailwind.css') }}" />
 
     <!-- Custom Styles -->
     <style>
@@ -152,6 +148,13 @@
             </main>
         </div>
     </div>
+
+    <!-- Store API Token from Session to localStorage -->
+    @if (session('api_token'))
+    <script>
+        localStorage.setItem('api_token', '{{ session("api_token") }}');
+    </script>
+    @endif
 </body>
 
 </html>

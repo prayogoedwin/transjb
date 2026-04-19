@@ -34,9 +34,9 @@ class LaporanController extends Controller
         ];
 
         // Get monthly data for chart
-        $pembelianPerBulan = Pembelian::selectRaw('MONTH(created_at) as bulan, SUM(harga_akhir) as total')
+        $pembelianPerBulan = Pembelian::selectRaw("strftime('%m', created_at) as bulan, SUM(harga_akhir) as total")
             ->whereBetween('created_at', [$dateFrom, $dateTo . ' 23:59:59'])
-            ->groupByRaw('MONTH(created_at)')
+            ->groupByRaw("strftime('%m', created_at)")
             ->get();
 
         // Detail transactions
