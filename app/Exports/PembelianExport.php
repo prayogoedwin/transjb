@@ -44,7 +44,7 @@ class PembelianExport implements FromCollection, WithHeadings, WithMapping, With
             'Satuan',
             'Total Berat',
             'Total Harga',
-            'Biaya Admin (%)',
+            'Potongan (%)',
             'Biaya Admin (Rp)',
             'Harga Akhir',
             'Created At',

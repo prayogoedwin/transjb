@@ -37,40 +37,44 @@
                     <select id="produk_id" name="produk_id" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100" required>
                         <option value="">{{ __('Pilih Produk') }}</option>
                         @foreach($products as $p)
-                            <option value="{{ $p->id }}" data-satuan="{{ $p->satuan }}" {{ old('produk_id') == $p->id ? 'selected' : '' }}>{{ $p->nama_produk }} ({{ $p->satuan }})</option>
+                            <option value="{{ $p->id }}" data-satuan="{{ $p->satuan }}" {{ old('produk_id') == $p->id ? 'selected' : '' }}>{{ $p->nama_produk }} - {{ formatDecimalSmart($p->harga_beli) }} / {{ $p->satuan }}</option>
                         @endforeach
                     </select>
                     @error('produk_id')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                     @enderror
                 </div>
-
+<!-- 
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Satuan') }}</label>
                     <input type="text" id="satuan_display" readonly class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-600 dark:text-gray-100 text-gray-600" />
                     <input type="hidden" name="satuan" id="satuan_input" value="{{ old('satuan', '') }}" />
-                </div>
+                </div> -->
 
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Total Berat') }} *</label>
-                    <input type="number" name="total_berat" step="0.0001" min="0" value="{{ old('total_berat', 0) }}" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100" required />
+                    <input type="number" name="total_berat" value="{{ old('total_berat', 0) }}" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100" required />
                     @error('total_berat')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                     @enderror
                 </div>
-
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Harga Satuan Beli') }} *</label>
-                    <input type="number" name="harga_satuan_beli" step="0.01" min="0" value="{{ old('harga_satuan_beli', 0) }}" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100" required />
-                    @error('harga_satuan_beli')
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Potongan (%)') }} *</label>
+                    <input type="number" name="biaya_admin_persen" max="100" value="{{ old('biaya_admin_persen', 0) }}" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100" required />
+                    @error('biaya_admin_persen')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <div class="mb-6">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Biaya Admin (%)') }} *</label>
-                    <input type="number" name="biaya_admin_persen" step="0.01" min="0" max="100" value="{{ old('biaya_admin_persen', 0) }}" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100" required />
-                    @error('biaya_admin_persen')
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Berat Setelah Potong') }}</label>
+                    <input type="number" id="berat_setelah_potong_display" name="berat_setelah_potong" value="{{ old('berat_setelah_potong', 0) }}" readonly class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-600 dark:text-gray-100 text-gray-600" />
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Harga Satuan Beli') }} *</label>
+                    <input type="number" name="harga_satuan_beli" value="{{ old('harga_satuan_beli', 0) }}" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100" required />
+                    @error('harga_satuan_beli')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                     @enderror
                 </div>
@@ -84,20 +88,34 @@
                 </div>
 
                 <div class="bg-blue-50 dark:bg-blue-900 p-4 rounded-lg mb-6">
-                    <div class="space-y-2 text-sm">
-                        <div class="flex justify-between">
-                            <span class="text-blue-700 dark:text-blue-300">{{ __('Total Harga') }}</span>
-                            <span class="font-semibold text-blue-900 dark:text-blue-100" id="summary-total-price">Rp 0</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-blue-700 dark:text-blue-300">{{ __('Biaya Admin') }}</span>
-                            <span class="font-semibold text-blue-900 dark:text-blue-100" id="summary-admin-fee">Rp 0</span>
-                        </div>
-                        <div class="border-t border-blue-200 dark:border-blue-700 pt-2 mt-2 flex justify-between">
-                            <span class="text-blue-900 dark:text-blue-100">{{ __('Harga Akhir') }}</span>
-                            <span class="font-bold text-lg text-blue-900 dark:text-blue-100" id="summary-final-price">Rp 0</span>
-                        </div>
-                    </div>
+                    <table class="w-full text-sm">
+                        <tbody>
+                            <tr>
+                                <td class="py-1 text-blue-700 dark:text-blue-300">{{ __('Harga Satuan') }}</td>
+                                <td class="py-1 text-right font-semibold text-blue-900 dark:text-blue-100" id="harga-satuan">Rp 0</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <!-- </tr>                            <tr>
+                                <td class="py-1 text-blue-700 dark:text-blue-300">{{ __('Total Harga') }}</td>
+                                <td class="py-1 text-right font-semibold text-blue-900 dark:text-blue-100" id="summary-total-price">Rp 0</td>
+                                <td></td>
+                                <td></td>
+                            </tr> -->
+                            <tr>
+                                <td class="py-1 text-blue-700 dark:text-blue-300">{{ __('Total berat setelah potong') }}</td>
+                                <td class="py-1 text-right font-semibold text-blue-900 dark:text-blue-100" id="total-berat-setelah-potong">0</td>
+                                <td class="text-left font-semibold text-blue-900 dark:text-blue-100" id="satuan-display"></td>
+                                <td class="text-right font-semibold text-blue-900 dark:text-blue-100">x</td>
+                            </tr>
+                            <tr class="border-t border-blue-200 dark:border-blue-700">
+                                <td class="pt-2 text-blue-900 dark:text-blue-100 font-semibold">{{ __('Harga Akhir') }}</td>
+                                <td class="pt-2 text-right font-bold text-lg text-blue-900 dark:text-blue-100" id="summary-final-price">Rp 0</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
 
                 <div class="mb-6">
@@ -129,13 +147,18 @@
             const totalBerat = parseFloat(totalBeratInput.value) || 0;
             const biayaAdminPersen = parseFloat(biayaAdminPersenInput.value) || 0;
             
+            const beratSetelahPotong = totalBerat - (totalBerat * biayaAdminPersen / 100);
             const totalHarga = hargaSatuan * totalBerat;
             const biayaAdmin = (totalHarga * biayaAdminPersen) / 100;
             const hargaAkhir = totalHarga - biayaAdmin;
-            
+
+
+            document.getElementById('harga-satuan').value = 'Rp '+ hargaSatuan.toLocaleString('id-ID', {maximumFractionDigits: 0});
+            document.getElementById('berat_setelah_potong_display').value = beratSetelahPotong;
             document.getElementById('summary-total-price').textContent = 'Rp ' + totalHarga.toLocaleString('id-ID', {maximumFractionDigits: 0});
-            document.getElementById('summary-admin-fee').textContent = 'Rp ' + biayaAdmin.toLocaleString('id-ID', {maximumFractionDigits: 0});
+            document.getElementById('total-berat-setelah-potong').textContent = beratSetelahPotong.toLocaleString('id-ID', {maximumFractionDigits: 2});
             document.getElementById('summary-final-price').textContent = 'Rp ' + hargaAkhir.toLocaleString('id-ID', {maximumFractionDigits: 0});
+            document.getElementById('satuan-display').textContent = form.querySelector('input[name="satuan"]').value;
         }
 
         hargaSatuanInput.addEventListener('change', updateSummary);
@@ -210,17 +233,18 @@
 
             const totalHarga = hargaSatuan * totalBerat;
             const biayaAdmin = (totalHarga * biayaPersen) / 100;
+            const total_berat_setelah_potong = totalBerat - (totalBerat * biayaPersen / 100);
             const hargaAkhir = totalHarga - biayaAdmin;
 
             document.getElementById('summary-total-price').textContent = 'Rp ' + totalHarga.toLocaleString('id-ID', {maximumFractionDigits: 0});
-            document.getElementById('summary-admin-fee').textContent = 'Rp ' + biayaAdmin.toLocaleString('id-ID', {maximumFractionDigits: 0});
+            document.getElementById('total-berat-setelah-potong').textContent = total_berat_setelah_potong==null? '0' : total_berat_setelah_potong.toLocaleString('id-ID', {maximumFractionDigits: 2}) ;
             document.getElementById('summary-final-price').textContent = 'Rp ' + hargaAkhir.toLocaleString('id-ID', {maximumFractionDigits: 0});
 
-        document.querySelector('input[name="harga_satuan_beli"]').addEventListener('change', calculateTotals);
-        document.querySelector('input[name="total_berat"]').addEventListener('change', calculateTotals);
-        document.querySelector('input[name="biaya_admin_persen"]').addEventListener('change', calculateTotals);
+        document.querySelector('input[name="harga_satuan_beli"]').addEventListener('change', updateSummary);
+        document.querySelector('input[name="total_berat"]').addEventListener('change', updateSummary);
+        document.querySelector('input[name="biaya_admin_persen"]').addEventListener('change', updateSummary);
 
         // Initial calculation
-        calculateTotals();
+        updateSummary();
     </script>
 </x-layouts.app>

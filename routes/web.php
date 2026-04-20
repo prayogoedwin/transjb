@@ -14,9 +14,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MaintenanceController;
 use App\Http\Controllers\Settings\BackupController;
 // Maintenance routes (admin only)
-Route::get('/clear-cache', [MaintenanceController::class, 'clearCache'])->name('maintenance.clear-cache');
-Route::get('/clear-log', [MaintenanceController::class, 'clearLog'])->name('maintenance.clear-log');
-Route::get('/clear-all', [MaintenanceController::class, 'clearAll'])->name('maintenance.clear-all');
+// Route::get('/clear-cache', [MaintenanceController::class, 'clearCache'])->name('maintenance.clear-cache');
+// Route::get('/clear-log', [MaintenanceController::class, 'clearLog'])->name('maintenance.clear-log');
+// Route::get('/clear-all', [MaintenanceController::class, 'clearAll'])->name('maintenance.clear-all');
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -132,17 +132,17 @@ Route::middleware(['auth'])->group(function () {
     Route::get('laporan/export-pdf', [LaporanController::class, 'exportPdf'])->name('laporan.export-pdf');
     Route::get('laporan/print', [LaporanController::class, 'print'])->name('laporan.print');
     
-    Route::prefix('api/backups')->middleware('role:admin')->group(function () {
-        Route::post('/', [BackupController::class, 'backup'])->name('backups.create');
-        Route::get('/', [BackupController::class, 'list'])->name('backups.list');
-        Route::get('/history', [BackupController::class, 'history'])->name('backups.history');
-        Route::get('/restore-history', [BackupController::class, 'restoreHistory'])->name('backups.restore-history');
-        Route::get('/stats', [BackupController::class, 'stats'])->name('backups.stats');
-        Route::get('/{backupName}/metadata', [BackupController::class, 'metadata'])->name('backups.metadata');
-        Route::get('/{backupName}/download', [BackupController::class, 'download'])->name('backups.download');
-        Route::post('/restore', [BackupController::class, 'restore'])->name('backups.restore');
-        Route::delete('/', [BackupController::class, 'delete'])->name('backups.delete');
-    });
+    // Route::prefix('api/backups')->middleware('role:admin')->group(function () {
+    //     Route::post('/', [BackupController::class, 'backup'])->name('backups.create');
+    //     Route::get('/', [BackupController::class, 'list'])->name('backups.list');
+    //     Route::get('/history', [BackupController::class, 'history'])->name('backups.history');
+    //     Route::get('/restore-history', [BackupController::class, 'restoreHistory'])->name('backups.restore-history');
+    //     Route::get('/stats', [BackupController::class, 'stats'])->name('backups.stats');
+    //     Route::get('/{backupName}/metadata', [BackupController::class, 'metadata'])->name('backups.metadata');
+    //     Route::get('/{backupName}/download', [BackupController::class, 'download'])->name('backups.download');
+    //     Route::post('/restore', [BackupController::class, 'restore'])->name('backups.restore');
+    //     Route::delete('/', [BackupController::class, 'delete'])->name('backups.delete');
+    // });
 });
 
 

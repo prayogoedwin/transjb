@@ -25,6 +25,7 @@ class Pembelian extends Model
         'harga_satuan_beli',
         'satuan',
         'total_berat',
+        'berat_setelah_potong',
         'total_harga',
         'biaya_admin_persen',
         'biaya_admin',
@@ -42,6 +43,7 @@ class Pembelian extends Model
         return [
             'harga_satuan_beli' => 'decimal:2',
             'total_berat' => 'decimal:4',
+            'berat_setelah_potong' => 'decimal:4',
             'total_harga' => 'decimal:2',
             'biaya_admin_persen' => 'decimal:2',
             'biaya_admin' => 'decimal:2',

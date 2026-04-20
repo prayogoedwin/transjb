@@ -127,7 +127,7 @@
                     <span class="font-semibold text-gray-900 dark:text-gray-100">{{ formatCurrencyRound($stats['total_penjualan']) }}</span>
                 </div>
                 <div class="flex justify-between items-center">
-                    <span class="text-gray-600 dark:text-gray-400">{{ __('Biaya Admin') }}</span>
+                    <span class="text-gray-600 dark:text-gray-400">{{ __('Potongan') }}</span>
                     <span class="font-semibold text-red-600 dark:text-red-400">{{ formatCurrencyRound($stats['total_biaya_admin']) }}</span>
                 </div>
                 <!-- <div class="border-t border-gray-200 dark:border-gray-700 pt-3 mt-3 flex justify-between items-center">

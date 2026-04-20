@@ -40,13 +40,6 @@ class LoginController extends Controller
 
         $request->session()->regenerate();
 
-        // Generate API token for Sanctum
-        $user = Auth::user();
-        $token = $user->createToken('api-token')->plainTextToken;
-        
-        // Flash token to session so it can be stored in localStorage
-        session()->flash('api_token', $token);
-
         return redirect()->intended(route('dashboard', absolute: false));
     }
 
