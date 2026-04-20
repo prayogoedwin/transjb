@@ -28,10 +28,16 @@ class SimpanPinjamController extends Controller
                     return 'Rp ' . number_format($item->nominal, 0, ',', '.');
                 })
                 ->addColumn('tipe_badge', function ($item) {
-                    if ($item->tipe === 'simpan') {
-                        return '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Simpan</span>';
+                    if ($item->tipe === 'bayar') {
+                        return '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Bayar</span>';
+                    } else if ($item->tipe === 'hutang') {
+                        return '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">Hutang</span>';
+                    } else if ($item->tipe === 'transaksi') {
+                        return '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">Transaksi</span>';
+                    } else if ($item->tipe === 'ambil') {
+                        return '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">Ambil</span>';
                     } else {
-                        return '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">Pinjam</span>';
+                        return '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200">' . ucfirst($item->tipe) . '</span>';
                     }
                 })
                 ->addColumn('actions', function ($item) {
@@ -39,19 +45,19 @@ class SimpanPinjamController extends Controller
                     
                     if (auth()->user()->hasPermission('show-simpan-pinjam')) {
                         $actions .= '<a href="' . route('simpan_pinjam.show', $item) . '" class="text-green-600 dark:text-green-400 hover:underline mr-3">Detail</a>';
-                        $actions .= '<a href="' . route('simpan_pinjam.printReceipt', $item) . '" target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline mr-3">Print</a>';
+                        $actions .= '<a href="' . route('simpan_pinjam.printReceipt', $item) . '" target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline mr-3">Cetak</a>';
                     }
                     
-                    if (auth()->user()->hasPermission('edit-simpan-pinjam')) {
-                        $actions .= '<a href="' . route('simpan_pinjam.edit', $item) . '" class="text-blue-600 dark:text-blue-400 hover:underline mr-3">Edit</a>';
-                    }
+                    // if (auth()->user()->hasPermission('edit-simpan-pinjam')) {
+                    //     $actions .= '<a href="' . route('simpan_pinjam.edit', $item) . '" class="text-blue-600 dark:text-blue-400 hover:underline mr-3">Ubah</a>';
+                    // }
                     
-                    if (auth()->user()->hasPermission('delete-simpan-pinjam')) {
-                        $actions .= '<form action="' . route('simpan_pinjam.destroy', $item) . '" method="POST" class="inline" onsubmit="return confirm(\'Apakah Anda yakin ingin menghapus data ini?\')">
-                            ' . csrf_field() . method_field('DELETE') . '
-                            <button type="submit" class="text-red-600 dark:text-red-400 hover:underline">Hapus</button>
-                        </form>';
-                    }
+                    // if (auth()->user()->hasPermission('delete-simpan-pinjam')) {
+                    //     $actions .= '<form action="' . route('simpan_pinjam.destroy', $item) . '" method="POST" class="inline" onsubmit="return confirm(\'Apakah Anda yakin ingin menghapus data ini?\')">
+                    //         ' . csrf_field() . method_field('DELETE') . '
+                    //         <button type="submit" class="text-red-600 dark:text-red-400 hover:underline">Hapus</button>
+                    //     </form>';
+                    // }
                     
                     return $actions;
                 })
@@ -117,7 +123,7 @@ class SimpanPinjamController extends Controller
     {
         $validated = $request->validate([
             'nasabah_id' => ['required', 'exists:nasabah,id'],
-            'tipe' => ['required', 'in:simpan,pinjam'],
+            'tipe' => ['required', 'in:bayar,hutang,transaksi,ambil'],
             'nominal' => ['required', 'numeric', 'min:0'],
         ]);
 
@@ -156,7 +162,7 @@ class SimpanPinjamController extends Controller
         $dateFrom = $request->date_from;
         $dateTo = $request->date_to;
 
-        $filename = 'SimpanPinjam-' . date('YmdHis') . '.xlsx';
+        $filename = 'BayarHutang-' . date('YmdHis') . '.xlsx';
         
         return Excel::download(
             new SimpanPinjamExport($dateFrom, $dateTo),

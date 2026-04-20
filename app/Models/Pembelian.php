@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -26,8 +27,7 @@ class Pembelian extends Model
         'satuan',
         'total_berat',
         'berat_setelah_potong',
-        'total_harga',
-        'biaya_admin_persen',
+        'potongan',
         'biaya_admin',
         'harga_akhir',
         'keterangan',
@@ -44,11 +44,22 @@ class Pembelian extends Model
             'harga_satuan_beli' => 'decimal:2',
             'total_berat' => 'decimal:4',
             'berat_setelah_potong' => 'decimal:4',
-            'total_harga' => 'decimal:2',
-            'biaya_admin_persen' => 'decimal:2',
+            'potongan' => 'decimal:2',
             'biaya_admin' => 'decimal:2',
             'harga_akhir' => 'decimal:2',
         ];
+    }
+
+    protected $appends = ['total_harga', 'created_at_id'];
+
+    public function getTotalHargaAttribute(): float
+    {
+        return (float) $this->harga_satuan_beli * (float) $this->berat_setelah_potong;
+    }
+
+    public function getCreatedAtIdAttribute(): string
+    {
+        return Carbon::parse($this->created_at)->locale('id')->translatedFormat('d F Y H:i');
     }
 
     /**
@@ -86,6 +97,16 @@ class Pembelian extends Model
             'jumlah' => $this->total_berat,
             'satuan' => $this->satuan,
             'transaksi' => 'in',
+        ]);
+    }
+
+    public function addTransaksiSimpanPinjam(): SimpanPinjam
+    {
+        return SimpanPinjam::create([
+            'nasabah_id' => $this->nasabah_id,
+            'tipe' => 'transaksi',
+            'nominal' => $this->harga_akhir,
+            'pembelian_id' => $this->id,
         ]);
     }
 }

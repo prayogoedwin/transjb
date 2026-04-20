@@ -90,7 +90,7 @@
             font-size: 14px;
         }
         .summary-row.total {
-            border-top: 2px solid #333;
+            /* border-top: 2px solid #333; */
             padding-top: 10px;
             font-weight: bold;
             font-size: 16px;
@@ -148,7 +148,7 @@
             <h1>INVOICE PEMBELIAN</h1>
             <p>Bukti Transaksi Pembelian Produk</p>
             <div class="invoice-no">
-                No. Invoice: {{ $pembelian->id }} | Tanggal: {{ $pembelian->created_at->format('d/m/Y H:i') }}
+                No. Invoice: {{ $pembelian->id }} | Tanggal: {{ $pembelian->created_at_id }}
             </div>
         </div>
 
@@ -159,19 +159,19 @@
                 <thead>
                     <tr>
                         <th>Deskripsi</th>
-                        <th width="120" class="text-right">Satuan</th>
-                        <th width="120" class="text-right">Jumlah</th>
-                        <th width="150" class="text-right">Harga Satuan</th>
-                        <th width="150" class="text-right">Total</th>
+                        <th width="20%" class="text-right">Harga Satuan</th>
+                        <th width="20%" class="text-right">Berat Total</th>
+                        <th width="20%" class="text-right">Potongan</th>
+                        <th width="20%" class="text-right">Harga Akhir</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td><strong>{{ $pembelian->product->nama_produk }}</strong></td>
-                        <td class="text-right">{{ $pembelian->satuan }}</td>
-                        <td class="text-right">{{ number_format($pembelian->total_berat, 2, ',', '.') }}</td>
-                        <td class="text-right">Rp {{ number_format($pembelian->harga_satuan_beli, 0, ',', '.') }}</td>
-                        <td class="text-right"><strong>Rp {{ number_format($pembelian->total_harga, 0, ',', '.') }}</strong></td>
+                        <td class="text-right">Rp {{ formatCurrencyRound($pembelian->harga_satuan_beli) }}</td>
+                        <td class="text-right">{{ formatDecimalSmart($pembelian->total_berat) }} {{ $pembelian->satuan }}</td>
+                        <td class="text-right">{{ formatDecimalSmart($pembelian->potongan) }} %</td>
+                        <td class="text-right"><strong>Rp {{ formatCurrencyRound($pembelian->harga_akhir) }}</strong></td>
                     </tr>
                 </tbody>
             </table>
@@ -181,36 +181,18 @@
             <div class="section-title">Ringkasan Pembayaran</div>
             
             <div class="summary-section">
-                <div class="summary-row">
-                    <span class="summary-label">Total Harga:</span>
-                    <span class="summary-value">Rp {{ number_format($pembelian->total_harga, 0, ',', '.') }}</span>
-                </div>
-                
-                <div class="summary-row">
-                    <span class="summary-label">Biaya Admin ({{ number_format($pembelian->biaya_admin_persen, 2) }}%):</span>
-                    <span class="summary-value">Rp {{ number_format($pembelian->biaya_admin, 0, ',', '.') }}</span>
-                </div>
-                
                 <div class="summary-row total">
                     <span class="summary-label">HARGA AKHIR:</span>
-                    <span class="summary-value">Rp {{ number_format($pembelian->harga_akhir, 0, ',', '.') }}</span>
+                    <span class="summary-value">Rp {{ formatCurrencyRound($pembelian->harga_akhir) }}</span>
                 </div>
             </div>
 
             <div class="divider"></div>
 
-            <div class="section-title">Informasi Tambahan</div>
-            
-            <div class="row">
-                <span class="label">Total Berat Diterima:</span>
-                <span class="value"><strong>{{ number_format($pembelian->total_berat, 2, ',', '.') }} {{ $pembelian->satuan }}</strong></span>
-            </div>
+            <div class="section-title">Keterangan</div>
             
             @if($pembelian->keterangan)
                 <div class="row">
-                    <span class="label">
-                        {{ __('Keterangan') }}
-                    </span>
                     <div class="value" style="text-align: left; margin-top: 5px; color: #555;">
                         {{ $pembelian->keterangan }}
                     </div>

@@ -22,6 +22,7 @@ class SimpanPinjam extends Model
         'nasabah_id',
         'tipe',
         'nominal',
+        'pembelian_id'
     ];
 
     /**

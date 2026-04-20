@@ -8,11 +8,11 @@
                             <x-layouts.sidebar-link href="{{ route('dashboard') }}" icon='fas-house'
                                 :active="request()->routeIs('dashboard*')">Dashboard</x-layouts.sidebar-link>
 
-                            <x-layouts.sidebar-link href="{{ route('products.index') }}" icon='fas-box'
-                                :active="request()->routeIs('products*')">Produk</x-layouts.sidebar-link>
-                            <x-layouts.sidebar-link href="{{ route('nasabah.index') }}" icon='fas-user' :active="request()->routeIs('nasabah*')">Nasabah</x-layouts.sidebar-link>
-                            <x-layouts.sidebar-link href="{{ route('simpan_pinjam.index') }}" icon='fas-piggy-bank' :active="request()->routeIs('simpan_pinjam*')">Bayar & Hutang</x-layouts.sidebar-link>
-                            <x-layouts.sidebar-link href="{{ route('pembelian.index') }}" icon='fas-cart-shopping' :active="request()->routeIs('pembelian*')">Pembelian</x-layouts.sidebar-link>
+                                <x-layouts.sidebar-link href="{{ route('pembelian.index') }}" icon='fas-cart-shopping' :active="request()->routeIs('pembelian*')">Pembelian</x-layouts.sidebar-link>
+                                <x-layouts.sidebar-link href="{{ route('penjualan.index') }}" icon='fas-money-bill-wave' :active="request()->routeIs('penjualan*')">Penjualan</x-layouts.sidebar-link>
+                                <x-layouts.sidebar-link href="{{ route('simpan_pinjam.index') }}" icon='fas-piggy-bank' :active="request()->routeIs('simpan_pinjam*')">Bayar & Hutang</x-layouts.sidebar-link>
+                                <x-layouts.sidebar-link href="{{ route('nasabah.index') }}" icon='fas-user' :active="request()->routeIs('nasabah*')">Nasabah</x-layouts.sidebar-link>
+                                <x-layouts.sidebar-link href="{{ route('products.index') }}" icon='fas-box' :active="request()->routeIs('products*')">Produk</x-layouts.sidebar-link>
                             <x-layouts.sidebar-link href="{{ route('laporan.index') }}" icon='fas-chart-bar' :active="request()->routeIs('laporan*')">Laporan/Rekap</x-layouts.sidebar-link>
 
                             @if(auth()->user()->hasPermission('usermanagement-menu'))

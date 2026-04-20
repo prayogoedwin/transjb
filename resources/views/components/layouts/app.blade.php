@@ -155,6 +155,17 @@
         localStorage.setItem('api_token', '{{ session("api_token") }}');
     </script>
     @endif
+
+    <script>
+        document.addEventListener('submit', function (e) {
+            const form = e.target;
+            const btn = form.querySelector('button[type="submit"], button:not([type="button"]):not([type="reset"])');
+            if (!btn || btn.disabled) return;
+            btn.disabled = true;
+            btn.style.opacity = '0.6';
+            btn.style.cursor = 'not-allowed';
+        }, true);
+    </script>
 </body>
 
 </html>

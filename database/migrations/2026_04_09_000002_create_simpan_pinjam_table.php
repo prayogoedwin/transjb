@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('simpan_pinjam', function (Blueprint $table) {
             $table->id();
             $table->foreignId('nasabah_id')->constrained('nasabah')->cascadeOnDelete();
-            $table->enum('tipe', ['simpan', 'pinjam']);
+            $table->enum('tipe', ['bayar', 'hutang', 'transaksi', 'ambil'])->nullable();
             $table->decimal('nominal', 15, 2);
+            $table->unsignedBigInteger('pembelian_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->index('nasabah_id');

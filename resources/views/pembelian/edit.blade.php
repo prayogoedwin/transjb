@@ -72,8 +72,8 @@
 
                 <div class="mb-6">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Biaya Admin (%)') }} *</label>
-                    <input type="number" name="biaya_admin_persen" step="0.01" min="0" max="100" value="{{ old('biaya_admin_persen', $pembelian->biaya_admin_persen) }}" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100" required />
-                    @error('biaya_admin_persen')
+                    <input type="number" name="potongan" step="0.01" min="0" max="100" value="{{ old('potongan', $pembelian->potongan) }}" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100" required />
+                    @error('potongan')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                     @enderror
                 </div>
@@ -117,7 +117,7 @@
         function calculateTotals() {
             const hargaSatuan = parseFloat(document.querySelector('input[name="harga_satuan_beli"]').value) || 0;
             const totalBerat = parseFloat(document.querySelector('input[name="total_berat"]').value) || 0;
-            const biayaPersen = parseFloat(document.querySelector('input[name="biaya_admin_persen"]').value) || 0;
+            const biayaPersen = parseFloat(document.querySelector('input[name="potongan"]').value) || 0;
 
             const totalHarga = hargaSatuan * totalBerat;
             const biayaAdmin = (totalHarga * biayaPersen) / 100;
@@ -130,7 +130,7 @@
 
         document.querySelector('input[name="harga_satuan_beli"]').addEventListener('change', calculateTotals);
         document.querySelector('input[name="total_berat"]').addEventListener('change', calculateTotals);
-        document.querySelector('input[name="biaya_admin_persen"]').addEventListener('change', calculateTotals);
+        document.querySelector('input[name="potongan"]').addEventListener('change', calculateTotals);
 
         // Initial calculation
         calculateTotals();

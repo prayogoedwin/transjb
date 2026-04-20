@@ -34,18 +34,18 @@ class PenjualanController extends Controller
                     $actions = '';
                     
                     if (auth()->user()->hasPermission('show-penjualan')) {
-                        $actions .= '<a href="' . route('penjualan.show', $item) . '" class="text-green-600 dark:text-green-400 hover:underline mr-3">View</a>';
-                        $actions .= '<a href="' . route('penjualan.printInvoice', $item) . '" target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline mr-3">Print</a>';
+                        $actions .= '<a href="' . route('penjualan.show', $item) . '" class="text-green-600 dark:text-green-400 hover:underline mr-3">Lihat</a>';
+                        $actions .= '<a href="' . route('penjualan.printInvoice', $item) . '" target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline mr-3">Cetak</a>';
                     }
                     
                     if (auth()->user()->hasPermission('edit-penjualan')) {
-                        $actions .= '<a href="' . route('penjualan.edit', $item) . '" class="text-yellow-600 dark:text-yellow-400 hover:underline mr-3">Edit</a>';
+                        $actions .= '<a href="' . route('penjualan.edit', $item) . '" class="text-yellow-600 dark:text-yellow-400 hover:underline mr-3">Ubah</a>';
                     }
                     
                     if (auth()->user()->hasPermission('delete-penjualan')) {
-                        $actions .= '<form action="' . route('penjualan.destroy', $item) . '" method="POST" class="inline" onsubmit="return confirm(\'Are you sure?\')">
+                        $actions .= '<form action="' . route('penjualan.destroy', $item) . '" method="POST" class="inline" onsubmit="return confirm(\'Apakah Anda yakin?\')">
                             ' . csrf_field() . method_field('DELETE') . '
-                            <button type="submit" class="text-red-600 dark:text-red-400 hover:underline">Delete</button>
+                            <button type="submit" class="text-red-600 dark:text-red-400 hover:underline">Hapus</button>
                         </form>';
                     }
                     
@@ -224,7 +224,7 @@ class PenjualanController extends Controller
             return true;
         });
 
-        return to_route('penjualan.index')->with('status', 'Penjualan updated successfully.');
+        return to_route('penjualan.index')->with('status', 'Penjualan diperbarui berhasil.');
     }
 
     public function destroy(Penjualan $penjualan): RedirectResponse
@@ -235,7 +235,7 @@ class PenjualanController extends Controller
             $penjualan->delete();
         });
 
-        return to_route('penjualan.index')->with('status', 'Penjualan deleted successfully.');
+        return to_route('penjualan.index')->with('status', 'Penjualan dihapus berhasil.');
     }
 
     /**

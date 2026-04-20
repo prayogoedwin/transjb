@@ -79,12 +79,110 @@
                 </div>
             </div>
         </div>
-
-        <!-- Info Card -->
         <div>
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
                 <div class="p-6">
-                    <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">{{ __('Riwayat Penjualan') }}</h3>
+                    <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">{{ __('Riwayat Bayar & Hutang') }}</h3>
+                    <div class="space-y-3 text-sm">
+                        <!-- <div>
+                            <div class="text-gray-600 dark:text-gray-400">{{ __('Total Transaksi') }}</div>
+                            <div class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ $nasabah->simpanPinjam->count() }}</div>
+                        </div> -->
+                        @php
+                            $totalBayar = $nasabah->simpanPinjam->where('tipe', 'bayar')->sum('nominal');
+                            $totalHutang = $nasabah->simpanPinjam->where('tipe', 'hutang')->sum('nominal');
+                            $totalTransaksi = $nasabah->simpanPinjam->where('tipe', 'transaksi')->sum('nominal');
+                            $totalAmbil = $nasabah->simpanPinjam->where('tipe', 'ambil')->sum('nominal');
+
+                            $sisaHutang = max(0, $totalHutang - $totalBayar);
+                            $sisaBayar = max(0, $totalBayar - $totalHutang);
+                        @endphp
+                        <div>
+                            <div class="text-gray-600 dark:text-gray-400">{{ __('Total Bayar') }}</div>
+                            <div class="text-lg font-semibold text-green-600 dark:text-green-400">{{ formatCurrencyRound($totalBayar) }}</div>
+                        </div>
+                        <div>
+                            <div class="text-gray-600 dark:text-gray-400">{{ __('Total Hutang') }}</div>
+                            <div class="text-lg font-semibold text-red-600 dark:text-red-400">{{ formatCurrencyRound($totalHutang) }}</div>
+                        </div>
+                        <div>
+                            <div class="text-gray-600 dark:text-gray-400">{{ __('Total Transaksi') }}</div>
+                            <div class="text-lg font-semibold text-green-600 dark:text-green-400">{{ $totalTransaksi > 0 ? formatCurrencyRound($totalTransaksi) : '0' }}</div>
+                        </div>
+                        <div>
+                            <div class="text-gray-600 dark:text-gray-400">{{ __('Total Ambil') }}</div>
+                            <div class="text-lg font-semibold text-yellow-600 dark:text-yellow-400">{{ $totalAmbil > 0 ? formatCurrencyRound($totalAmbil) : '0' }}</div>                        
+                        </div>
+                        <div class="border-t border-gray-100 dark:border-gray-700 pt-3">
+                            <div class="text-gray-600 dark:text-gray-400">{{ __('Sisa Hutang') }}</div>
+                            <div class="text-lg font-semibold text-red-600 dark:text-red-400">{{ $sisaHutang > 0 ? formatCurrencyRound($sisaHutang) : '0' }}</div>
+                        </div>
+                        <div>
+                            <div class="text-gray-600 dark:text-gray-400">{{ __('Sisa Bayar') }}</div>
+                            <div class="text-lg font-semibold text-green-600 dark:text-green-400">{{ $sisaBayar > 0 ? formatCurrencyRound($sisaBayar) : '0' }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <!-- Bayar & Hutang History -->
+    @if($nasabah->simpanPinjam->count() > 0)
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div class="p-6">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">{{ __('Detail Riwayat Bayar & Hutang') }}</h3>
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    <thead class="bg-gray-50 dark:bg-gray-900">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">{{ __('Tipe') }}</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">{{ __('Nominal') }}</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">{{ __('Tanggal') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                        @foreach($nasabah->simpanPinjam->sortByDesc('created_at') as $item)
+                            <tr>
+                                <td class="px-6 py-3">
+                                    @if($item->tipe === 'bayar')
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">{{ __('Bayar') }}</span>
+                                    @elseif($item->tipe === 'hutang')
+                                         <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">{{ __('Hutang') }}</span>
+                                    @elseif($item->tipe === 'transaksi')
+                                         <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">{{ __('Transaksi') }}</span>
+                                    @elseif($item->tipe === 'ambil')
+                                         <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark    :text-yellow-200">{{ __('Ambil') }}</span>
+                                    @else
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">{{ __('Lainnya') }}</span>
+                                    @endif
+                                </td>
+                                <td class="px-6 py-3 text-gray-900 dark:text-gray-100">
+                                    {{ formatCurrencyRound($item->nominal) }}
+                                </td>
+                                <td class="px-6 py-3 text-gray-900 dark:text-gray-100">
+                                    {{ $item->created_at->format('d M Y') }}
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    @else
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div class="p-6 text-center text-gray-500 dark:text-gray-400">
+                {{ __('Belum ada riwayat Bayar & Hutang') }}
+            </div>
+        </div>
+    @endif
+
+
+
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+         <!-- Info Card -->
+        <div class="mt-6">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                <div class="p-6">
+                    <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">{{ __('Detail Penjualan') }}</h3>
                     <div class="space-y-3 text-sm">
                         <div>
                             <div class="text-gray-600 dark:text-gray-400">{{ __('Total Transaksi') }}</div>
@@ -102,77 +200,12 @@
                 </div>
             </div>
         </div>
-        <div>
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-                <div class="p-6">
-                    <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">{{ __('Riwayat Bayar & Hutang') }}</h3>
-                    <div class="space-y-3 text-sm">
-                        <div>
-                            <div class="text-gray-600 dark:text-gray-400">{{ __('Total Transaksi') }}</div>
-                            <div class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ $nasabah->simpanPinjam->count() }}</div>
-                        </div>
-                        <div>
-                            <div class="text-gray-600 dark:text-gray-400">{{ __('Total Simpan') }}</div>
-                            <div class="text-lg font-semibold text-green-600 dark:text-green-400">{{ formatCurrencyRound($nasabah->simpanPinjam->where('tipe', 'simpan')->sum('nominal')) }}</div>
-                        </div>
-                        <div>
-                            <div class="text-gray-600 dark:text-gray-400">{{ __('Total Pinjam') }}</div>
-                            <div class="text-lg font-semibold text-red-600 dark:text-red-400">{{ formatCurrencyRound($nasabah->simpanPinjam->where('tipe', 'pinjam')->sum('nominal')) }}</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-    <!-- Bayar & Hutang History -->
-    @if($nasabah->simpanPinjam->count() > 0)
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden mt-6">
-            <div class="p-6">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">{{ __('Detail Riwayat Bayar & Hutang') }}</h3>
-                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                    <thead class="bg-gray-50 dark:bg-gray-900">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">{{ __('Tipe') }}</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">{{ __('Nominal') }}</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">{{ __('Tanggal') }}</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-                        @foreach($nasabah->simpanPinjam->sortByDesc('created_at') as $item)
-                            <tr>
-                                <td class="px-6 py-3">
-                                    @if($item->tipe === 'simpan')
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">{{ __('Simpan') }}</span>
-                                    @else
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">{{ __('Pinjam') }}</span>
-                                    @endif
-                                </td>
-                                <td class="px-6 py-3 text-gray-900 dark:text-gray-100">
-                                    {{ formatCurrencyRound($item->nominal) }}
-                                </td>
-                                <td class="px-6 py-3 text-gray-900 dark:text-gray-100">
-                                    {{ $item->created_at->format('d M Y') }}
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    @else
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden mt-6">
-            <div class="p-6 text-center text-gray-500 dark:text-gray-400">
-                {{ __('Belum ada riwayat Bayar & Hutang') }}
-            </div>
-        </div>
-    @endif
 
     <!-- Pembelian History -->
     @if($nasabah->pembelian->count() > 0)
         <div class="col-span-1 lg:col-span-2 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden mt-6">
             <div class="p-6">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">{{ __('Detail Riwayat Penjualan') }}</h3>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">{{ __('Riwayat Penjualan') }}</h3>
                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                     <thead class="bg-gray-50 dark:bg-gray-900">
                         <tr>

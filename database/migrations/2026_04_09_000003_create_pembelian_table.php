@@ -17,8 +17,7 @@ return new class extends Migration
             $table->decimal('harga_satuan_beli', 15, 2);
             $table->string('satuan', 50)->default('kg');
             $table->decimal('total_berat', 15, 4);
-            $table->decimal('total_harga', 15, 2);
-            $table->decimal('biaya_admin_persen', 5, 2)->default(0);
+            $table->decimal('potongan', 5, 2)->default(0);
             $table->decimal('biaya_admin', 15, 2)->default(0);
             $table->decimal('harga_akhir', 15, 2);
             $table->timestamps();

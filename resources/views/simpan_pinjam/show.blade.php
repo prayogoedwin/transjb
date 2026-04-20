@@ -15,11 +15,11 @@
             <p class="text-gray-600 dark:text-gray-400 mt-1">{{ __('Lihat data Bayar & Hutang') }}</p>
         </div>
         <div class="flex gap-2">
-            @if(auth()->user()->hasPermission('edit-simpan-pinjam'))
+            <!-- @if(auth()->user()->hasPermission('edit-simpan-pinjam'))
                 <a href="{{ route('simpan_pinjam.edit', $simpanPinjam) }}">
                     <x-button type="primary">{{ __('Edit') }}</x-button>
                 </a>
-            @endif
+            @endif -->
             <a href="{{ route('simpan_pinjam.index') }}">
                 <x-button type="secondary">{{ __('Kembali') }}</x-button>
             </a>
@@ -46,10 +46,16 @@
                                 {{ __('Tipe') }}
                             </label>
                             <div>
-                                @if($simpanPinjam->tipe === 'simpan')
-                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">{{ __('Simpan') }}</span>
+                                @if($simpanPinjam->tipe === 'bayar')
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">{{ __('Bayar') }}</span>
+                                @elseif($simpanPinjam->tipe === 'hutang')
+                                     <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">{{ __('Hutang') }}</span>
+                                @elseif($simpanPinjam->tipe === 'transaksi')
+                                     <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">{{ __('Transaksi') }}</span>
+                                @elseif($simpanPinjam->tipe === 'ambil')
+                                     <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark    :text-yellow-200">{{ __('Ambil') }}</span>
                                 @else
-                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">{{ __('Pinjam') }}</span>
+                                     <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200">{{ ucfirst($simpanPinjam->tipe) }}</span>
                                 @endif
                             </div>
                         </div>

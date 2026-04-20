@@ -35,9 +35,13 @@ class PembelianController extends Controller
                 ->addColumn('total_harga', function ($item) {
                     return formatCurrencyRound($item->total_harga);
                 })
-                ->addColumn('biaya_admin', function ($item) {
-                    return formatCurrencyRound($item->biaya_admin) . ' (' . number_format($item->biaya_admin_persen, 2) . '%)';
+                // ->addColumn('biaya_admin', function ($item) {
+                //     return formatCurrencyRound($item->biaya_admin) . ' (' . number_format($item->potongan, 2) . '%)';  
+                // })
+                ->addColumn('potongan', function ($item) {
+                    return formatDecimalSmart($item->potongan) .' %';  
                 })
+                
                 ->addColumn('harga_akhir', function ($item) {
                     return '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">'. formatCurrencyRound($item->harga_akhir) . '</span>';
                 })
@@ -66,7 +70,7 @@ class PembelianController extends Controller
                     return $actions;
                 })
                 ->editColumn('created_at', function ($item) {
-                    return $item->created_at->format('M d, Y');
+                    return $item->created_at_id;
                 })
                 ->rawColumns(['harga_akhir', 'actions'])
                 ->make(true);
@@ -87,26 +91,27 @@ class PembelianController extends Controller
         $validated = $request->validate([
             'nasabah_id' => ['required', 'exists:nasabah,id'],
             'produk_id' => ['required', 'exists:products,id'],
-            'harga_satuan_beli' => ['required', 'numeric', 'min:0'],
+            // 'harga_satuan_beli' => ['required', 'numeric', 'min:0'],
             'total_berat' => ['required', 'numeric', 'min:0'],
-            'biaya_admin_persen' => ['required', 'numeric', 'min:0', 'max:100'],
+            'potongan' => ['required', 'numeric', 'min:0', 'max:100'],
             'keterangan' => ['nullable', 'string'],
             'print_invoice' => ['sometimes', 'boolean'],
         ]);
+        
 
         try {
             return DB::transaction(function () use ($request, $validated) {
                 // Calculate totals
-                $validated['total_harga'] = $validated['harga_satuan_beli'] * $validated['total_berat'];
-                $validated['biaya_admin'] = ($validated['total_harga'] * $validated['biaya_admin_persen']) / 100;
-                $validated['harga_akhir'] = $validated['total_harga'] - $validated['biaya_admin'];
-
                 $product = Product::findOrFail($validated['produk_id']);
-                $validated['satuan'] = $product->satuan; // Set satuan dari produk terkait
-                
+                $validated['harga_satuan_beli'] = $product->harga_beli;
+                $validated['satuan'] = $product->satuan;
+                $validated['berat_setelah_potong'] = $validated['total_berat'] * ((100 - $validated['potongan']) / 100);
+                $validated['harga_akhir'] = $validated['harga_satuan_beli'] * $validated['berat_setelah_potong'];
+                $validated['biaya_admin'] = ($validated['harga_satuan_beli'] * $validated['potongan']) / 100;
+
                 $pembelian = Pembelian::create($validated);
                 $pembelian->addToStok();
-
+                $pembelian->addTransaksiSimpanPinjam();
 
                 // Jika user memilih untuk cetak invoice dan request AJAX
                 if ($request->has('print_invoice') && $request->print_invoice && $request->wantsJson()) {
@@ -114,7 +119,7 @@ class PembelianController extends Controller
                     
                     return response()->json([
                         'status' => 'success',
-                        'message' => 'Pembelian created successfully.',
+                        'message' => 'Pembelian berhasil.',
                         'print_url' => route('pembelian.printInvoice', $pembelian),
                         'redirect_url' => route('pembelian.index'),
                         'id' => $pembelian->id,
@@ -163,14 +168,14 @@ class PembelianController extends Controller
             'harga_satuan_beli' => ['required', 'numeric', 'min:0'],
             'satuan' => ['required', 'string', 'max:50'],
             'total_berat' => ['required', 'numeric', 'min:0'],
-            'biaya_admin_persen' => ['required', 'numeric', 'min:0', 'max:100'],
+            'potongan' => ['required', 'numeric', 'min:0', 'max:100'],
             'keterangan' => ['nullable', 'string'],
         ]);
 
         // Calculate totals
-        $validated['total_harga'] = $validated['harga_satuan_beli'] * $validated['total_berat'];
-        $validated['biaya_admin'] = ($validated['total_harga'] * $validated['biaya_admin_persen']) / 100;
-        $validated['harga_akhir'] = $validated['total_harga'] - $validated['biaya_admin'];
+        $totalHarga = $validated['harga_satuan_beli'] * $validated['total_berat'];
+        $validated['biaya_admin'] = ($totalHarga * $validated['potongan']) / 100;
+        $validated['harga_akhir'] = $totalHarga - $validated['biaya_admin'];
 
         $pembelian->update($validated);
 

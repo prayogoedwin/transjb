@@ -60,71 +60,32 @@
                                 Rp {{ number_format($pembelian->harga_satuan_beli, 0, ',', '.') }}
                             </div>
                         </div>
-
-                        <div class="mb-6">
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                {{ __('Satuan') }}
-                            </label>
-                            <div class="text-gray-900 dark:text-gray-100">
-                                {{ $pembelian->satuan }}
-                            </div>
-                        </div>
-
                         <div class="mb-6">
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 {{ __('Total Berat') }}
                             </label>
                             <div class="text-gray-900 dark:text-gray-100">
-                                {{ number_format($pembelian->total_berat, 2) }}
+                                {{ formatDecimalSmart($pembelian->total_berat) }} {{ $pembelian->satuan }}
                             </div>
                         </div>
 
-                        <div class="mb-6">
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                {{ __('Total Harga') }}
-                            </label>
-                            <div class="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                                Rp {{ number_format($pembelian->total_harga, 0, ',', '.') }}
-                            </div>
-                        </div>
-
-                        <div class="mb-6">
+                         <div class="mb-6">
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 {{ __('Biaya Admin (%)') }}
                             </label>
                             <div class="text-gray-900 dark:text-gray-100">
-                                {{ number_format($pembelian->biaya_admin_persen, 2) }}%
+                                {{ number_format($pembelian->potongan, 2) }}%
                             </div>
                         </div>
-
-                        <div class="mb-6">
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                {{ __('Biaya Admin (Rp)') }}
-                            </label>
-                            <div class="text-gray-900 dark:text-gray-100">
-                                Rp {{ number_format($pembelian->biaya_admin, 0, ',', '.') }}
-                            </div>
-                        </div>
-
+                      
                         <div class="mb-6">
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 {{ __('Harga Akhir') }}
                             </label>
                             <div class="text-xl font-bold text-blue-600 dark:text-blue-400">
-                                Rp {{ number_format($pembelian->harga_akhir, 0, ',', '.') }}
+                                Rp {{ formatCurrencyRound($pembelian->harga_akhir) }}
                             </div>
                         </div>
-
-                        @if($pembelian->keterangan)
-                            <div class="mb-6">
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                    {{ __('Keterangan') }}
-                                </label>
-                                <div class="text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-700 p-3 rounded">
-                                    {{ $pembelian->keterangan }}
-                                </div>
-                            </div>
-                        @endif
                     </div>
                 </div>
             </div>
@@ -136,10 +97,20 @@
                 <div class="p-6">
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">{{ __('Informasi') }}</h3>
                     <div class="space-y-3 text-sm">
+                        @if($pembelian->keterangan)
+                            <div class="mb-6">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    {{ __('Keterangan') }}
+                                </label>
+                                <div class="text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-700 p-3 rounded">
+                                    {{ $pembelian->keterangan }}
+                                </div>
+                            </div>
+                        @endif
                         <div>
                             <span class="text-gray-600 dark:text-gray-400">{{ __('Dibuat') }}</span>
                             <div class="text-gray-900 dark:text-gray-100">
-                                {{ $pembelian->created_at->format('d M Y H:i') }}
+                                {{ $pembelian->created_at_id }}
                             </div>
                         </div>
                         <div>

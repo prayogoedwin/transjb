@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('restore_history', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('set null')->nullable();
+            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('set null');
             $table->enum('status', ['success', 'failed'])->default('success');
             $table->text('error_message')->nullable();
             $table->timestamp('created_at')->nullable();

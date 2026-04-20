@@ -152,7 +152,7 @@
 
         <!-- Section: Informasi Nasabah -->
         <div class="section">
-            <div class="section-title">📋 INFORMASI NASABAH</div>
+            <div class="section-title">INFORMASI NASABAH</div>
             <div class="info-grid">
                 <div class="info-item">
                     <div class="info-label">Nama Nasabah</div>
@@ -183,7 +183,7 @@
 
         <!-- Section: Riwayat Bayar & Hutang -->
         <div class="section">
-            <div class="section-title">💰 RIWAYAT SIMPAN PINJAM</div>
+            <div class="section-title">RIWAYAT SIMPAN PINJAM</div>
             @if($nasabah->simpanPinjam->count() > 0)
                 <table>
                     <thead>
@@ -199,10 +199,16 @@
                             <tr>
                                 <td>{{ $index + 1 }}</td>
                                 <td>
-                                    @if($item->tipe === 'simpan')
-                                        <span class="badge badge-simpan">Simpan</span>
+                                    @if($item->tipe === 'bayar')
+                                        <span class="badge badge-simpan">Bayar</span>
+                                    @elseif($item->tipe === 'hutang')
+                                         <span class="badge badge-pinjam">Hutang</span>
+                                    @elseif($item->tipe === 'transaksi')
+                                         <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">{{ __('Transaksi') }}</span>
+                                    @elseif($item->tipe === 'ambil')
+                                         <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark    :text-yellow-200">{{ __('Ambil') }}</span>
                                     @else
-                                        <span class="badge badge-pinjam">Pinjam</span>
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200">{{ ucfirst($item->tipe) }}</span>
                                     @endif
                                 </td>
                                 <td class="text-right">Rp {{ number_format($item->nominal, 0, ',', '.') }}</td>
@@ -213,17 +219,25 @@
                 </table>
                 <div class="summary">
                     @php
-                        $totalSimpan = $nasabah->simpanPinjam->where('tipe', 'simpan')->sum('nominal');
-                        $totalPinjam = $nasabah->simpanPinjam->where('tipe', 'pinjam')->sum('nominal');
+                        $totalBayar = $nasabah->simpanPinjam->where('tipe', 'bayar')->sum('nominal');
+                        $totalHutang = $nasabah->simpanPinjam->where('tipe', 'hutang')->sum('nominal');
+                        $totalTransaksi = $nasabah->simpanPinjam->where('tipe', 'transaksi')->sum('nominal');
+                        $totalAmbil = $nasabah->simpanPinjam->where('tipe', 'ambil')->sum('nominal');
                     @endphp
                     <div class="summary-item">
-                        <span class="summary-label">Total Simpan:</span> Rp {{ number_format($totalSimpan, 0, ',', '.') }}
+                        <span class="summary-label">Total Bayar:</span>{{ formatCurrency($totalBayar, 0, ',', '.') }}
                     </div>
                     <div class="summary-item">
-                        <span class="summary-label">Total Pinjam:</span> Rp {{ number_format($totalPinjam, 0, ',', '.') }}
+                        <span class="summary-label">Total Hutang:</span>{{ formatCurrency($totalHutang, 0, ',', '.') }}
                     </div>
                     <div class="summary-item">
-                        <span class="summary-label">Saldo Netto:</span> Rp {{ number_format($totalSimpan - $totalPinjam, 0, ',', '.') }}
+                        <span class="summary-label">Total Transaksi:</span>{{ formatCurrency($totalTransaksi, 0, ',', '.') }}
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Total Ambil:</span>{{ formatCurrency($totalAmbil, 0, ',', '.') }}
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Sisa Bayar:</span>{{ formatCurrency($totalBayar - $totalHutang , 0, ',', '.') }} 
                     </div>
                 </div>
             @else
@@ -267,7 +281,7 @@
                         <span class="summary-label">Total Berat/Jumlah:</span> {{ number_format($totalBerat, 2, ',', '.') }} Kg
                     </div>
                     <div class="summary-item">
-                        <span class="summary-label">Total Harga:</span> Rp {{ number_format($totalHargaAkhir, 0, ',', '.') }}
+                        <span class="summary-label">Total Harga Akhir:</span> Rp {{ number_format($totalHargaAkhir, 0, ',', '.') }}
                     </div>
                     <div class="summary-item">
                         <span class="summary-label">Rata-rata Harga:</span> Rp {{ number_format($totalHargaAkhir / $nasabah->pembelian->count(), 0, ',', '.') }}

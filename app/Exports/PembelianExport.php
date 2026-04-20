@@ -61,7 +61,7 @@ class PembelianExport implements FromCollection, WithHeadings, WithMapping, With
             $pembelian->satuan,
             $pembelian->total_berat,
             $pembelian->total_harga,
-            $pembelian->biaya_admin_persen,
+            $pembelian->potongan,
             $pembelian->biaya_admin,
             $pembelian->harga_akhir,
             $pembelian->created_at->format('Y-m-d H:i:s'),

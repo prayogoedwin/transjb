@@ -16,7 +16,29 @@
 
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden max-w-2xl">
         <div class="p-6">
-            <form id="pembelian-form" action="{{ route('pembelian.store') }}" method="POST" class="max-w-2xl">
+            <form id="pembelian-form"
+                x-data="{
+                    hargaSatuan: 0,
+                    satuan: '',
+                    totalBerat: {{ old('total_berat', 0) }},
+                    potongan: {{ old('potongan', 0) }},
+                    get beratSetelahPotong() { return this.totalBerat - (this.totalBerat * this.potongan / 100); },
+                    get totalHarga() { return this.hargaSatuan * this.totalBerat; },
+                    get biayaAdmin() { return this.totalHarga * this.potongan / 100; },
+                    get hargaAkhir() { return this.totalHarga - this.biayaAdmin; },
+                    onProductChange(el) {
+                        const opt = el.options[el.selectedIndex];
+                        this.hargaSatuan = parseFloat(opt.dataset.harga) || 0;
+                        this.satuan = opt.dataset.satuan || '';
+                    },
+                    fmt(val) { return 'Rp ' + Math.round(val).toLocaleString('id-ID'); },
+                    fmtBerat(val) { return val.toLocaleString('id-ID', {maximumFractionDigits: 4}); },
+                    init() {
+                        const sel = this.$el.querySelector('[name=produk_id]');
+                        if (sel && sel.value) this.onProductChange(sel);
+                    }
+                }"
+                action="{{ route('pembelian.store') }}" method="POST" class="max-w-2xl">
                 @csrf
 
                 <div class="mb-4">
@@ -34,55 +56,29 @@
 
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Produk') }} *</label>
-                    <select id="produk_id" name="produk_id" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100" required>
+                    <select id="produk_id" name="produk_id" @change="onProductChange($el)" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100" required>
                         <option value="">{{ __('Pilih Produk') }}</option>
                         @foreach($products as $p)
-                            <option value="{{ $p->id }}" data-satuan="{{ $p->satuan }}" {{ old('produk_id') == $p->id ? 'selected' : '' }}>{{ $p->nama_produk }} - {{ formatDecimalSmart($p->harga_beli) }} / {{ $p->satuan }}</option>
+                            <option value="{{ $p->id }}" data-satuan="{{ $p->satuan }}" data-harga="{{ $p->harga_beli }}" {{ old('produk_id') == $p->id ? 'selected' : '' }}>{{ $p->nama_produk }} - {{ formatCurrency($p->harga_beli) }} / {{ $p->satuan }}</option>
                         @endforeach
                     </select>
                     @error('produk_id')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                     @enderror
                 </div>
-<!-- 
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Satuan') }}</label>
-                    <input type="text" id="satuan_display" readonly class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-600 dark:text-gray-100 text-gray-600" />
-                    <input type="hidden" name="satuan" id="satuan_input" value="{{ old('satuan', '') }}" />
-                </div> -->
 
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Total Berat') }} *</label>
-                    <input type="number" name="total_berat" value="{{ old('total_berat', 0) }}" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100" required />
+                    <input type="number" name="total_berat" x-model.number="totalBerat" value="{{ old('total_berat', 0) }}" step="0.0001" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100" required />
                     @error('total_berat')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                     @enderror
                 </div>
+
                 <div class="mb-6">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Potongan (%)') }} *</label>
-                    <input type="number" name="biaya_admin_persen" max="100" value="{{ old('biaya_admin_persen', 0) }}" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100" required />
-                    @error('biaya_admin_persen')
-                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Berat Setelah Potong') }}</label>
-                    <input type="number" id="berat_setelah_potong_display" name="berat_setelah_potong" value="{{ old('berat_setelah_potong', 0) }}" readonly class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-600 dark:text-gray-100 text-gray-600" />
-                </div>
-
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Harga Satuan Beli') }} *</label>
-                    <input type="number" name="harga_satuan_beli" value="{{ old('harga_satuan_beli', 0) }}" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100" required />
-                    @error('harga_satuan_beli')
-                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <div class="mb-6">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Keterangan') }}</label>
-                    <textarea name="keterangan" rows="3" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100" placeholder="{{ __('Catatan tambahan tentang pembelian ini') }}">{{ old('keterangan') }}</textarea>
-                    @error('keterangan')
+                    <input type="number" name="potongan" x-model.number="potongan" max="100" value="{{ old('potongan', 0) }}" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100" required />
+                    @error('potongan')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                     @enderror
                 </div>
@@ -92,30 +88,32 @@
                         <tbody>
                             <tr>
                                 <td class="py-1 text-blue-700 dark:text-blue-300">{{ __('Harga Satuan') }}</td>
-                                <td class="py-1 text-right font-semibold text-blue-900 dark:text-blue-100" id="harga-satuan">Rp 0</td>
+                                <td class="py-1 text-right font-semibold text-blue-900 dark:text-blue-100" x-text="fmt(hargaSatuan)">Rp 0</td>
                                 <td></td>
                                 <td></td>
                             </tr>
-                            <!-- </tr>                            <tr>
-                                <td class="py-1 text-blue-700 dark:text-blue-300">{{ __('Total Harga') }}</td>
-                                <td class="py-1 text-right font-semibold text-blue-900 dark:text-blue-100" id="summary-total-price">Rp 0</td>
-                                <td></td>
-                                <td></td>
-                            </tr> -->
                             <tr>
-                                <td class="py-1 text-blue-700 dark:text-blue-300">{{ __('Total berat setelah potong') }}</td>
-                                <td class="py-1 text-right font-semibold text-blue-900 dark:text-blue-100" id="total-berat-setelah-potong">0</td>
-                                <td class="text-left font-semibold text-blue-900 dark:text-blue-100" id="satuan-display"></td>
-                                <td class="text-right font-semibold text-blue-900 dark:text-blue-100">x</td>
+                                <td class="py-1 text-blue-700 dark:text-blue-300">{{ __('Berat setelah potong') }}</td>
+                                <td class="py-1 text-right font-semibold text-blue-900 dark:text-blue-100" x-text="fmtBerat(beratSetelahPotong)">0</td>
+                                <td class="pl-1 text-center font-semibold text-blue-900 dark:text-blue-100" x-text="satuan"></td>
+                                <td class="text-center font-semibold text-blue-900 dark:text-blue-100">x</td>
                             </tr>
                             <tr class="border-t border-blue-200 dark:border-blue-700">
                                 <td class="pt-2 text-blue-900 dark:text-blue-100 font-semibold">{{ __('Harga Akhir') }}</td>
-                                <td class="pt-2 text-right font-bold text-lg text-blue-900 dark:text-blue-100" id="summary-final-price">Rp 0</td>
+                                <td class="pt-2 text-right font-bold text-lg text-blue-900 dark:text-blue-100" x-text="fmt(hargaAkhir)">Rp 0</td>
                                 <td></td>
                                 <td></td>
                             </tr>
                         </tbody>
                     </table>
+                </div>
+                
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Keterangan') }}</label>
+                    <textarea name="keterangan" rows="3" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100" placeholder="{{ __('Catatan tambahan tentang pembelian ini') }}">{{ old('keterangan') }}</textarea>
+                    @error('keterangan')
+                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div class="mb-6">
@@ -124,6 +122,12 @@
                         <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">{{ __('Cetak invoice') }}</span>
                     </label>
                 </div>
+
+                <input type="hidden" name="harga_satuan_beli" :value="hargaSatuan">
+                <input type="hidden" name="satuan" :value="satuan">
+                <input type="hidden" name="berat_setelah_potong" :value="beratSetelahPotong">
+                <input type="hidden" name="biaya_admin" :value="biayaAdmin">
+                <input type="hidden" name="harga_akhir" :value="hargaAkhir">
 
                 <div class="flex gap-3">
                     <x-button type="primary">{{ __('Simpan') }}</x-button>
@@ -136,115 +140,27 @@
     </div>
 
     <script>
-        // Calculate summary
-        const form = document.getElementById('pembelian-form');
-        const hargaSatuanInput = form.querySelector('input[name="harga_satuan_beli"]');
-        const totalBeratInput = form.querySelector('input[name="total_berat"]');
-        const biayaAdminPersenInput = form.querySelector('input[name="biaya_admin_persen"]');
-        
-        function updateSummary() {
-            const hargaSatuan = parseFloat(hargaSatuanInput.value) || 0;
-            const totalBerat = parseFloat(totalBeratInput.value) || 0;
-            const biayaAdminPersen = parseFloat(biayaAdminPersenInput.value) || 0;
-            
-            const beratSetelahPotong = totalBerat - (totalBerat * biayaAdminPersen / 100);
-            const totalHarga = hargaSatuan * totalBerat;
-            const biayaAdmin = (totalHarga * biayaAdminPersen) / 100;
-            const hargaAkhir = totalHarga - biayaAdmin;
-
-
-            document.getElementById('harga-satuan').value = 'Rp '+ hargaSatuan.toLocaleString('id-ID', {maximumFractionDigits: 0});
-            document.getElementById('berat_setelah_potong_display').value = beratSetelahPotong;
-            document.getElementById('summary-total-price').textContent = 'Rp ' + totalHarga.toLocaleString('id-ID', {maximumFractionDigits: 0});
-            document.getElementById('total-berat-setelah-potong').textContent = beratSetelahPotong.toLocaleString('id-ID', {maximumFractionDigits: 2});
-            document.getElementById('summary-final-price').textContent = 'Rp ' + hargaAkhir.toLocaleString('id-ID', {maximumFractionDigits: 0});
-            document.getElementById('satuan-display').textContent = form.querySelector('input[name="satuan"]').value;
-        }
-
-        hargaSatuanInput.addEventListener('change', updateSummary);
-        totalBeratInput.addEventListener('change', updateSummary);
-        biayaAdminPersenInput.addEventListener('change', updateSummary);
-
-        // Handle form submission with print invoice
-        form.addEventListener('submit', function(e) {
+        document.getElementById('pembelian-form').addEventListener('submit', function (e) {
             const printCheckbox = document.getElementById('print_invoice');
-            
-            // Jika checkbox cetak dicentang
+
             if (printCheckbox.checked) {
                 e.preventDefault();
-                
-                // Collect form data
-                const formData = new FormData(this);
-                
-                // Submit via AJAX dengan Accept JSON header
+
                 fetch(this.action, {
                     method: 'POST',
-                    body: formData,
-                    headers: {
-                        'Accept': 'application/json',
-                    }
+                    body: new FormData(this),
+                    headers: { 'Accept': 'application/json' }
                 })
                 .then(response => {
                     if (!response.ok) throw new Error('Network response was not ok');
                     return response.json();
                 })
                 .then(data => {
-                    // Buka PDF di tab baru
                     window.open(data.print_url, '_blank');
-                    
-                    // Redirect halaman saat ini ke index
-                    setTimeout(() => {
-                        window.location.href = data.redirect_url;
-                    }, 500);
+                    setTimeout(() => { window.location.href = data.redirect_url; }, 500);
                 })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Terjadi kesalahan saat menyimpan data');
-                });
+                .catch(() => alert('Terjadi kesalahan saat menyimpan data'));
             }
-            // Jika checkbox tidak dicentang, biarkan form submit normal
         });
-    </script>
-
-    <script>
-        // Auto-fill satuan from selected product
-        const produkSelect = document.getElementById('produk_id');
-        const satuanDisplay = document.getElementById('satuan_display');
-        const satuanInput = document.getElementById('satuan_input');
-
-        function updateSatuan() {
-            const selectedOption = produkSelect.options[produkSelect.selectedIndex];
-            const satuan = selectedOption.getAttribute('data-satuan') || '';
-            satuanDisplay.value = satuan;
-            satuanInput.value = satuan;
-        }
-
-        // Handle product selection change
-        produkSelect.addEventListener('change', updateSatuan);
-
-        // Initialize satuan on page load if product already selected
-        window.addEventListener('load', updateSatuan);
-    </script>
-
-    <script>
-            const hargaSatuan = parseFloat(document.querySelector('input[name="harga_satuan_beli"]').value) || 0;
-            const totalBerat = parseFloat(document.querySelector('input[name="total_berat"]').value) || 0;
-            const biayaPersen = parseFloat(document.querySelector('input[name="biaya_admin_persen"]').value) || 0;
-
-            const totalHarga = hargaSatuan * totalBerat;
-            const biayaAdmin = (totalHarga * biayaPersen) / 100;
-            const total_berat_setelah_potong = totalBerat - (totalBerat * biayaPersen / 100);
-            const hargaAkhir = totalHarga - biayaAdmin;
-
-            document.getElementById('summary-total-price').textContent = 'Rp ' + totalHarga.toLocaleString('id-ID', {maximumFractionDigits: 0});
-            document.getElementById('total-berat-setelah-potong').textContent = total_berat_setelah_potong==null? '0' : total_berat_setelah_potong.toLocaleString('id-ID', {maximumFractionDigits: 2}) ;
-            document.getElementById('summary-final-price').textContent = 'Rp ' + hargaAkhir.toLocaleString('id-ID', {maximumFractionDigits: 0});
-
-        document.querySelector('input[name="harga_satuan_beli"]').addEventListener('change', updateSummary);
-        document.querySelector('input[name="total_berat"]').addEventListener('change', updateSummary);
-        document.querySelector('input[name="biaya_admin_persen"]').addEventListener('change', updateSummary);
-
-        // Initial calculation
-        updateSummary();
     </script>
 </x-layouts.app>
