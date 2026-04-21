@@ -16,7 +16,7 @@
 
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
         <div class="p-6">
-            <form id="simpan-pinjam-form" action="{{ route('simpan_pinjam.store') }}" method="POST" class="max-w-2xl">
+            <form id="simpan-pinjam-form" action="{{ route('simpan_pinjam.store') }}" method="POST" class="max-w-2xl" @submit="formSubmitted = true">
                 @csrf
 
                 <div class="mb-4">
@@ -58,7 +58,7 @@
                 </div>
 
                 <div class="flex gap-3">
-                    <x-button type="primary">{{ __('Simpan') }}</x-button>
+                    <x-button type="primary" :disabled="formSubmitted" x-text="formSubmitted ? '{{ __('Menyimpan...') }}' : '{{ __('Simpan') }}'"></x-button>
                     <a href="{{ route('simpan_pinjam.index') }}">
                         <x-button type="secondary">{{ __('Batal') }}</x-button>
                     </a>

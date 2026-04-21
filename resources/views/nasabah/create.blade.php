@@ -16,7 +16,7 @@
 
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden max-w-xl">
         <div class="p-6">
-            <form action="{{ route('nasabah.store') }}" method="POST" class="max-w-2xl">
+            <form action="{{ route('nasabah.store') }}" method="POST" class="max-w-2xl" @submit="formSubmitted = true">
                 @csrf
 
                 <div class="mb-4">
@@ -49,7 +49,7 @@
                 </div>
 
                 <div class="flex gap-3">
-                    <x-button type="primary">{{ __('Simpan') }}</x-button>
+                    <x-button type="primary" :disabled="formSubmitted" x-text="formSubmitted ? '{{ __('Menyimpan...') }}' : '{{ __('Simpan') }}'"></x-button>
                     <x-button type="secondary" tag="a" href="{{ route('nasabah.index') }}">{{ __('Batal') }}</x-button>
                 </div>
             </form>
