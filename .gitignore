@@ -21,9 +21,5 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
-<<<<<<< HEAD
-/dist
-=======
 /dist
 /build
->>>>>>> master

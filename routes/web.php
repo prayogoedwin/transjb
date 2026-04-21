@@ -132,7 +132,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('laporan', [LaporanController::class, 'index'])->name('laporan.index');
     Route::get('laporan/export-pdf', [LaporanController::class, 'exportPdf'])->name('laporan.export-pdf');
     Route::get('laporan/print', [LaporanController::class, 'print'])->name('laporan.print');
-<<<<<<< HEAD
     
     // Route::prefix('api/backups')->middleware('role:admin')->group(function () {
     //     Route::post('/', [BackupController::class, 'backup'])->name('backups.create');
@@ -145,14 +144,12 @@ Route::middleware(['auth'])->group(function () {
     //     Route::post('/restore', [BackupController::class, 'restore'])->name('backups.restore');
     //     Route::delete('/', [BackupController::class, 'delete'])->name('backups.delete');
     // });
-=======
 
     // Penyesuaian Stok
     Route::get('penyesuaian_stok', [PenyesuaianStokController::class, 'index'])->name('penyesuaian_stok.index')->middleware('permission:view-penyesuaian-stok');
     Route::get('penyesuaian_stok/create', [PenyesuaianStokController::class, 'create'])->name('penyesuaian_stok.create')->middleware('permission:create-penyesuaian-stok');
     Route::post('penyesuaian_stok', [PenyesuaianStokController::class, 'store'])->name('penyesuaian_stok.store')->middleware('permission:create-penyesuaian-stok');
     Route::get('penyesuaian_stok/{penyesuaianStok}', [PenyesuaianStokController::class, 'show'])->name('penyesuaian_stok.show')->middleware('permission:show-penyesuaian-stok');
->>>>>>> master
 });
 
 

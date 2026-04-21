@@ -14,11 +14,7 @@
                                 <x-layouts.sidebar-link href="{{ route('nasabah.index') }}" icon='fas-user' :active="request()->routeIs('nasabah*')">Nasabah</x-layouts.sidebar-link>
                                 <x-layouts.sidebar-link href="{{ route('products.index') }}" icon='fas-box' :active="request()->routeIs('products*')">Produk</x-layouts.sidebar-link>
                             <x-layouts.sidebar-link href="{{ route('laporan.index') }}" icon='fas-chart-bar' :active="request()->routeIs('laporan*')">Laporan/Rekap</x-layouts.sidebar-link>
-<<<<<<< HEAD
-=======
-                            <x-layouts.sidebar-link href="{{ route('penjualan.index') }}" icon='fas-money-bill' :active="request()->routeIs('penjualan*')">Penjualan</x-layouts.sidebar-link>
                             <x-layouts.sidebar-link href="{{ route('penyesuaian_stok.index') }}" icon='fas-adjust' :active="request()->routeIs('penyesuaian_stok*')">Penyesuaian Stok</x-layouts.sidebar-link>
->>>>>>> master
 
                             @if(auth()->user()->hasPermission('usermanagement-menu'))
                             <x-layouts.sidebar-two-level-link-parent title="User Management" icon="fas-users"

@@ -16,7 +16,6 @@
 
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden max-w-2xl">
         <div class="p-6">
-<<<<<<< HEAD
             <form id="pembelian-form"
                 x-data="{
                     hargaSatuan: 0,
@@ -39,10 +38,7 @@
                         if (sel && sel.value) this.onProductChange(sel);
                     }
                 }"
-                action="{{ route('pembelian.store') }}" method="POST" class="max-w-2xl">
-=======
-            <form id="pembelian-form" action="{{ route('pembelian.store') }}" method="POST" class="max-w-2xl" @submit="formSubmitted = true">
->>>>>>> master
+                action="{{ route('pembelian.store') }}" method="POST" class="max-w-2xl" @submit="formSubmitted = true">
                 @csrf
 
                 <div class="mb-4">
