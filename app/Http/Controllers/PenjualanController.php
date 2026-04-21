@@ -169,71 +169,77 @@ class PenjualanController extends Controller
             'details.*.jumlah' => ['required', 'numeric', 'min:0'],
         ]);
 
-        return DB::transaction(function () use ($penjualan, $validated) {
-            // Calculate total penjualan
-            $totalPembelian = 0;
-            foreach ($validated['details'] as $detail) {
-                $totalPembelian += $detail['harga_satuan'] * $detail['jumlah'];
-            }
-            $validated['total_pembelian'] = $totalPembelian;
-
-            // Update main record
-            $penjualan->update($validated);
-
-            // Get existing detail IDs
-            $existingIds = $penjualan->details->pluck('id')->toArray();
-            $updatedIds = [];
-
-            // Update or create details
-            foreach ($validated['details'] as $detail) {
-                $product = Product::findOrFail($detail['produk_id']);
-                
-                if (isset($detail['id']) && $detail['id']) {
-                    // Update existing
-                    $detailItem = PenjualanDetail::find($detail['id']);
-                    $detailItem->update([
-                        'produk_id' => $detail['produk_id'],
-                        'nama_produk' => $product->nama_produk,
-                        'harga_satuan' => $detail['harga_satuan'],
-                        'satuan' => $detail['satuan'],
-                        'jumlah' => $detail['jumlah'],
-                        'harga_total' => $detail['harga_satuan'] * $detail['jumlah'],
-                    ]);
-                    $updatedIds[] = $detail['id'];
-                } else {
-                    // Create new
-                    $newDetail = PenjualanDetail::create([
-                        'penjualan_id' => $penjualan->id,
-                        'produk_id' => $detail['produk_id'],
-                        'nama_produk' => $product->nama_produk,
-                        'harga_satuan' => $detail['harga_satuan'],
-                        'satuan' => $detail['satuan'],
-                        'jumlah' => $detail['jumlah'],
-                        'harga_total' => $detail['harga_satuan'] * $detail['jumlah'],
-                    ]);
-                    $updatedIds[] = $newDetail->id;
+        try {
+            DB::transaction(function () use ($penjualan, $validated) {
+                // Calculate total penjualan
+                $totalPembelian = 0;
+                foreach ($validated['details'] as $detail) {
+                    $totalPembelian += $detail['harga_satuan'] * $detail['jumlah'];
                 }
-            }
+                $validated['total_pembelian'] = $totalPembelian;
 
-            // Delete removed details
-            $toDelete = array_diff($existingIds, $updatedIds);
-            if (!empty($toDelete)) {
-                PenjualanDetail::whereIn('id', $toDelete)->delete();
-            }
+                // Update main record
+                $penjualan->update($validated);
 
-            return true;
-        });
+                // Get existing detail IDs
+                $existingIds = $penjualan->details->pluck('id')->toArray();
+                $updatedIds = [];
+
+                // Update or create details
+                foreach ($validated['details'] as $detail) {
+                    $product = Product::findOrFail($detail['produk_id']);
+                    
+                    if (isset($detail['id']) && $detail['id']) {
+                        // Update existing
+                        $detailItem = PenjualanDetail::find($detail['id']);
+                        $detailItem->update([
+                            'produk_id' => $detail['produk_id'],
+                            'nama_produk' => $product->nama_produk,
+                            'harga_satuan' => $detail['harga_satuan'],
+                            'satuan' => $detail['satuan'],
+                            'jumlah' => $detail['jumlah'],
+                            'harga_total' => $detail['harga_satuan'] * $detail['jumlah'],
+                        ]);
+                        $updatedIds[] = $detail['id'];
+                    } else {
+                        // Create new
+                        $newDetail = PenjualanDetail::create([
+                            'penjualan_id' => $penjualan->id,
+                            'produk_id' => $detail['produk_id'],
+                            'nama_produk' => $product->nama_produk,
+                            'harga_satuan' => $detail['harga_satuan'],
+                            'satuan' => $detail['satuan'],
+                            'jumlah' => $detail['jumlah'],
+                            'harga_total' => $detail['harga_satuan'] * $detail['jumlah'],
+                        ]);
+                        $updatedIds[] = $newDetail->id;
+                    }
+                }
+
+                // Delete removed details
+                $toDelete = array_diff($existingIds, $updatedIds);
+                if (!empty($toDelete)) {
+                    PenjualanDetail::whereIn('id', $toDelete)->delete();
+                }
+            });
+        } catch (\Exception $e) {
+            return back()->withInput()->with('error', 'Gagal memperbarui penjualan. ' . $e->getMessage());
+        }
 
         return to_route('penjualan.index')->with('status', 'Penjualan updated successfully.');
     }
 
     public function destroy(Penjualan $penjualan): RedirectResponse
     {
-        DB::transaction(function () use ($penjualan) {
-            // Delete all details first
-            $penjualan->details()->delete();
-            $penjualan->delete();
-        });
+        try {
+            DB::transaction(function () use ($penjualan) {
+                // Delete all details first
+                $penjualan->details()->delete();
+                $penjualan->delete();
+            });
+        } catch (\Exception $e) {
+            return back()->with('error', 'Gagal menghapus penjualan. ' . $e->getMessage());
+        }
 
         return to_route('penjualan.index')->with('status', 'Penjualan deleted successfully.');
     }

@@ -62,6 +62,9 @@ class RolePermissionSeeder extends Seeder
             // 'edit-penjualan',
             'download-penjualan',
             // 'delete-penjualan',
+            'view-penyesuaian-stok',
+            'show-penyesuaian-stok',
+            'create-penyesuaian-stok',
         ];
 
         foreach ($permissions as $permissionName) {

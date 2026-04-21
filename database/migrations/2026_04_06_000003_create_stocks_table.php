@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('produk_id')->nullable();
             $table->foreignId('pembelian_id')->nullable();
+            $table->unsignedBigInteger('penyesuaian_stok_id')->nullable();
             $table->decimal('jumlah', 15, 4);
             $table->string('satuan', 50)->default('kg');
             $table->enum('transaksi', ['in', 'out'])->nullable();

@@ -22,7 +22,7 @@
 
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
         <div class="p-6">
-            <form action="{{ route('permissions.store') }}" method="POST" class="max-w-md">
+            <form action="{{ route('permissions.store') }}" method="POST" class="max-w-md" @submit="formSubmitted = true">
                 @csrf
 
                 <div class="mb-6">
@@ -31,7 +31,7 @@
                 </div>
 
                 <div class="flex gap-3">
-                    <x-button type="primary">{{ __('Create') }}</x-button>
+                    <x-button type="primary" :disabled="formSubmitted" x-text="formSubmitted ? '{{ __('Saving...') }}' : '{{ __('Create') }}'"></x-button>
                     <a href="{{ route('permissions.index') }}">
                         <x-button type="secondary">{{ __('Cancel') }}</x-button>
                     </a>

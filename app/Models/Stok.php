@@ -20,6 +20,7 @@ class Stok extends Model
     protected $fillable = [
         'produk_id',
         'pembelian_id',
+        'penyesuaian_stok_id',
         'transaksi',
         'jumlah',
         'satuan',
@@ -52,6 +53,11 @@ class Stok extends Model
     public function pembelian(): BelongsTo
     {
         return $this->belongsTo(Pembelian::class, 'pembelian_id');
+    }
+
+    public function penyesuaianStok(): BelongsTo
+    {
+        return $this->belongsTo(PenyesuaianStok::class, 'penyesuaian_stok_id');
     }
 
     /**

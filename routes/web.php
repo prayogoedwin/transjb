@@ -10,6 +10,7 @@ use App\Http\Controllers\SimpanPinjamController;
 use App\Http\Controllers\PembelianController;
 use App\Http\Controllers\PenjualanController;
 use App\Http\Controllers\LaporanController;
+use App\Http\Controllers\PenyesuaianStokController;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/', function () {
@@ -120,6 +121,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('laporan', [LaporanController::class, 'index'])->name('laporan.index');
     Route::get('laporan/export-pdf', [LaporanController::class, 'exportPdf'])->name('laporan.export-pdf');
     Route::get('laporan/print', [LaporanController::class, 'print'])->name('laporan.print');
+
+    // Penyesuaian Stok
+    Route::get('penyesuaian_stok', [PenyesuaianStokController::class, 'index'])->name('penyesuaian_stok.index')->middleware('permission:view-penyesuaian-stok');
+    Route::get('penyesuaian_stok/create', [PenyesuaianStokController::class, 'create'])->name('penyesuaian_stok.create')->middleware('permission:create-penyesuaian-stok');
+    Route::post('penyesuaian_stok', [PenyesuaianStokController::class, 'store'])->name('penyesuaian_stok.store')->middleware('permission:create-penyesuaian-stok');
+    Route::get('penyesuaian_stok/{penyesuaianStok}', [PenyesuaianStokController::class, 'show'])->name('penyesuaian_stok.show')->middleware('permission:show-penyesuaian-stok');
 });
 
 require __DIR__.'/auth.php';

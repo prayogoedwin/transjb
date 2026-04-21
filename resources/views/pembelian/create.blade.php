@@ -22,7 +22,7 @@
 
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden max-w-2xl">
         <div class="p-6">
-            <form id="pembelian-form" action="{{ route('pembelian.store') }}" method="POST" class="max-w-2xl">
+            <form id="pembelian-form" action="{{ route('pembelian.store') }}" method="POST" class="max-w-2xl" @submit="formSubmitted = true">
                 @csrf
 
                 <div class="mb-4">
@@ -114,7 +114,7 @@
                 </div>
 
                 <div class="flex gap-3">
-                    <x-button type="primary">{{ __('Simpan') }}</x-button>
+                    <x-button type="primary" :disabled="formSubmitted" x-text="formSubmitted ? '{{ __('Menyimpan...') }}' : '{{ __('Simpan') }}'"></x-button>
                     <a href="{{ route('pembelian.index') }}">
                         <x-button type="secondary">{{ __('Batal') }}</x-button>
                     </a>
