@@ -58,7 +58,7 @@
                 </div>
 
                 <div class="flex gap-3">
-                    <x-button type="primary" :disabled="formSubmitted" x-text="formSubmitted ? '{{ __('Menyimpan...') }}' : '{{ __('Simpan') }}'"></x-button>
+                    <x-button type="primary" x-bind:disabled="formSubmitted" x-text="formSubmitted ? '{{ __('Menyimpan...') }}' : '{{ __('Simpan') }}'"></x-button>
                     <a href="{{ route('simpan_pinjam.index') }}">
                         <x-button type="secondary">{{ __('Batal') }}</x-button>
                     </a>

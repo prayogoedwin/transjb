@@ -85,7 +85,7 @@
                 </script>
 
                 <div class="flex gap-3">
-                    <x-button type="primary" :disabled="formSubmitted" x-text="formSubmitted ? '{{ __('Saving...') }}' : '{{ __('Create') }}'"></x-button>
+                    <x-button type="primary" x-bind:disabled="formSubmitted" x-text="formSubmitted ? '{{ __('Saving...') }}' : '{{ __('Create') }}'"></x-button>
                     <a href="{{ route('roles.index') }}">
                         <x-button type="secondary">{{ __('Cancel') }}</x-button>
                     </a>

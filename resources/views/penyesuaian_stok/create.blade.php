@@ -70,7 +70,7 @@
                 </div>
 
                 <div class="flex gap-3">
-                    <x-button type="primary" id="btn-simpan" :disabled="formSubmitted" x-text="formSubmitted ? '{{ __('Menyimpan...') }}' : '{{ __('Simpan') }}'"></x-button>
+                    <x-button type="primary" id="btn-simpan" x-bind:disabled="formSubmitted" x-text="formSubmitted ? '{{ __('Menyimpan...') }}' : '{{ __('Simpan') }}'"></x-button>
                     <a href="{{ route('penyesuaian_stok.index') }}">
                         <x-button type="secondary">{{ __('Batal') }}</x-button>
                     </a>
