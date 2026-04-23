@@ -81,7 +81,7 @@ class SimpanPinjamController extends Controller
     {
         $validated = $request->validate([
             'nasabah_id' => ['required', 'exists:nasabah,id'],
-            'tipe' => ['required', 'in:simpan,pinjam'],
+            'tipe' => ['required', 'in:bayar,hutang,transaksi,ambil'],
             'nominal' => ['required', 'numeric', 'min:0'],
             'print_receipt' => ['sometimes', 'boolean'],
         ]);
