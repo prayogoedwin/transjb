@@ -14,7 +14,7 @@
             ->take(3)
             ->implode('');
     @endphp
-    <link rel="icon" type="image/svg+xml" href="{{ asset('minicon.svg') }}">
+    <link rel="icon" type="image/svg+xml" href="{{ asset('minicon.svg') }} ">
     
     <!-- Tailwind CSS CDN -->
     <script src="{{ asset('tailwind.js') }}"></script>
