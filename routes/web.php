@@ -123,6 +123,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('penjualan', [PenjualanController::class, 'index'])->name('penjualan.index')->middleware('permission:view-penjualan');
     Route::get('penjualan/create', [PenjualanController::class, 'create'])->name('penjualan.create')->middleware('permission:create-penjualan');
     Route::post('penjualan', [PenjualanController::class, 'store'])->name('penjualan.store')->middleware('permission:create-penjualan');
+    Route::get('penjualan/export', [PenjualanController::class, 'exportExcel'])->name('penjualan.export')->middleware('permission:download-penjualan');
     Route::get('penjualan/{penjualan}', [PenjualanController::class, 'show'])->name('penjualan.show')->middleware('permission:show-penjualan');
     Route::get('penjualan/{penjualan}/print', [PenjualanController::class, 'printInvoice'])->name('penjualan.printInvoice')->middleware('permission:show-penjualan');
     Route::get('penjualan/{penjualan}/edit', [PenjualanController::class, 'edit'])->name('penjualan.edit')->middleware('permission:edit-penjualan');

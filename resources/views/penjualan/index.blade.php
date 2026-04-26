@@ -22,6 +22,26 @@
 
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
         <div class="p-4">
+            <div class="mb-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3 items-end">
+                <div>
+                    <label for="filter_date_from" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Tanggal Mulai') }}</label>
+                    <input type="date" id="filter_date_from" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100">
+                </div>
+                <div>
+                    <label for="filter_date_to" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Tanggal Akhir') }}</label>
+                    <input type="date" id="filter_date_to" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100">
+                </div>
+                <div class="flex gap-2">
+                    <x-button type="primary" id="btn-filter-penjualan">{{ __('Cari') }}</x-button>
+                    <x-button type="secondary" id="btn-reset-filter">{{ __('Reset') }}</x-button>
+                </div>
+                <div class="text-right lg:col-start-5">
+                    <a id="btn-download-excel" href="{{ route('penjualan.export') }}">
+                        <x-button type="secondary">{{ __('Download Excel') }}</x-button>
+                    </a>
+                </div>
+            </div>
+
             <table id="penjualan-table" class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead class="bg-gray-50 dark:bg-gray-900">
                     <tr>
@@ -44,10 +64,16 @@
 
     <script>
         $(document).ready(function() {
-            $('#penjualan-table').DataTable({
+            const table = $('#penjualan-table').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('penjualan.index') }}",
+                ajax: {
+                    url: "{{ route('penjualan.index') }}",
+                    data: function(d) {
+                        d.date_from = $('#filter_date_from').val();
+                        d.date_to = $('#filter_date_to').val();
+                    }
+                },
                 columns: [
                     { data: 'nama_customer', name: 'nama_customer' },
                     { data: 'nopol', name: 'nopol' },
@@ -73,6 +99,33 @@
                     }
                 }
             });
+
+            function updateExportUrl() {
+                const params = new URLSearchParams();
+                const dateFrom = $('#filter_date_from').val();
+                const dateTo = $('#filter_date_to').val();
+
+                if (dateFrom) params.set('date_from', dateFrom);
+                if (dateTo) params.set('date_to', dateTo);
+
+                const baseUrl = "{{ route('penjualan.export') }}";
+                $('#btn-download-excel').attr('href', params.toString() ? `${baseUrl}?${params.toString()}` : baseUrl);
+            }
+
+            $('#btn-filter-penjualan').on('click', function() {
+                table.draw();
+                updateExportUrl();
+            });
+
+            $('#btn-reset-filter').on('click', function() {
+                $('#filter_date_from').val('');
+                $('#filter_date_to').val('');
+                table.search('').draw();
+                updateExportUrl();
+            });
+
+            $('#filter_date_from, #filter_date_to').on('change', updateExportUrl);
+            updateExportUrl();
         });
     </script>
 </x-layouts.app>

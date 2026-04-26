@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Penjualan;
 use App\Models\PenjualanDetail;
 use App\Models\Product;
+use App\Exports\PenjualanExport;
 use App\Models\Nasabah;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -13,6 +14,7 @@ use Illuminate\View\View;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PenjualanController extends Controller
 {
@@ -20,6 +22,13 @@ class PenjualanController extends Controller
     {
         if ($request->ajax()) {
             $penjualan = Penjualan::with('details')->select('penjualan.*')->orderby('created_at', 'desc');
+
+            if ($request->filled('date_from')) {
+                $penjualan->whereDate('created_at', '>=', $request->input('date_from'));
+            }
+            if ($request->filled('date_to')) {
+                $penjualan->whereDate('created_at', '<=', $request->input('date_to'));
+            }
             
             return DataTables::of($penjualan)
                 ->addColumn('total_pembelian', function ($item) {
@@ -255,5 +264,20 @@ class PenjualanController extends Controller
         $pdf = Pdf::loadView('penjualan.invoice', ['penjualan' => $penjualan]);
         // return \View::make('penjualan.invoice', ['penjualan' => $penjualan])->render();
         return $pdf->download('Penjualan-' . $penjualan->id . '-' . date('YmdHis') . '.pdf');
+    }
+
+    public function exportExcel(Request $request)
+    {
+        $request->validate([
+            'date_from' => ['nullable', 'date'],
+            'date_to' => ['nullable', 'date'],
+        ]);
+
+        $filename = 'Penjualan-' . date('YmdHis') . '.xlsx';
+
+        return Excel::download(
+            new PenjualanExport($request->date_from, $request->date_to),
+            $filename
+        );
     }
 }
