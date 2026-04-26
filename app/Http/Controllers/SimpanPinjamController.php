@@ -64,16 +64,16 @@ class SimpanPinjamController extends Controller
                         $actions .= '<a href="' . route('simpan_pinjam.printReceipt', $item) . '" target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline mr-3">Cetak</a>';
                     }
                     
-                    // if (auth()->user()->hasPermission('edit-simpan-pinjam')) {
-                    //     $actions .= '<a href="' . route('simpan_pinjam.edit', $item) . '" class="text-blue-600 dark:text-blue-400 hover:underline mr-3">Ubah</a>';
-                    // }
+                    if (auth()->user()->hasPermission('edit-simpan-pinjam')) {
+                        $actions .= '<a href="' . route('simpan_pinjam.edit', $item) . '" class="text-blue-600 dark:text-blue-400 hover:underline mr-3">Ubah</a>';
+                    }
                     
-                    // if (auth()->user()->hasPermission('delete-simpan-pinjam')) {
-                    //     $actions .= '<form action="' . route('simpan_pinjam.destroy', $item) . '" method="POST" class="inline" onsubmit="return confirm(\'Apakah Anda yakin ingin menghapus data ini?\')">
-                    //         ' . csrf_field() . method_field('DELETE') . '
-                    //         <button type="submit" class="text-red-600 dark:text-red-400 hover:underline">Hapus</button>
-                    //     </form>';
-                    // }
+                    if (auth()->user()->hasPermission('delete-simpan-pinjam')) {
+                        $actions .= '<form action="' . route('simpan_pinjam.destroy', $item) . '" method="POST" class="inline" onsubmit="return confirm(\'Apakah Anda yakin ingin menghapus data ini?\')">
+                            ' . csrf_field() . method_field('DELETE') . '
+                            <button type="submit" class="text-red-600 dark:text-red-400 hover:underline">Hapus</button>
+                        </form>';
+                    }
                     
                     return $actions;
                 })

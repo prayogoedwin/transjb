@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Pembelian;
 use App\Models\Product;
 use App\Models\Nasabah;
+use App\Models\Stok;
+use App\Models\SimpanPinjam;
 use App\Exports\PembelianExport;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -66,16 +68,16 @@ class PembelianController extends Controller
                         $actions .= '<a href="' . route('pembelian.printInvoice', $item) . '" target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline mr-3">Cetak</a>';
                     }
                     
-                    // if (auth()->user()->hasPermission('edit-pembelian')) {
-                    //     $actions .= '<a href="' . route('pembelian.edit', $item) . '" class="text-blue-600 dark:text-blue-400 hover:underline mr-3">Edit</a>';
-                    // }
+                    if (auth()->user()->hasPermission('edit-pembelian')) {
+                        $actions .= '<a href="' . route('pembelian.edit', $item) . '" class="text-blue-600 dark:text-blue-400 hover:underline mr-3">Edit</a>';
+                    }
                     
-                    // if (auth()->user()->hasPermission('delete-pembelian')) {
-                    //     $actions .= '<form action="' . route('pembelian.destroy', $item) . '" method="POST" class="inline" onsubmit="return confirm(\'Are you sure?\')">
-                    //         ' . csrf_field() . method_field('DELETE') . '
-                    //         <button type="submit" class="text-red-600 dark:text-red-400 hover:underline">Delete</button>
-                    //     </form>';
-                    // }
+                    if (auth()->user()->hasPermission('delete-pembelian')) {
+                        $actions .= '<form action="' . route('pembelian.destroy', $item) . '" method="POST" class="inline" onsubmit="return confirm(\'Apakah Anda yakin ingin menghapus pembelian ini?\')">
+                            ' . csrf_field() . method_field('DELETE') . '
+                            <button type="submit" class="text-red-600 dark:text-red-400 hover:underline">Hapus</button>
+                        </form>';
+                    }
                     
                     return $actions;
                 })
@@ -208,19 +210,42 @@ class PembelianController extends Controller
             'keterangan' => ['nullable', 'string'],
         ]);
 
-        // Calculate totals
-        $totalHarga = $validated['harga_satuan_beli'] * $validated['total_berat'];
-        $validated['biaya_admin'] = ($totalHarga * $validated['potongan']) / 100;
-        $validated['harga_akhir'] = $totalHarga - $validated['biaya_admin'];
+        DB::transaction(function () use ($validated, $pembelian) {
+            // Calculate totals
+            $totalHarga = $validated['harga_satuan_beli'] * $validated['total_berat'];
+            $validated['biaya_admin'] = ($totalHarga * $validated['potongan']) / 100;
+            $validated['harga_akhir'] = $totalHarga - $validated['biaya_admin'];
+            $pembelian->update($validated);
 
-        $pembelian->update($validated);
+            // Sync stok data linked to this pembelian
+            Stok::where('pembelian_id', $pembelian->id)->update([
+                'produk_id' => $validated['produk_id'],
+                'jumlah' => $validated['total_berat'],
+                'satuan' => $validated['satuan'],
+            ]);
+
+            // Sync catatan keuangan linked to this pembelian
+            SimpanPinjam::where('pembelian_id', $pembelian->id)->update([
+                'nasabah_id' => $validated['nasabah_id'],
+            ]);
+
+            SimpanPinjam::where('pembelian_id', $pembelian->id)
+                ->where('tipe', 'transaksi')
+                ->update([
+                    'nominal' => $validated['harga_akhir'],
+                ]);
+        });
 
         return to_route('pembelian.index')->with('status', 'Data Pembelian berhasil diperbarui.');
     }
 
     public function destroy(Pembelian $pembelian): RedirectResponse
     {
-        $pembelian->delete();
+        DB::transaction(function () use ($pembelian) {
+            Stok::where('pembelian_id', $pembelian->id)->delete();
+            SimpanPinjam::where('pembelian_id', $pembelian->id)->delete();
+            $pembelian->delete();
+        });
 
         return to_route('pembelian.index')->with('status', 'Data Pembelian berhasil dihapus.');
     }

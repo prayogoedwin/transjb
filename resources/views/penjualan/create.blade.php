@@ -21,12 +21,7 @@
 
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Nama Pembeli') }} *</label>
-                    <select name="nama_customer" id="nama_customer" required class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100">
-                        <option value="">{{ __('Pilih atau ketik nama pembeli') }}</option>
-                        @foreach($nasabah as $n)
-                            <option value="{{ $n->nama }}" {{ old('nama_customer') === $n->nama ? 'selected' : '' }}>{{ $n->nama }}</option>
-                        @endforeach
-                    </select>
+                    <input type="text" name="nama_customer" id="nama_customer" value="{{ old('nama_customer') }}" required class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100" />
                     @error('nama_customer')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                     @enderror
@@ -133,17 +128,9 @@
         </div>
     </template>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css">
-    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
     <script>
         let itemCount = 0;
         const products = @json($products);
-
-        new TomSelect('#nama_customer', {
-            create: true,
-            sortField: { field: 'text', direction: 'asc' },
-            placeholder: '{{ __("Pilih atau ketik nama pembeli") }}'
-        });
 
         function updateCalculations() {
             let totalItems = 0;

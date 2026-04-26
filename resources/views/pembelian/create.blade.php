@@ -59,7 +59,7 @@
 
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Nasabah') }} *</label>
-                    <select name="nasabah_id" @change="onNasabahChange($el)" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100" required>
+                    <select id="nasabah_id" name="nasabah_id" @change="onNasabahChange($el)" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100" required>
                         <option value="">{{ __('Pilih Nasabah') }}</option>
                         @foreach($nasabah as $nb)
                             <option value="{{ $nb->id }}" data-sisa-hutang="{{ (int) round($nb->sisa_hutang ?? 0) }}" {{ old('nasabah_id') == $nb->id ? 'selected' : '' }}>{{ $nb->nama }}</option>
@@ -204,7 +204,15 @@
         </div>
     </div>
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css">
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
     <script>
+        new TomSelect('#nasabah_id', {
+            create: false,
+            sortField: { field: 'text', direction: 'asc' },
+            placeholder: '{{ __("Pilih Nasabah") }}'
+        });
+
         document.getElementById('pembelian-form').addEventListener('submit', function (e) {
             const printCheckbox = document.getElementById('print_invoice');
 
