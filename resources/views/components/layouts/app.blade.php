@@ -21,10 +21,10 @@
         %3C/svg%3E">
 
     
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <link rel="stylesheet" href="{{ asset('tailwind.css') }}">
+    <script defer src="{{ asset('alpine.js') }}"></script>
     
     <!-- FontAwesome CDN for Icons -->
-    <link rel="stylesheet" href="{{ asset('tailwind.css') }}" />
 
     <!-- Custom Styles -->
     <style>
