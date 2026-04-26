@@ -23,11 +23,13 @@ class SimpanPinjamExport implements FromCollection, WithHeadings, WithMapping, W
 
     private $dateFrom;
     private $dateTo;
+    private $nasabahId;
 
-    public function __construct($dateFrom = null, $dateTo = null)
+    public function __construct($dateFrom = null, $dateTo = null, $nasabahId = null)
     {
         $this->dateFrom = $dateFrom;
         $this->dateTo = $dateTo;
+        $this->nasabahId = $nasabahId;
     }
 
     public function collection()
@@ -40,6 +42,10 @@ class SimpanPinjamExport implements FromCollection, WithHeadings, WithMapping, W
 
         if ($this->dateTo) {
             $query->whereDate('created_at', '<=', $this->dateTo);
+        }
+
+        if ($this->nasabahId) {
+            $query->where('nasabah_id', $this->nasabahId);
         }
 
         return $query->get();

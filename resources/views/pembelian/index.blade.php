@@ -20,26 +20,37 @@
         </div>
     </div>
 
-    <!-- Filter dan Export Section -->
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden mb-6">
-        <div class="p-4">
-            <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4">{{ __('Export ke Excel') }}</h3>
-            <form method="GET" action="{{ route('pembelian.export') }}" class="flex gap-4 items-end flex-wrap">
-                <div class="flex-1 min-w-[200px]">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Tanggal Mulai') }}</label>
-                    <input type="date" name="date_from" value="{{ request('date_from') }}" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100">
-                </div>
-                <div class="flex-1 min-w-[200px]">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Tanggal Akhir') }}</label>
-                    <input type="date" name="date_to" value="{{ request('date_to') }}" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100">
-                </div>
-                <x-button type="secondary" class="mt-4">{{ __('Download Excel') }}</x-button>
-            </form>
-        </div>
-    </div>
-
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
         <div class="p-4">
+            <div class="mb-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3 items-end">
+                <div>
+                    <label for="filter_date_from" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Tanggal Mulai') }}</label>
+                    <input type="date" id="filter_date_from" value="{{ request('date_from') }}" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100">
+                </div>
+                <div>
+                    <label for="filter_date_to" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Tanggal Akhir') }}</label>
+                    <input type="date" id="filter_date_to" value="{{ request('date_to') }}" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100">
+                </div>
+                <div>
+                    <label for="filter_nasabah" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Nama Nasabah') }}</label>
+                    <select id="filter_nasabah" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100">
+                        <option value="">{{ __('Semua Nasabah') }}</option>
+                        @foreach($nasabah as $item)
+                            <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="flex gap-2">
+                    <x-button type="primary" id="btn-filter-pembelian">{{ __('Cari') }}</x-button>
+                    <x-button type="secondary" id="btn-reset-filter">{{ __('Reset') }}</x-button>
+                </div>
+                <div class="text-right">
+                    <a id="btn-download-excel" href="{{ route('pembelian.export') }}">
+                        <x-button type="secondary">{{ __('Download Excel') }}</x-button>
+                    </a>
+                </div>
+            </div>
+
             <table id="pembelian-table" class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead class="bg-gray-50 dark:bg-gray-900">
                     <tr>
@@ -59,15 +70,30 @@
 
     <link rel="stylesheet" href="{{ asset('jquery.dataTables.min.css') }}">
     <link rel="stylesheet" href="{{ asset('dataTables.tailwindcss.min.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css">
     <script src="{{ asset('jquery-3.7.0.min.js') }}"></script>
     <script src="{{ asset('jquery.dataTables.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
 
     <script>
         $(document).ready(function() {
-            $('#pembelian-table').DataTable({
+            new TomSelect('#filter_nasabah', {
+                create: false,
+                sortField: { field: 'text', direction: 'asc' },
+                placeholder: '{{ __("Semua Nasabah") }}'
+            });
+
+            const table = $('#pembelian-table').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('pembelian.index') }}",
+                ajax: {
+                    url: "{{ route('pembelian.index') }}",
+                    data: function(d) {
+                        d.nasabah_id = $('#filter_nasabah').val();
+                        d.date_from = $('#filter_date_from').val();
+                        d.date_to = $('#filter_date_to').val();
+                    }
+                },
                 columns: [
                     { data: 'nasabah_name', name: 'nasabah_name' },
                     { data: 'product_name', name: 'product_name' },
@@ -100,6 +126,40 @@
                 lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]],
                 stripeClasses: ['bg-white dark:bg-gray-800', 'bg-gray-50 dark:bg-gray-900']
             });
+
+            function updateExportUrl() {
+                const params = new URLSearchParams();
+                const nasabahId = $('#filter_nasabah').val();
+                const dateFrom = $('#filter_date_from').val();
+                const dateTo = $('#filter_date_to').val();
+
+                if (nasabahId) params.set('nasabah_id', nasabahId);
+                if (dateFrom) params.set('date_from', dateFrom);
+                if (dateTo) params.set('date_to', dateTo);
+
+                const baseUrl = "{{ route('pembelian.export') }}";
+                $('#btn-download-excel').attr('href', params.toString() ? `${baseUrl}?${params.toString()}` : baseUrl);
+            }
+
+            $('#btn-filter-pembelian').on('click', function() {
+                table.draw();
+                updateExportUrl();
+            });
+
+            $('#btn-reset-filter').on('click', function() {
+                if (document.getElementById('filter_nasabah').tomselect) {
+                    document.getElementById('filter_nasabah').tomselect.clear();
+                } else {
+                    $('#filter_nasabah').val('');
+                }
+                $('#filter_date_from').val('');
+                $('#filter_date_to').val('');
+                table.search('').draw();
+                updateExportUrl();
+            });
+
+            $('#filter_nasabah, #filter_date_from, #filter_date_to').on('change', updateExportUrl);
+            updateExportUrl();
         });
     </script>
 

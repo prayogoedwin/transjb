@@ -13,16 +13,18 @@ class PembelianExport implements FromCollection, WithHeadings, WithMapping, With
 {
     private $dateFrom;
     private $dateTo;
+    private $nasabahId;
 
-    public function __construct($dateFrom = null, $dateTo = null)
+    public function __construct($dateFrom = null, $dateTo = null, $nasabahId = null)
     {
         $this->dateFrom = $dateFrom;
         $this->dateTo = $dateTo;
+        $this->nasabahId = $nasabahId;
     }
 
     public function collection()
     {
-        $query = Pembelian::with('product');
+        $query = Pembelian::with('product', 'nasabah');
 
         if ($this->dateFrom) {
             $query->whereDate('created_at', '>=', $this->dateFrom);
@@ -32,6 +34,10 @@ class PembelianExport implements FromCollection, WithHeadings, WithMapping, With
             $query->whereDate('created_at', '<=', $this->dateTo);
         }
 
+        if ($this->nasabahId) {
+            $query->where('nasabah_id', $this->nasabahId);
+        }
+
         return $query->get();
     }
 
@@ -39,6 +45,7 @@ class PembelianExport implements FromCollection, WithHeadings, WithMapping, With
     {
         return [
             'ID',
+            'Nasabah',
             'Produk',
             'Harga Satuan Beli',
             'Satuan',
@@ -56,6 +63,7 @@ class PembelianExport implements FromCollection, WithHeadings, WithMapping, With
     {
         return [
             $pembelian->id,
+            $pembelian->nasabah?->nama ?? '-',
             $pembelian->product->nama_produk ?? '-',
             $pembelian->harga_satuan_beli,
             $pembelian->satuan,

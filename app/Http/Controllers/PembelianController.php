@@ -21,6 +21,16 @@ class PembelianController extends Controller
     {
         if ($request->ajax()) {
             $pembelian = Pembelian::with('product', 'nasabah')->select('pembelian.*')->orderby('created_at', 'desc');
+
+            if ($request->filled('date_from')) {
+                $pembelian->whereDate('created_at', '>=', $request->input('date_from'));
+            }
+            if ($request->filled('date_to')) {
+                $pembelian->whereDate('created_at', '<=', $request->input('date_to'));
+            }
+            if ($request->filled('nasabah_id')) {
+                $pembelian->where('nasabah_id', $request->integer('nasabah_id'));
+            }
             
             return DataTables::of($pembelian)
                 ->addColumn('nasabah_name', function ($item) {
@@ -76,7 +86,8 @@ class PembelianController extends Controller
                 ->make(true);
         }
 
-        return view('pembelian.index');
+        $nasabah = Nasabah::orderBy('nama')->get();
+        return view('pembelian.index', compact('nasabah'));
     }
 
     public function create(): View
@@ -227,15 +238,17 @@ class PembelianController extends Controller
         $request->validate([
             'date_from' => ['nullable', 'date'],
             'date_to' => ['nullable', 'date'],
+            'nasabah_id' => ['nullable', 'integer', 'exists:nasabah,id'],
         ]);
 
         $dateFrom = $request->date_from;
         $dateTo = $request->date_to;
+        $nasabahId = $request->nasabah_id;
 
         $filename = 'Pembelian-' . date('YmdHis') . '.xlsx';
         
         return Excel::download(
-            new PembelianExport($dateFrom, $dateTo),
+            new PembelianExport($dateFrom, $dateTo, $nasabahId),
             $filename
         );
     }

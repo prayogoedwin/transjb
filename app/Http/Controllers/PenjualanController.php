@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Penjualan;
 use App\Models\PenjualanDetail;
 use App\Models\Product;
+use App\Models\Nasabah;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -64,7 +65,8 @@ class PenjualanController extends Controller
     public function create(): View
     {
         $products = Product::orderBy('nama_produk')->get();
-        return view('penjualan.create', compact('products'));
+        $nasabah = Nasabah::orderBy('nama')->get();
+        return view('penjualan.create', compact('products', 'nasabah'));
     }
 
     public function store(Request $request)

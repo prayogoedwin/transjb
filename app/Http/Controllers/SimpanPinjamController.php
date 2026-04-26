@@ -19,6 +19,16 @@ class SimpanPinjamController extends Controller
     {
         if ($request->ajax()) {
             $simpanPinjam = SimpanPinjam::with('nasabah')->select('simpan_pinjam.*');
+
+            if ($request->filled('date_from')) {
+                $simpanPinjam->whereDate('created_at', '>=', $request->input('date_from'));
+            }
+            if ($request->filled('date_to')) {
+                $simpanPinjam->whereDate('created_at', '<=', $request->input('date_to'));
+            }
+            if ($request->filled('nasabah_id')) {
+                $simpanPinjam->where('nasabah_id', $request->integer('nasabah_id'));
+            }
             
             return DataTables::of($simpanPinjam)
                 ->addColumn('nasabah_name', function ($item) {
@@ -74,7 +84,8 @@ class SimpanPinjamController extends Controller
                 ->make(true);
         }
 
-        return view('simpan_pinjam.index');
+        $nasabah = Nasabah::orderBy('nama')->get();
+        return view('simpan_pinjam.index', compact('nasabah'));
     }
 
     public function create(): View
@@ -179,15 +190,17 @@ class SimpanPinjamController extends Controller
         $request->validate([
             'date_from' => ['nullable', 'date'],
             'date_to' => ['nullable', 'date'],
+            'nasabah_id' => ['nullable', 'integer', 'exists:nasabah,id'],
         ]);
 
         $dateFrom = $request->date_from;
         $dateTo = $request->date_to;
+        $nasabahId = $request->nasabah_id;
 
         $filename = 'BayarHutang-' . date('YmdHis') . '.xlsx';
         
         return Excel::download(
-            new SimpanPinjamExport($dateFrom, $dateTo),
+            new SimpanPinjamExport($dateFrom, $dateTo, $nasabahId),
             $filename
         );
     }
