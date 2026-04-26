@@ -11,6 +11,14 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class SimpanPinjamExport implements FromCollection, WithHeadings, WithMapping, WithStyles
 {
+    private const TIPE_LABELS = [
+        'bayar' => 'Bayar',
+        'hutang' => 'Hutang',
+        'transaksi' => 'Transaksi',
+        'ambil' => 'Ambil',
+        'simpan' => 'Simpan',
+    ];
+
     private $dateFrom;
     private $dateTo;
 
@@ -51,7 +59,7 @@ class SimpanPinjamExport implements FromCollection, WithHeadings, WithMapping, W
         return [
             $simpanPinjam->id,
             $simpanPinjam->nasabah->nama,
-            $simpanPinjam->tipe === 'simpan' ? 'Simpan' : 'Pinjam',
+            self::TIPE_LABELS[$simpanPinjam->tipe] ?? ucfirst((string) $simpanPinjam->tipe),
             $simpanPinjam->nominal,
             $simpanPinjam->created_at->format('Y-m-d H:i:s'),
         ];

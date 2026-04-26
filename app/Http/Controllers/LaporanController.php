@@ -28,7 +28,7 @@ class LaporanController extends Controller
             'total_simpan' => SimpanPinjam::where('tipe', 'simpan')
                 ->whereBetween('created_at', [$dateFrom, $dateTo . ' 23:59:59'])
                 ->sum('nominal'),
-            'total_pinjam' => SimpanPinjam::where('tipe', 'pinjam')
+            'total_pinjam' => SimpanPinjam::where('tipe', 'hutang')
                 ->whereBetween('created_at', [$dateFrom, $dateTo . ' 23:59:59'])
                 ->sum('nominal'),
         ];
@@ -68,7 +68,7 @@ class LaporanController extends Controller
             'total_simpan' => SimpanPinjam::where('tipe', 'simpan')
                 ->whereBetween('created_at', [$dateFrom, $dateTo . ' 23:59:59'])
                 ->sum('nominal'),
-            'total_pinjam' => SimpanPinjam::where('tipe', 'pinjam')
+            'total_pinjam' => SimpanPinjam::where('tipe', 'hutang')
                 ->whereBetween('created_at', [$dateFrom, $dateTo . ' 23:59:59'])
                 ->sum('nominal'),
         ];
@@ -101,7 +101,7 @@ class LaporanController extends Controller
             'total_simpan' => SimpanPinjam::where('tipe', 'simpan')
                 ->whereBetween('created_at', [$dateFrom, $dateTo . ' 23:59:59'])
                 ->sum('nominal'),
-            'total_pinjam' => SimpanPinjam::where('tipe', 'pinjam')
+            'total_pinjam' => SimpanPinjam::where('tipe', 'hutang')
                 ->whereBetween('created_at', [$dateFrom, $dateTo . ' 23:59:59'])
                 ->sum('nominal'),
         ];

@@ -36,6 +36,8 @@ class SimpanPinjamController extends Controller
                         return '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">Transaksi</span>';
                     } else if ($item->tipe === 'ambil') {
                         return '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">Ambil</span>';
+                    } else if ($item->tipe === 'simpan') {
+                        return '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200">Simpan</span>';
                     } else {
                         return '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200">' . ucfirst($item->tipe) . '</span>';
                     }
@@ -81,7 +83,7 @@ class SimpanPinjamController extends Controller
     {
         $validated = $request->validate([
             'nasabah_id' => ['required', 'exists:nasabah,id'],
-            'tipe' => ['required', 'in:bayar,hutang,transaksi,ambil'],
+            'tipe' => ['required', 'in:bayar,hutang,transaksi,ambil,simpan'],
             'nominal' => ['required', 'numeric', 'min:0'],
             'print_receipt' => ['sometimes', 'boolean'],
         ]);
@@ -123,7 +125,7 @@ class SimpanPinjamController extends Controller
     {
         $validated = $request->validate([
             'nasabah_id' => ['required', 'exists:nasabah,id'],
-            'tipe' => ['required', 'in:bayar,hutang,transaksi,ambil'],
+            'tipe' => ['required', 'in:bayar,hutang,transaksi,ambil,simpan'],
             'nominal' => ['required', 'numeric', 'min:0'],
         ]);
 

@@ -37,8 +37,11 @@
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Tipe') }} *</label>
                     <select name="tipe" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100" required>
                         <option value="">{{ __('Pilih Tipe') }}</option>
+                        <option value="bayar" {{ old('tipe', $simpanPinjam->tipe) == 'bayar' ? 'selected' : '' }}>{{ __('Bayar') }}</option>
+                        <option value="hutang" {{ old('tipe', $simpanPinjam->tipe) == 'hutang' ? 'selected' : '' }}>{{ __('Hutang') }}</option>
+                        <option value="transaksi" {{ old('tipe', $simpanPinjam->tipe) == 'transaksi' ? 'selected' : '' }}>{{ __('Transaksi') }}</option>
+                        <option value="ambil" {{ old('tipe', $simpanPinjam->tipe) == 'ambil' ? 'selected' : '' }}>{{ __('Ambil') }}</option>
                         <option value="simpan" {{ old('tipe', $simpanPinjam->tipe) == 'simpan' ? 'selected' : '' }}>{{ __('Simpan') }}</option>
-                        <option value="pinjam" {{ old('tipe', $simpanPinjam->tipe) == 'pinjam' ? 'selected' : '' }}>{{ __('Pinjam') }}</option>
                     </select>
                     @error('tipe')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>

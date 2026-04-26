@@ -96,6 +96,10 @@
             background: #fff3cd;
             color: #856404;
         }
+        .receipt-type.simpan {
+            background: #f3e8ff;
+            color: #6b21a8;
+        }
         .receipt-footer {
             text-align: center;
             margin-top: 30px;
@@ -133,8 +137,8 @@
 
         <div class="receipt-content">
             <div style="text-align: center; margin-bottom: 20px;">
-                <span class="receipt-type {{ $simpanPinjam->tipe === 'bayar' ? 'bayar' : ($simpanPinjam->tipe === 'hutang' ? 'hutang' : ($simpanPinjam->tipe === 'transaksi' ? 'transaksi' : ($simpanPinjam->tipe === 'ambil' ? 'ambil' : ''))) }}">
-                    {{ $simpanPinjam->tipe === 'bayar' ? 'Bayar' : ($simpanPinjam->tipe === 'hutang' ? 'Hutang' : ($simpanPinjam->tipe === 'transaksi' ? 'Transaksi' : ($simpanPinjam->tipe === 'ambil' ? 'Ambil' : ''))) }}
+                <span class="receipt-type {{ $simpanPinjam->tipe === 'bayar' ? 'bayar' : ($simpanPinjam->tipe === 'hutang' ? 'hutang' : ($simpanPinjam->tipe === 'transaksi' ? 'transaksi' : ($simpanPinjam->tipe === 'ambil' ? 'ambil' : ($simpanPinjam->tipe === 'simpan' ? 'simpan' : '')))) }}">
+                    {{ $simpanPinjam->tipe === 'bayar' ? 'Bayar' : ($simpanPinjam->tipe === 'hutang' ? 'Hutang' : ($simpanPinjam->tipe === 'transaksi' ? 'Transaksi' : ($simpanPinjam->tipe === 'ambil' ? 'Ambil' : ($simpanPinjam->tipe === 'simpan' ? 'Simpan' : '')))) }}
                 </span>
             </div>
 

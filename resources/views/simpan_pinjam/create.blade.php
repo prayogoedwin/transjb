@@ -40,6 +40,7 @@
                         <option value="hutang" {{ old('tipe') == 'hutang' ? 'selected' : '' }}>{{ __('Hutang') }}</option>
                         <option value="transaksi" {{ old('tipe') == 'transaksi' ? 'selected' : '' }}>{{ __('Transaksi') }}</option>
                         <option value="ambil" {{ old('tipe') == 'ambil' ? 'selected' : '' }}>{{ __('Ambil') }}</option>
+                        <option value="simpan" {{ old('tipe') == 'simpan' ? 'selected' : '' }}>{{ __('Simpan') }}</option>
                     </select>
                     @error('tipe')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
