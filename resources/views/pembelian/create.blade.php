@@ -25,6 +25,7 @@
                     bayarNominal: {{ old('bayar_nominal', 0) }},
                     simpanNominal: {{ old('simpan_nominal', 0) }},
                     ambilNominal: {{ old('ambil_nominal', 0) }},
+                    sisaHutangNasabah: 0,
                     rupiah(val) { return Math.round(Number(val) || 0); },
                     get beratSetelahPotong() { return this.totalBerat - (this.totalBerat * this.potongan / 100); },
                     get totalHarga() { return this.rupiah(this.hargaSatuan * this.totalBerat); },
@@ -40,11 +41,17 @@
                         this.hargaSatuan = parseFloat(opt.dataset.harga) || 0;
                         this.satuan = opt.dataset.satuan || '';
                     },
+                    onNasabahChange(el) {
+                        const opt = el.options[el.selectedIndex];
+                        this.sisaHutangNasabah = this.rupiah(opt?.dataset?.sisaHutang || 0);
+                    },
                     fmt(val) { return 'Rp ' + Math.round(val).toLocaleString('id-ID'); },
                     fmtBerat(val) { return val.toLocaleString('id-ID', {maximumFractionDigits: 4}); },
                     init() {
                         const sel = this.$el.querySelector('[name=produk_id]');
                         if (sel && sel.value) this.onProductChange(sel);
+                        const nasabahSel = this.$el.querySelector('[name=nasabah_id]');
+                        if (nasabahSel) this.onNasabahChange(nasabahSel);
                     }
                 }"
                 action="{{ route('pembelian.store') }}" method="POST" class="max-w-2xl" @submit="formSubmitted = true">
@@ -52,10 +59,10 @@
 
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Nasabah') }} *</label>
-                    <select name="nasabah_id" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100" required>
+                    <select name="nasabah_id" @change="onNasabahChange($el)" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100" required>
                         <option value="">{{ __('Pilih Nasabah') }}</option>
                         @foreach($nasabah as $nb)
-                            <option value="{{ $nb->id }}" {{ old('nasabah_id') == $nb->id ? 'selected' : '' }}>{{ $nb->nama }}</option>
+                            <option value="{{ $nb->id }}" data-sisa-hutang="{{ (int) round($nb->sisa_hutang ?? 0) }}" {{ old('nasabah_id') == $nb->id ? 'selected' : '' }}>{{ $nb->nama }}</option>
                         @endforeach
                     </select>
                     @error('nasabah_id')
@@ -128,6 +135,9 @@
 
                 <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg mb-6 border border-gray-200 dark:border-gray-700">
                     <h3 class="text-sm font-semibold text-gray-800 dark:text-gray-100 mb-3">{{ __('Alokasi dari Harga Akhir (Masuk Riwayat)') }}</h3>
+                    <p class="mb-3 text-sm text-red-600 dark:text-red-400">
+                        {{ __('Sisa Hutang Nasabah') }}: <span class="font-semibold" x-text="fmt(sisaHutangNasabah)">Rp 0</span>
+                    </p>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Untuk Bayar') }}</label>

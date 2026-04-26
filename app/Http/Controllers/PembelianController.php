@@ -93,7 +93,12 @@ class PembelianController extends Controller
     public function create(): View
     {
         $products = Product::orderBy('nama_produk')->get();
-        $nasabah = Nasabah::orderBy('nama')->get();
+        $nasabah = Nasabah::with('simpanPinjam')->orderBy('nama')->get()->map(function ($item) {
+            $totalHutang = $item->simpanPinjam->where('tipe', 'hutang')->sum('nominal');
+            $totalBayar = $item->simpanPinjam->whereIn('tipe', ['bayar', 'bayar_simpanan'])->sum('nominal');
+            $item->sisa_hutang = max(0, (float) $totalHutang - (float) $totalBayar);
+            return $item;
+        });
         return view('pembelian.create', compact('products', 'nasabah'));
     }
 
