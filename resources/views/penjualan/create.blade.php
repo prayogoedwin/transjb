@@ -180,16 +180,21 @@
             updateCalculations();
         }
 
-        document.getElementById('addItemBtn').addEventListener('click', addItem);
+        document.getElementById('addItemBtn').addEventListener('click', function (e) {
+            e.preventDefault();
+            addItem();
+        });
         addItem();
 
         document.getElementById('penjualan-form').addEventListener('submit', function(e) {
-            e.preventDefault();
             const printCheckbox = document.getElementById('print_invoice');
-            if (printCheckbox.checked) {
-                e.preventDefault();
-                const formData = new FormData(this);
-                fetch(this.action, {
+            if (!printCheckbox.checked) {
+                return;
+            }
+
+            e.preventDefault();
+            const formData = new FormData(this);
+            fetch(this.action, {
                     method: 'POST',
                     body: formData,
                     headers: { 'Accept': 'application/json' }
@@ -200,7 +205,6 @@
                     setTimeout(() => { window.location.href = data.redirect_url; }, 500);
                 })
                 .catch(() => alert('{{ __("Error") }}'));
-            }
         });
     </script>
 </x-layouts.app>
