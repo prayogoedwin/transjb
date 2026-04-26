@@ -46,7 +46,7 @@ class LaporanController extends Controller
     {
         $dateRange = [$dateFrom, $dateTo . ' 23:59:59'];
         $totalHutang = SimpanPinjam::where('tipe', 'hutang')->sum('nominal');
-        $totalBayar = SimpanPinjam::whereIn('tipe', ['bayar', 'bayar_simpanan'])->sum('nominal');
+        $totalBayar = SimpanPinjam::whereIn('tipe', ['bayar', 'bayar_cash', 'bayar_simpanan'])->sum('nominal');
         $totalSimpan = SimpanPinjam::where('tipe', 'simpan')->sum('nominal');
         $totalKeluarSimpanan = SimpanPinjam::whereIn('tipe', ['ambil_simpanan', 'bayar_simpanan'])->sum('nominal');
 

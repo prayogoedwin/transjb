@@ -217,6 +217,8 @@
                                 <td>
                                     @if($item->tipe === 'bayar')
                                         <span class="badge badge-simpan">Bayar</span>
+                                    @elseif($item->tipe === 'bayar_cash')
+                                        <span class="badge" style="background:#d9f99d;color:#365314;">Bayar Cash</span>
                                     @elseif($item->tipe === 'bayar_simpanan')
                                          <span class="badge" style="background:#d1fae5;color:#065f46;">Bayar Dari Simpanan</span>
                                     @elseif($item->tipe === 'hutang')
@@ -241,7 +243,7 @@
                 </table>
                 <div class="summary">
                     @php
-                        $totalBayarManual = $nasabah->simpanPinjam->where('tipe', 'bayar')->sum('nominal');
+                        $totalBayarManual = $nasabah->simpanPinjam->whereIn('tipe', ['bayar', 'bayar_cash'])->sum('nominal');
                         $totalBayarSimpanan = $nasabah->simpanPinjam->where('tipe', 'bayar_simpanan')->sum('nominal');
                         $totalBayar = $totalBayarManual + $totalBayarSimpanan;
                         $totalHutang = $nasabah->simpanPinjam->where('tipe', 'hutang')->sum('nominal');

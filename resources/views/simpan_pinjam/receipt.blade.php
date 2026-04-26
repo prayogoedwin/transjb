@@ -84,6 +84,10 @@
             background: #d4edda;
             color: #155724;
         }
+        .receipt-type.bayar-cash {
+            background: #d9f99d;
+            color: #365314;
+        }
         .receipt-type.bayar-simpanan {
             background: #d1fae5;
             color: #065f46;
@@ -145,8 +149,8 @@
 
         <div class="receipt-content">
             <div style="text-align: center; margin-bottom: 20px;">
-                <span class="receipt-type {{ $simpanPinjam->tipe === 'bayar' ? 'bayar' : ($simpanPinjam->tipe === 'bayar_simpanan' ? 'bayar-simpanan' : ($simpanPinjam->tipe === 'hutang' ? 'hutang' : ($simpanPinjam->tipe === 'transaksi' ? 'transaksi' : ($simpanPinjam->tipe === 'ambil' ? 'ambil' : ($simpanPinjam->tipe === 'ambil_simpanan' ? 'ambil-simpanan' : ($simpanPinjam->tipe === 'simpan' ? 'simpan' : '')))))) }}">
-                    {{ $simpanPinjam->tipe === 'bayar' ? 'Bayar' : ($simpanPinjam->tipe === 'bayar_simpanan' ? 'Bayar dari Simpanan' : ($simpanPinjam->tipe === 'hutang' ? 'Hutang' : ($simpanPinjam->tipe === 'transaksi' ? 'Transaksi' : ($simpanPinjam->tipe === 'ambil' ? 'Ambil' : ($simpanPinjam->tipe === 'ambil_simpanan' ? 'Ambil Simpanan' : ($simpanPinjam->tipe === 'simpan' ? 'Simpan' : '')))))) }}
+                <span class="receipt-type {{ $simpanPinjam->tipe === 'bayar' ? 'bayar' : ($simpanPinjam->tipe === 'bayar_cash' ? 'bayar-cash' : ($simpanPinjam->tipe === 'bayar_simpanan' ? 'bayar-simpanan' : ($simpanPinjam->tipe === 'hutang' ? 'hutang' : ($simpanPinjam->tipe === 'transaksi' ? 'transaksi' : ($simpanPinjam->tipe === 'ambil' ? 'ambil' : ($simpanPinjam->tipe === 'ambil_simpanan' ? 'ambil-simpanan' : ($simpanPinjam->tipe === 'simpan' ? 'simpan' : '')))))))) }}">
+                    {{ $simpanPinjam->tipe === 'bayar' ? 'Bayar' : ($simpanPinjam->tipe === 'bayar_cash' ? 'Bayar Cash' : ($simpanPinjam->tipe === 'bayar_simpanan' ? 'Bayar dari Simpanan' : ($simpanPinjam->tipe === 'hutang' ? 'Hutang' : ($simpanPinjam->tipe === 'transaksi' ? 'Transaksi' : ($simpanPinjam->tipe === 'ambil' ? 'Ambil' : ($simpanPinjam->tipe === 'ambil_simpanan' ? 'Ambil Simpanan' : ($simpanPinjam->tipe === 'simpan' ? 'Simpan' : '')))))))) }}
                 </span>
             </div>
 

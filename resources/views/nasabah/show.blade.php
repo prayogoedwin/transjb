@@ -39,7 +39,7 @@
 
     @php
         $riwayatSimpanPinjam = $nasabah->simpanPinjam->sortByDesc('created_at');
-        $totalBayarManual = $nasabah->simpanPinjam->where('tipe', 'bayar')->sum('nominal');
+        $totalBayarManual = $nasabah->simpanPinjam->whereIn('tipe', ['bayar', 'bayar_cash'])->sum('nominal');
         $totalBayarSimpanan = $nasabah->simpanPinjam->where('tipe', 'bayar_simpanan')->sum('nominal');
         $totalBayar = $totalBayarManual + $totalBayarSimpanan;
         $totalHutang = $nasabah->simpanPinjam->where('tipe', 'hutang')->sum('nominal');
@@ -139,6 +139,8 @@
                                             <td class="px-6 py-3">
                                                 @if($item->tipe === 'bayar')
                                                     <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">{{ __('Bayar') }}</span>
+                                                @elseif($item->tipe === 'bayar_cash')
+                                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-lime-100 text-lime-800 dark:bg-lime-900 dark:text-lime-200">{{ __('Bayar Cash') }}</span>
                                                 @elseif($item->tipe === 'bayar_simpanan')
                                                     <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200">{{ __('Bayar Dari Simpanan') }}</span>
                                                 @elseif($item->tipe === 'hutang')

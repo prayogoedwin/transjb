@@ -43,7 +43,7 @@
         <div class="section-title">RINGKASAN RIWAYAT</div>
         <div class="summary">
             @php
-                $totalBayarManual = $nasabah->simpanPinjam->where('tipe', 'bayar')->sum('nominal');
+                $totalBayarManual = $nasabah->simpanPinjam->whereIn('tipe', ['bayar', 'bayar_cash'])->sum('nominal');
                 $totalBayarSimpanan = $nasabah->simpanPinjam->where('tipe', 'bayar_simpanan')->sum('nominal');
                 $totalBayar = $totalBayarManual + $totalBayarSimpanan;
                 $totalHutang = $nasabah->simpanPinjam->where('tipe', 'hutang')->sum('nominal');

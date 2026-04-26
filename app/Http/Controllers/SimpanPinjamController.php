@@ -40,6 +40,8 @@ class SimpanPinjamController extends Controller
                 ->addColumn('tipe_badge', function ($item) {
                     if ($item->tipe === 'bayar') {
                         return '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Bayar</span>';
+                    } else if ($item->tipe === 'bayar_cash') {
+                        return '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-lime-100 text-lime-800 dark:bg-lime-900 dark:text-lime-200">Bayar Cash</span>';
                     } else if ($item->tipe === 'bayar_simpanan') {
                         return '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200">Bayar Dari Simpanan</span>';
                     } else if ($item->tipe === 'hutang') {
@@ -105,7 +107,7 @@ class SimpanPinjamController extends Controller
     {
         $validated = $request->validate([
             'nasabah_id' => ['required', 'exists:nasabah,id'],
-            'tipe' => ['required', 'in:bayar,bayar_simpanan,hutang,transaksi,ambil,simpan,ambil_simpanan'],
+            'tipe' => ['required', 'in:bayar,bayar_cash,bayar_simpanan,hutang,transaksi,ambil,simpan,ambil_simpanan'],
             'nominal' => ['required', 'numeric', 'min:0'],
             'print_receipt' => ['sometimes', 'boolean'],
         ]);
@@ -156,7 +158,7 @@ class SimpanPinjamController extends Controller
     {
         $validated = $request->validate([
             'nasabah_id' => ['required', 'exists:nasabah,id'],
-            'tipe' => ['required', 'in:bayar,bayar_simpanan,hutang,transaksi,ambil,simpan,ambil_simpanan'],
+            'tipe' => ['required', 'in:bayar,bayar_cash,bayar_simpanan,hutang,transaksi,ambil,simpan,ambil_simpanan'],
             'nominal' => ['required', 'numeric', 'min:0'],
         ]);
 

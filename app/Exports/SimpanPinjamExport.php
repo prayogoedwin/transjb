@@ -13,6 +13,7 @@ class SimpanPinjamExport implements FromCollection, WithHeadings, WithMapping, W
 {
     private const TIPE_LABELS = [
         'bayar' => 'Bayar',
+        'bayar_cash' => 'Bayar Cash',
         'bayar_simpanan' => 'Bayar dari Simpanan',
         'hutang' => 'Hutang',
         'transaksi' => 'Transaksi',
