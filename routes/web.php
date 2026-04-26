@@ -89,6 +89,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('nasabah', [NasabahController::class, 'index'])->name('nasabah.index')->middleware('permission:view-nasabah');
     Route::get('nasabah/export', [NasabahController::class, 'export'])->name('nasabah.export')->middleware('permission:download-nasabah');
     Route::get('nasabah/{nasabah}/export-pdf', [NasabahController::class, 'exportPdf'])->name('nasabah.export-pdf')->middleware('permission:show-nasabah');
+    Route::get('nasabah/{nasabah}/export-summary-pdf', [NasabahController::class, 'exportSummaryPdf'])->name('nasabah.export-summary-pdf')->middleware('permission:show-nasabah');
     Route::get('nasabah/create', [NasabahController::class, 'create'])->name('nasabah.create')->middleware('permission:create-nasabah');
     Route::post('nasabah', [NasabahController::class, 'store'])->name('nasabah.store')->middleware('permission:create-nasabah');
     Route::get('nasabah/{nasabah}', [NasabahController::class, 'show'])->name('nasabah.show')->middleware('permission:show-nasabah');

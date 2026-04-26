@@ -4,6 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laporan Bisnis</title>
+    @php
+        $appName = config('app.name', 'App');
+        $initials = collect(explode(' ', $appName))
+            ->map(fn($word) => strtoupper(substr($word, 0, 1)))
+            ->take(3)
+            ->implode('');
+    @endphp
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,
+        %3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E
+            %3Crect width='100' height='100' rx='20' fill='%232563eb'/%3E
+            %3Ctext x='50' y='50' text-anchor='middle' dy='0.35em' font-family='Arial, sans-serif' font-size='45' font-weight='bold' fill='white'%3E{{ $initials }}%3C/text%3E
+        %3C/svg%3E">
     <style>
         * {
             margin: 0;
@@ -36,62 +48,6 @@
         header p {
             color: #6b7280;
             font-size: 14px;
-        }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        .stat-card {
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            padding: 20px;
-            background: #f9fafb;
-        }
-        .stat-card h3 {
-            font-size: 12px;
-            color: #6b7280;
-            text-transform: uppercase;
-            margin-bottom: 10px;
-        }
-        .stat-card .value {
-            font-size: 24px;
-            font-weight: bold;
-            color: #1f2937;
-        }
-        .summary-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        .summary-card {
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            padding: 20px;
-        }
-        .summary-card h3 {
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            color: #1f2937;
-        }
-        .summary-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid #f3f4f6;
-        }
-        .summary-item:last-child {
-            border-bottom: none;
-        }
-        .summary-item span:first-child {
-            color: #6b7280;
-        }
-        .summary-item span:last-child {
-            font-weight: bold;
-            color: #1f2937;
         }
         table {
             width: 100%;
@@ -159,82 +115,53 @@
             <p>Tanggal Cetak: {{ now()->format('d M Y H:i') }}</p>
         </header>
 
-        <!-- Statistics -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <h3>Total Nasabah</h3>
-                <div class="value">{{ $stats['total_nasabah'] }}</div>
-            </div>
-            <div class="stat-card">
-                <h3>Total Produk</h3>
-                <div class="value">{{ $stats['total_produk'] }}</div>
-            </div>
-            <div class="stat-card">
-                <h3>Total Pembelian</h3>
-                <div class="value">{{ formatCurrencyRound($stats['total_pembelian_nominal']) }}</div>
-            </div>
-            <div class="stat-card">
-                <h3>Total Transaksi</h3>
-                <div class="value">{{ $stats['total_pembelian'] }}</div>
-            </div>
+        <div class="table-section">
+            <h3>Rekap Bisnis Keseluruhan</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Indikator</th>
+                        <th style="text-align: right;">Nilai</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Total Nasabah</td><td style="text-align: right;">{{ $stats['total_nasabah'] }}</td></tr>
+                    <tr><td>Total Produk</td><td style="text-align: right;">{{ $stats['total_produk'] }}</td></tr>
+                    <tr><td>Total Sisa Hutang</td><td style="text-align: right;">{{ formatCurrencyRound($stats['total_sisa_hutang']) }}</td></tr>
+                    <tr><td>Total Sisa Simpanan</td><td style="text-align: right;">{{ formatCurrencyRound($stats['total_sisa_simpanan']) }}</td></tr>
+                    <tr><td>Total Pembelian</td><td style="text-align: right;">{{ formatCurrencyRound($stats['total_pembelian']) }}</td></tr>
+                    <tr><td>Total Penjualan</td><td style="text-align: right;">{{ formatCurrencyRound($stats['total_penjualan']) }}</td></tr>
+                    <tr><td>Jumlah Transaksi Pembelian</td><td style="text-align: right;">{{ $stats['total_transaksi_pembelian'] }}x</td></tr>
+                    <tr><td>Jumlah Transaksi Penjualan</td><td style="text-align: right;">{{ $stats['total_transaksi_penjualan'] }}x</td></tr>
+                    <tr><td>Total Biaya Admin</td><td style="text-align: right;">{{ formatCurrencyRound($stats['total_biaya_admin']) }}</td></tr>
+                </tbody>
+            </table>
         </div>
 
-        <!-- Summary -->
-        <div class="summary-grid">
-            <div class="summary-card">
-                <h3>Pembelian</h3>
-                <div class="summary-item">
-                    <span>Transaksi</span>
-                    <span>{{ $stats['total_pembelian'] }} x</span>
-                </div>
-                <div class="summary-item">
-                    <span>Total Pembelian</span>
-                    <span>{{ formatCurrencyRound($stats['total_pembelian_nominal']) }}</span>
-                </div>
-                <div class="summary-item">
-                    <span>Biaya Admin</span>
-                    <span>{{ formatCurrencyRound($stats['total_biaya_admin']) }}</span>
-                </div>
-                <!-- <div class="summary-item" style="border-top: 2px solid #d1d5db; padding-top: 10px; margin-top: 10px;">
-                    <span><strong>Pendapatan Bersih</strong></span>
-                    <span><strong>Rp {{ number_format($stats['total_pembelian'] - $stats['total_biaya_admin'], 0, ',', '.') }}</strong></span>
-                </div> -->
-            </div>
-
-            <div class="summary-card">
-                <h3>Bayar & Hutang</h3>
-                <div class="summary-item">
-                    <span>Total Simpan</span>
-                    <span>{{ formatCurrencyRound($stats['total_simpan']) }}</span>
-                </div>
-                <div class="summary-item">
-                    <span>Total Pinjam</span>
-                    <span>{{ formatCurrencyRound($stats['total_pinjam']) }}</span>
-                </div>
-                <div class="summary-item" style="border-top: 2px solid #d1d5db; padding-top: 10px; margin-top: 10px;">
-                    <span><strong>Selisih</strong></span>
-                    <span><strong>{{ formatCurrencyRound($stats['total_simpan'] - $stats['total_pinjam']) }}</strong></span>
-                </div>
-            </div>
-<!-- 
-            <div class="summary-card">
-                <h3>Performa</h3>
-                <div class="summary-item">
-                    <span>Bilangan Hari</span>
-                    <span>{{ \Carbon\Carbon::parse($dateTo)->diffInDays(\Carbon\Carbon::parse($dateFrom)) + 1 }} hari</span>
-                </div>
-                <div class="summary-item">
-                    <span>Rata-rata Harian</span>
-                    <span>{{ formatCurrencyRound($stats['total_pembelian'] / (\Carbon\Carbon::parse($dateTo)->diffInDays(\Carbon\Carbon::parse($dateFrom)) + 1)) }}</span>
-                </div>
-                <div class="summary-item">
-                    <span>Rata-rata/Transaksi</span>
-                    <span>{{ formatCurrencyRound($stats['total_pembelian'] > 0 ? $stats['total_pembelian'] / $stats['total_pembelian'] : 0) }}</span>
-                </div>
-            </div> -->
+        <div class="table-section">
+            <h3>Total Stok Per Produk</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Produk</th>
+                        <th style="text-align: right;">Total Stok</th>
+                        <th>Satuan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($stokPerProduk as $item)
+                        <tr>
+                            <td>{{ $item->product?->nama_produk ?? '-' }}</td>
+                            <td style="text-align: right;">{{ formatDecimalSmart($item->total_stok) }}</td>
+                            <td>{{ $item->product?->satuan ?? '-' }}</td>
+                        </tr>
+                    @empty
+                        <tr><td colspan="3" style="text-align: center;">Tidak ada data</td></tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
 
-        <!-- Pembelian Detail -->
         @if($pembelianDetail->count() > 0)
             <div class="table-section">
                 <h3>Detail Pembelian</h3>
@@ -250,12 +177,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($pembelianDetail as $item)
+                        @foreach($pembelianDetail->take(10) as $item)
                             <tr>
                                 <td>{{ $item->created_at->format('d/m/Y') }}</td>
                                 <td>{{ $item->nasabah?->nama ?? '-' }}</td>
-                                <td>{{ $item->product->nama_produk }}</td>
-                                <td style="text-align: right;">{{ formatRound($item->total_berat, 2, ',', '.') }} {{ $item->satuan }}</td>
+                                <td>{{ $item->product?->nama_produk ?? '-' }}</td>
+                                <td style="text-align: right;">{{ formatDecimalSmart($item->total_berat) }} {{ $item->satuan }}</td>
                                 <td style="text-align: right;">{{ formatCurrencyRound($item->harga_satuan_beli) }}</td>
                                 <td style="text-align: right;">{{ formatCurrencyRound($item->harga_akhir) }}</td>
                             </tr>
@@ -265,26 +192,23 @@
             </div>
         @endif
 
-        <!-- Bayar & Hutang Detail -->
-        @if($simpanPinjamDetail->count() > 0)
+        @if($penjualanDetail->count() > 0)
             <div class="table-section">
-                <h3>Detail Bayar & Hutang</h3>
+                <h3>Detail Penjualan</h3>
                 <table>
                     <thead>
                         <tr>
                             <th>Tanggal</th>
-                            <th>Nasabah</th>
-                            <th>Tipe</th>
-                            <th>Nominal</th>
+                            <th>Pelanggan</th>
+                            <th style="text-align: right;">Nominal</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($simpanPinjamDetail as $item)
+                        @foreach($penjualanDetail->take(10) as $item)
                             <tr>
                                 <td>{{ $item->created_at->format('d/m/Y') }}</td>
-                                <td>{{ $item->nasabah?->nama ?? '-' }}</td>
-                                <td>{{ ucfirst($item->tipe) }}</td>
-                                <td>{{ formatCurrencyRound($item->nominal) }}</td>
+                                <td>{{ $item->nama_customer ?? '-' }}</td>
+                                <td style="text-align: right;">{{ formatCurrencyRound($item->total_pembelian) }}</td>
                             </tr>
                         @endforeach
                     </tbody>

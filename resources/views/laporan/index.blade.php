@@ -42,179 +42,112 @@
         </div>
     </div>
 
-    <!-- Key Statistics -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <!-- Total Nasabah -->
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-            <div class="p-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-gray-600 dark:text-gray-400 text-sm">{{ __('Total Nasabah') }}</p>
-                        <p class="text-3xl font-bold text-gray-900 dark:text-gray-100 mt-2">{{ $stats['total_nasabah'] }}</p>
-                    </div>
-                    <div class="bg-blue-100 dark:bg-blue-900 p-3 rounded-full">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 12H9m6 0a6 6 0 11-12 0 6 6 0 0112 0z" />
-                        </svg>
-                    </div>
-                </div>
-            </div>
+    <!-- Rekap Bisnis -->
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden mb-8">
+        <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ __('Rekap Bisnis Keseluruhan') }}</h3>
         </div>
-
-        <!-- Total Produk -->
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-            <div class="p-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-gray-600 dark:text-gray-400 text-sm">{{ __('Total Produk') }}</p>
-                        <p class="text-3xl font-bold text-gray-900 dark:text-gray-100 mt-2">{{ $stats['total_produk'] }}</p>
-                    </div>
-                    <div class="bg-green-100 dark:bg-green-900 p-3 rounded-full">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m0 0l8 4m-8-4v10l8 4m0-10l8 4m-8-4v10l8 4m0-10l-8-4" />
-                        </svg>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Total Penjualan -->
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-            <div class="p-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-gray-600 dark:text-gray-400 text-sm">{{ __('Total Pembelian') }}</p>
-                        <p class="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-2">{{ formatCurrencyRound($stats['total_pembelian']) }}</p>
-                    </div>
-                    <div class="bg-purple-100 dark:bg-purple-900 p-3 rounded-full">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-purple-600 dark:text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                        </svg>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Total Bayar & Hutang -->
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-            <div class="p-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-gray-600 dark:text-gray-400 text-sm">{{ __('Selisih Simpan-Pinjam') }}</p>
-                        <p class="text-2xl font-bold {{ $stats['total_simpan'] - $stats['total_pinjam'] >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400' }} mt-2">{{ formatCurrencyRound($stats['total_simpan'] - $stats['total_pinjam']) }}</p>
-                    </div>
-                    <div class="bg-yellow-100 dark:bg-yellow-900 p-3 rounded-full">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-600 dark:text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    </div>
-                </div>
-            </div>
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-gray-50 dark:bg-gray-900/30 border-b border-gray-200 dark:border-gray-700">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300">{{ __('Indikator') }}</th>
+                        <th class="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300">{{ __('Nilai') }}</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                        <td class="px-6 py-3 text-sm text-gray-900 dark:text-gray-100">{{ __('Total Nasabah') }}</td>
+                        <td class="px-6 py-3 text-sm text-right font-semibold text-gray-900 dark:text-gray-100">{{ $stats['total_nasabah'] }}</td>
+                    </tr>
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                        <td class="px-6 py-3 text-sm text-gray-900 dark:text-gray-100">{{ __('Total Produk') }}</td>
+                        <td class="px-6 py-3 text-sm text-right font-semibold text-gray-900 dark:text-gray-100">{{ $stats['total_produk'] }}</td>
+                    </tr>
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                        <td class="px-6 py-3 text-sm text-gray-900 dark:text-gray-100">{{ __('Total Sisa Hutang') }}</td>
+                        <td class="px-6 py-3 text-sm text-right font-semibold text-red-600 dark:text-red-400">{{ formatCurrencyRound($stats['total_sisa_hutang']) }}</td>
+                    </tr>
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                        <td class="px-6 py-3 text-sm text-gray-900 dark:text-gray-100">{{ __('Total Sisa Simpanan') }}</td>
+                        <td class="px-6 py-3 text-sm text-right font-semibold text-green-600 dark:text-green-400">{{ formatCurrencyRound($stats['total_sisa_simpanan']) }}</td>
+                    </tr>
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                        <td class="px-6 py-3 text-sm text-gray-900 dark:text-gray-100">{{ __('Total Pembelian') }}</td>
+                        <td class="px-6 py-3 text-sm text-right font-semibold text-gray-900 dark:text-gray-100">{{ formatCurrencyRound($stats['total_pembelian']) }}</td>
+                    </tr>
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                        <td class="px-6 py-3 text-sm text-gray-900 dark:text-gray-100">{{ __('Total Penjualan') }}</td>
+                        <td class="px-6 py-3 text-sm text-right font-semibold text-blue-600 dark:text-blue-400">{{ formatCurrencyRound($stats['total_penjualan']) }}</td>
+                    </tr>
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                        <td class="px-6 py-3 text-sm text-gray-900 dark:text-gray-100">{{ __('Jumlah Transaksi Pembelian') }}</td>
+                        <td class="px-6 py-3 text-sm text-right font-semibold text-gray-900 dark:text-gray-100">{{ $stats['total_transaksi_pembelian'] }}x</td>
+                    </tr>
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                        <td class="px-6 py-3 text-sm text-gray-900 dark:text-gray-100">{{ __('Jumlah Transaksi Penjualan') }}</td>
+                        <td class="px-6 py-3 text-sm text-right font-semibold text-gray-900 dark:text-gray-100">{{ $stats['total_transaksi_penjualan'] }}x</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
-    <!-- Summary Cards -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8 mt-8">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">{{ __('Penjualan') }}</h3>
-            <div class="space-y-3">
-                <div class="flex justify-between items-center">
-                    <span class="text-gray-600 dark:text-gray-400">{{ __('Transaksi') }}</span>
-                    <span class="font-semibold text-gray-900 dark:text-gray-100">{{ $stats['total_pembelian'] }} x</span>
-                </div>
-                <div class="flex justify-between items-center">
-                    <span class="text-gray-600 dark:text-gray-400">{{ __('Total Penjualan') }}</span>
-                    <span class="font-semibold text-gray-900 dark:text-gray-100">{{ formatCurrencyRound($stats['total_penjualan']) }}</span>
-                </div>
-                <div class="flex justify-between items-center">
-                    <span class="text-gray-600 dark:text-gray-400">{{ __('Potongan') }}</span>
-                    <span class="font-semibold text-red-600 dark:text-red-400">{{ formatCurrencyRound($stats['total_biaya_admin']) }}</span>
-                </div>
-                <!-- <div class="border-t border-gray-200 dark:border-gray-700 pt-3 mt-3 flex justify-between items-center">
-                    <span class="text-gray-600 dark:text-gray-400">{{ __('Pendapatan Bersih') }}</span>
-                    <span class="font-semibold text-green-600 dark:text-green-400">{{ formatCurrencyRound($stats['total_penjualan'] - $stats['total_biaya_admin']) }}</span>
-                </div> -->
-            </div>
-        </div>
-
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">{{ __('Bayar & Hutang') }}</h3>
-            <div class="space-y-3">
-                <div class="flex justify-between items-center">
-                    <span class="text-gray-600 dark:text-gray-400">{{ __('Total Simpan') }}</span>
-                    <span class="font-semibold text-green-600 dark:text-green-400">{{ formatCurrencyRound($stats['total_simpan']) }}</span>
-                </div>
-                <div class="flex justify-between items-center">
-                    <span class="text-gray-600 dark:text-gray-400">{{ __('Total Pinjam') }}</span>
-                    <span class="font-semibold text-red-600 dark:text-red-400">{{ formatCurrencyRound($stats['total_pinjam']) }}</span>
-                </div>
-                <div class="border-t border-gray-200 dark:border-gray-700 pt-3 mt-3 flex justify-between items-center">
-                    <span class="text-gray-600 dark:text-gray-400">{{ __('Selisih') }}</span>
-                    <span class="font-semibold {{ $stats['total_simpan'] - $stats['total_pinjam'] >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400' }}">{{ formatCurrencyRound($stats['total_simpan'] - $stats['total_pinjam']) }}</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">{{ __('Performa') }}</h3>
-            <div class="space-y-3">
-                <div class="flex justify-between items-center">
-                    <span class="text-gray-600 dark:text-gray-400">{{ __('Rata-rata Penjualan') }}</span>
-                    <span class="font-semibold text-gray-900 dark:text-gray-100">
-                        @php
-                            $days = \Carbon\Carbon::parse($dateTo)->diffInDays(\Carbon\Carbon::parse($dateFrom)) + 1;
-                            $avgPenjualan = $days > 0 ? $stats['total_penjualan'] / $days : 0;
-                        @endphp
-                        {{ formatCurrencyRound($avgPenjualan) }}
-                    </span>
-                </div>
-                <div class="flex justify-between items-center">
-                    <span class="text-gray-600 dark:text-gray-400">{{ __('Bilangan Hari') }}</span>
-                    <span class="font-semibold text-gray-900 dark:text-gray-100">{{ $days }} hari</span>
-                </div>
-                <div class="flex justify-between items-center">
-                    <span class="text-gray-600 dark:text-gray-400">{{ __('Rata-rata per Transaksi') }}</span>
-                    <span class="font-semibold text-gray-900 dark:text-gray-100">
-                        @php
-                            $avgTransaksi = $stats['total_pembelian'] > 0 ? $stats['total_penjualan'] / $stats['total_pembelian'] : 0;
-                        @endphp
-                        {{ formatCurrencyRound($avgTransaksi) }}
-                    </span>
-                </div>
-            </div>
-        </div> -->
-    </div>
-
-    <!-- Detail Tables -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
-        <!-- Top Products -->
+    <!-- Stok Per Produk -->
+    <div class="mt-8">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
             <div class="p-6 border-b border-gray-200 dark:border-gray-700">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ __('Produk Terlaris') }}</h3>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ __('Total Stok Per Produk') }}</h3>
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full">
+                    <thead class="bg-gray-50 dark:bg-gray-900/30 border-b border-gray-200 dark:border-gray-700">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300">{{ __('Produk') }}</th>
+                            <th class="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300">{{ __('Total Stok') }}</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300">{{ __('Satuan') }}</th>
+                        </tr>
+                    </thead>
                     <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-                        @php
-                            $topProducts = \App\Models\Pembelian::with('product')
-                                ->whereBetween('created_at', [$dateFrom, $dateTo . ' 23:59:59'])
-                                ->get()
-                                ->groupBy('product.nama_produk')
-                                ->map(function($items) {
-                                    return [
-                                        'nama' => $items->first()->product->nama_produk,
-                                        'total_berat' => $items->sum('total_berat'),
-                                        'total_nilai' => $items->sum('harga_akhir'),
-                                    ];
-                                })
-                                ->sortByDesc('total_nilai')
-                                ->take(5);
-                        @endphp
-                        @forelse($topProducts as $item)
+                        @forelse($stokPerProduk as $item)
                             <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-                                <td class="px-6 py-3 text-sm text-gray-900 dark:text-gray-100">{{ $item['nama'] }}</td>
-                                <td class="px-6 py-3 text-sm text-gray-600 dark:text-gray-400">{{ formatDecimalSmart($item['total_berat']) }} kg</td>
-                                <td class="px-6 py-3 text-sm font-semibold text-gray-900 dark:text-gray-100">{{ formatCurrencyRound($item['total_nilai']) }}</td>
+                                <td class="px-6 py-3 text-sm text-gray-900 dark:text-gray-100">{{ $item->product?->nama_produk ?? '-' }}</td>
+                                <td class="px-6 py-3 text-sm text-right font-semibold text-gray-900 dark:text-gray-100">{{ formatDecimalSmart($item->total_stok) }}</td>
+                                <td class="px-6 py-3 text-sm text-gray-600 dark:text-gray-400">{{ $item->product?->satuan ?? '-' }}</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="3" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">{{ __('Tidak ada data') }}</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detail Transaksi -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
+        <!-- Detail Pembelian -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ __('Detail Pembelian') }}</h3>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-50 dark:bg-gray-900/30 border-b border-gray-200 dark:border-gray-700">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300">{{ __('Tanggal') }}</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300">{{ __('Nasabah') }}</th>
+                            <th class="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300">{{ __('Nominal') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                        @forelse($pembelianDetail->take(10) as $item)
+                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                                <td class="px-6 py-3 text-sm text-gray-900 dark:text-gray-100">{{ $item->created_at->format('d/m/Y') }}</td>
+                                <td class="px-6 py-3 text-sm text-gray-600 dark:text-gray-400">{{ $item->nasabah?->nama ?? '-' }}</td>
+                                <td class="px-6 py-3 text-sm text-right font-semibold text-gray-900 dark:text-gray-100">{{ formatCurrencyRound($item->harga_akhir) }}</td>
                             </tr>
                         @empty
                             <tr>
@@ -226,34 +159,26 @@
             </div>
         </div>
 
-        <!-- Top Customers -->
+        <!-- Detail Penjualan -->
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
             <div class="p-6 border-b border-gray-200 dark:border-gray-700">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ __('Nasabah Terbaik') }}</h3>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ __('Detail Penjualan') }}</h3>
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full">
+                    <thead class="bg-gray-50 dark:bg-gray-900/30 border-b border-gray-200 dark:border-gray-700">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300">{{ __('Tanggal') }}</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300">{{ __('Pelanggan') }}</th>
+                            <th class="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300">{{ __('Nominal') }}</th>
+                        </tr>
+                    </thead>
                     <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-                        @php
-                            $topCustomers = \App\Models\Pembelian::with('nasabah')
-                                ->whereBetween('created_at', [$dateFrom, $dateTo . ' 23:59:59'])
-                                ->get()
-                                ->groupBy('nasabah.nama')
-                                ->map(function($items) {
-                                    return [
-                                        'nama' => $items->first()->nasabah?->nama ?? 'Unknown',
-                                        'jumlah' => $items->count(),
-                                        'total' => $items->sum('harga_akhir'),
-                                    ];
-                                })
-                                ->sortByDesc('total')
-                                ->take(5);
-                        @endphp
-                        @forelse($topCustomers as $item)
+                        @forelse($penjualanDetail->take(10) as $item)
                             <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-                                <td class="px-6 py-3 text-sm text-gray-900 dark:text-gray-100">{{ $item['nama'] }}</td>
-                                <td class="px-6 py-3 text-sm text-gray-600 dark:text-gray-400">{{ $item['jumlah'] }} x</td>
-                                <td class="px-6 py-3 text-sm font-semibold text-gray-900 dark:text-gray-100">{{ formatCurrencyRound($item['total']) }}</td>
+                                <td class="px-6 py-3 text-sm text-gray-900 dark:text-gray-100">{{ $item->created_at->format('d/m/Y') }}</td>
+                                <td class="px-6 py-3 text-sm text-gray-600 dark:text-gray-400">{{ $item->nama_customer ?? '-' }}</td>
+                                <td class="px-6 py-3 text-sm text-right font-semibold text-gray-900 dark:text-gray-100">{{ formatCurrencyRound($item->total_pembelian) }}</td>
                             </tr>
                         @empty
                             <tr>

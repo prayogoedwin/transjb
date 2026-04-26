@@ -30,12 +30,16 @@ class SimpanPinjamController extends Controller
                 ->addColumn('tipe_badge', function ($item) {
                     if ($item->tipe === 'bayar') {
                         return '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Bayar</span>';
+                    } else if ($item->tipe === 'bayar_simpanan') {
+                        return '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200">Bayar Dari Simpanan</span>';
                     } else if ($item->tipe === 'hutang') {
                         return '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">Hutang</span>';
                     } else if ($item->tipe === 'transaksi') {
                         return '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">Transaksi</span>';
                     } else if ($item->tipe === 'ambil') {
                         return '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">Ambil</span>';
+                    } else if ($item->tipe === 'ambil_simpanan') {
+                        return '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200">Ambil Simpanan</span>';
                     } else if ($item->tipe === 'simpan') {
                         return '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200">Simpan</span>';
                     } else {
@@ -75,7 +79,14 @@ class SimpanPinjamController extends Controller
 
     public function create(): View
     {
-        $nasabah = Nasabah::orderBy('nama')->get();
+        $nasabah = Nasabah::with('simpanPinjam')->orderBy('nama')->get()->map(function ($item) {
+            $totalSimpan = $item->simpanPinjam->where('tipe', 'simpan')->sum('nominal');
+            $totalKeluarSimpanan = $item->simpanPinjam
+                ->whereIn('tipe', ['ambil_simpanan', 'bayar_simpanan'])
+                ->sum('nominal');
+            $item->sisa_simpanan = max(0, $totalSimpan - $totalKeluarSimpanan);
+            return $item;
+        });
         return view('simpan_pinjam.create', compact('nasabah'));
     }
 
@@ -83,10 +94,19 @@ class SimpanPinjamController extends Controller
     {
         $validated = $request->validate([
             'nasabah_id' => ['required', 'exists:nasabah,id'],
-            'tipe' => ['required', 'in:bayar,hutang,transaksi,ambil,simpan'],
+            'tipe' => ['required', 'in:bayar,bayar_simpanan,hutang,transaksi,ambil,simpan,ambil_simpanan'],
             'nominal' => ['required', 'numeric', 'min:0'],
             'print_receipt' => ['sometimes', 'boolean'],
         ]);
+
+        if (in_array($validated['tipe'], ['bayar_simpanan', 'ambil_simpanan'], true)) {
+            $sisaSimpanan = $this->getSisaSimpanan((int) $validated['nasabah_id']);
+            if ((float) $validated['nominal'] > $sisaSimpanan) {
+                return back()
+                    ->withInput()
+                    ->withErrors(['nominal' => 'Nominal melebihi sisa simpanan (maksimal Rp ' . number_format((int) round($sisaSimpanan), 0, ',', '.') . ').']);
+            }
+        }
 
         $simpanPinjam = SimpanPinjam::create($validated);
 
@@ -125,7 +145,7 @@ class SimpanPinjamController extends Controller
     {
         $validated = $request->validate([
             'nasabah_id' => ['required', 'exists:nasabah,id'],
-            'tipe' => ['required', 'in:bayar,hutang,transaksi,ambil,simpan'],
+            'tipe' => ['required', 'in:bayar,bayar_simpanan,hutang,transaksi,ambil,simpan,ambil_simpanan'],
             'nominal' => ['required', 'numeric', 'min:0'],
         ]);
 
@@ -170,5 +190,18 @@ class SimpanPinjamController extends Controller
             new SimpanPinjamExport($dateFrom, $dateTo),
             $filename
         );
+    }
+
+    private function getSisaSimpanan(int $nasabahId): float
+    {
+        $totalSimpan = SimpanPinjam::where('nasabah_id', $nasabahId)
+            ->where('tipe', 'simpan')
+            ->sum('nominal');
+
+        $totalKeluarSimpanan = SimpanPinjam::where('nasabah_id', $nasabahId)
+            ->whereIn('tipe', ['ambil_simpanan', 'bayar_simpanan'])
+            ->sum('nominal');
+
+        return max(0, (float) $totalSimpan - (float) $totalKeluarSimpanan);
     }
 }

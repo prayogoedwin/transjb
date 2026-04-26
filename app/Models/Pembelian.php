@@ -100,13 +100,29 @@ class Pembelian extends Model
         ]);
     }
 
-    public function addTransaksiSimpanPinjam(): SimpanPinjam
+    public function addTransaksiSimpanPinjam(array $alokasi = []): SimpanPinjam
     {
-        return SimpanPinjam::create([
+        $transaksi = SimpanPinjam::create([
             'nasabah_id' => $this->nasabah_id,
             'tipe' => 'transaksi',
             'nominal' => $this->harga_akhir,
             'pembelian_id' => $this->id,
         ]);
+
+        foreach (['bayar', 'simpan', 'ambil'] as $tipe) {
+            $nominal = (float) ($alokasi[$tipe] ?? 0);
+            if ($nominal <= 0) {
+                continue;
+            }
+
+            SimpanPinjam::create([
+                'nasabah_id' => $this->nasabah_id,
+                'tipe' => $tipe,
+                'nominal' => $nominal,
+                'pembelian_id' => $this->id,
+            ]);
+        }
+
+        return $transaksi;
     }
 }

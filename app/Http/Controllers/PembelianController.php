@@ -91,27 +91,47 @@ class PembelianController extends Controller
         $validated = $request->validate([
             'nasabah_id' => ['required', 'exists:nasabah,id'],
             'produk_id' => ['required', 'exists:products,id'],
-            // 'harga_satuan_beli' => ['required', 'numeric', 'min:0'],
+            'harga_satuan_beli' => ['required', 'numeric', 'min:0'],
             'total_berat' => ['required', 'numeric', 'min:0'],
             'potongan' => ['required', 'numeric', 'min:0', 'max:100'],
+            'bayar_nominal' => ['nullable', 'numeric', 'min:0'],
+            'simpan_nominal' => ['nullable', 'numeric', 'min:0'],
+            'ambil_nominal' => ['nullable', 'numeric', 'min:0'],
             'keterangan' => ['nullable', 'string'],
             'print_invoice' => ['sometimes', 'boolean'],
         ]);
+
+        $alokasiBayar = (float) ($validated['bayar_nominal'] ?? 0);
+        $alokasiSimpan = (float) ($validated['simpan_nominal'] ?? 0);
+        $alokasiAmbil = (float) ($validated['ambil_nominal'] ?? 0);
+        $alokasiBayar = round($alokasiBayar);
+        $alokasiSimpan = round($alokasiSimpan);
+        $alokasiAmbil = round($alokasiAmbil);
+        unset($validated['bayar_nominal'], $validated['simpan_nominal'], $validated['ambil_nominal']);
         
 
         try {
-            return DB::transaction(function () use ($request, $validated) {
+            return DB::transaction(function () use ($request, $validated, $alokasiBayar, $alokasiSimpan, $alokasiAmbil) {
                 // Calculate totals
                 $product = Product::findOrFail($validated['produk_id']);
-                $validated['harga_satuan_beli'] = $product->harga_beli;
                 $validated['satuan'] = $product->satuan;
                 $validated['berat_setelah_potong'] = $validated['total_berat'] * ((100 - $validated['potongan']) / 100);
-                $validated['harga_akhir'] = $validated['harga_satuan_beli'] * $validated['berat_setelah_potong'];
-                $validated['biaya_admin'] = ($validated['harga_satuan_beli'] * $validated['potongan']) / 100;
+                $totalHarga = round($validated['harga_satuan_beli'] * $validated['total_berat']);
+                $validated['biaya_admin'] = round(($totalHarga * $validated['potongan']) / 100);
+                $validated['harga_akhir'] = max(0, $totalHarga - $validated['biaya_admin']);
+                $totalAlokasi = $alokasiBayar + $alokasiSimpan + $alokasiAmbil;
+
+                if ($totalAlokasi !== (float) $validated['harga_akhir']) {
+                    throw new \RuntimeException('Total alokasi Bayar + Simpan + Ambil harus sama persis dengan Harga Akhir.');
+                }
 
                 $pembelian = Pembelian::create($validated);
                 $pembelian->addToStok();
-                $pembelian->addTransaksiSimpanPinjam();
+                $pembelian->addTransaksiSimpanPinjam([
+                    'bayar' => $alokasiBayar,
+                    'simpan' => $alokasiSimpan,
+                    'ambil' => $alokasiAmbil,
+                ]);
 
                 // Jika user memilih untuk cetak invoice dan request AJAX
                 if ($request->has('print_invoice') && $request->print_invoice && $request->wantsJson()) {

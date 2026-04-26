@@ -24,7 +24,7 @@
                     <select name="nasabah_id" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100" required>
                         <option value="">{{ __('Pilih Nasabah') }}</option>
                         @foreach($nasabah as $n)
-                            <option value="{{ $n->id }}" {{ old('nasabah_id') == $n->id ? 'selected' : '' }}>{{ $n->nama }}</option>
+                            <option value="{{ $n->id }}" data-sisa-simpanan="{{ (int) round($n->sisa_simpanan ?? 0) }}" {{ old('nasabah_id') == $n->id ? 'selected' : '' }}>{{ $n->nama }}</option>
                         @endforeach
                     </select>
                     @error('nasabah_id')
@@ -36,10 +36,10 @@
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Tipe') }} *</label>
                     <select name="tipe" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100" required>
                         <option value="">{{ __('Pilih Tipe') }}</option>
-                        <option value="bayar" {{ old('tipe') == 'bayar' ? 'selected' : '' }}>{{ __('Bayar') }}</option>
+                        <option value="bayar_simpanan" {{ old('tipe') == 'bayar_simpanan' ? 'selected' : '' }}>{{ __('Bayar dari Simpanan') }}</option>
                         <option value="hutang" {{ old('tipe') == 'hutang' ? 'selected' : '' }}>{{ __('Hutang') }}</option>
                         <option value="transaksi" {{ old('tipe') == 'transaksi' ? 'selected' : '' }}>{{ __('Transaksi') }}</option>
-                        <option value="ambil" {{ old('tipe') == 'ambil' ? 'selected' : '' }}>{{ __('Ambil') }}</option>
+                        <option value="ambil_simpanan" {{ old('tipe') == 'ambil_simpanan' ? 'selected' : '' }}>{{ __('Ambil Simpanan') }}</option>
                         <option value="simpan" {{ old('tipe') == 'simpan' ? 'selected' : '' }}>{{ __('Simpan') }}</option>
                     </select>
                     @error('tipe')
@@ -49,6 +49,7 @@
 
                 <div class="mb-6">
                     <x-forms.input label="Nominal" name="nominal" type="number" step="0.01" min="0" value="{{ old('nominal', 0) }}" required />
+                    <p id="sisa-simpanan-info" class="mt-2 text-sm text-emerald-600 dark:text-emerald-400 hidden"></p>
                 </div>
 
                 <div class="mb-6">
@@ -69,6 +70,43 @@
     </div>
 
     <script>
+        (function () {
+            const nasabahSelect = document.querySelector('select[name="nasabah_id"]');
+            const tipeSelect = document.querySelector('select[name="tipe"]');
+            const nominalInput = document.querySelector('input[name="nominal"]');
+            const saldoInfo = document.getElementById('sisa-simpanan-info');
+            const tipeButuhSaldo = ['bayar_simpanan', 'ambil_simpanan'];
+
+            const fmtRupiah = (value) => 'Rp ' + Math.round(Number(value || 0)).toLocaleString('id-ID');
+
+            function getSelectedSaldo() {
+                const opt = nasabahSelect?.options[nasabahSelect.selectedIndex];
+                return Number(opt?.dataset?.sisaSimpanan || 0);
+            }
+
+            function syncSaldoInfo() {
+                if (!nasabahSelect || !tipeSelect || !nominalInput || !saldoInfo) return;
+                const butuhSaldo = tipeButuhSaldo.includes(tipeSelect.value);
+                const saldo = getSelectedSaldo();
+
+                if (butuhSaldo) {
+                    nominalInput.max = String(saldo);
+                    nominalInput.step = '1';
+                    saldoInfo.textContent = `Sisa simpanan tersedia: ${fmtRupiah(saldo)} (maksimal input)`;
+                    saldoInfo.classList.remove('hidden');
+                } else {
+                    nominalInput.removeAttribute('max');
+                    nominalInput.step = '0.01';
+                    saldoInfo.classList.add('hidden');
+                    saldoInfo.textContent = '';
+                }
+            }
+
+            nasabahSelect?.addEventListener('change', syncSaldoInfo);
+            tipeSelect?.addEventListener('change', syncSaldoInfo);
+            syncSaldoInfo();
+        })();
+
         document.getElementById('simpan-pinjam-form').addEventListener('submit', function(e) {
             const printCheckbox = document.getElementById('print_receipt');
             

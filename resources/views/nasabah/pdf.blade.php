@@ -12,24 +12,25 @@
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.5;
+            line-height: 1.35;
             color: #333;
+            font-size: 12px;
         }
         .container {
             max-width: 800px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 10px 14px;
         }
         .header {
             text-align: center;
-            margin-bottom: 30px;
-            border-bottom: 3px solid #1e40af;
-            padding-bottom: 15px;
+            margin-bottom: 14px;
+            border-bottom: 2px solid #1e40af;
+            padding-bottom: 8px;
         }
         .header h1 {
             color: #1e40af;
-            font-size: 24px;
-            margin-bottom: 5px;
+            font-size: 20px;
+            margin-bottom: 2px;
         }
         .header p {
             color: #666;
@@ -37,46 +38,53 @@
         }
         .print-date {
             text-align: right;
-            font-size: 12px;
+            font-size: 11px;
             color: #666;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
         .section {
-            margin-bottom: 30px;
+            margin-bottom: 14px;
         }
         .section-title {
             background-color: #1e40af;
             color: white;
-            padding: 10px 15px;
-            font-size: 16px;
+            padding: 7px 10px;
+            font-size: 13px;
             font-weight: bold;
-            margin-bottom: 15px;
+            margin-bottom: 8px;
             border-radius: 4px;
         }
-        .info-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
+        .info-card {
+            max-width: 520px;
+            border: 1px solid #dbe4ff;
+            border-radius: 4px;
+            padding: 8px 10px;
+            background: #fbfdff;
         }
-        .info-item {
-            page-break-inside: avoid;
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
         }
-        .info-label {
+        .info-table td {
+            padding: 3px 0;
+            vertical-align: top;
+            border: 0;
+            background: transparent !important;
+            font-size: 12px;
+        }
+        .info-table .label {
             font-weight: bold;
             color: #1e40af;
-            font-size: 13px;
-            margin-bottom: 5px;
+            width: 130px;
         }
-        .info-value {
-            color: #333;
-            font-size: 14px;
-            word-wrap: break-word;
+        .info-table .sep {
+            width: 12px;
+            text-align: center;
         }
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
+            margin-top: 6px;
             page-break-inside: avoid;
         }
         table thead {
@@ -85,16 +93,16 @@
             border-bottom: 2px solid #1e40af;
         }
         table th {
-            padding: 10px;
+            padding: 7px 8px;
             text-align: left;
             font-weight: bold;
             color: #1e40af;
-            font-size: 13px;
+            font-size: 12px;
         }
         table td {
-            padding: 10px;
+            padding: 7px 8px;
             border-bottom: 1px solid #e0e0e0;
-            font-size: 13px;
+            font-size: 12px;
         }
         table tbody tr:nth-child(even) {
             background-color: #f9fafb;
@@ -104,9 +112,9 @@
         }
         .badge {
             display: inline-block;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
             font-weight: bold;
         }
         .badge-simpan {
@@ -121,17 +129,17 @@
             font-style: italic;
             color: #999;
             text-align: center;
-            padding: 20px;
+            padding: 10px;
         }
         .summary {
             background-color: #f0f9ff;
             border-left: 4px solid #0284c7;
-            padding: 15px;
-            margin-top: 10px;
-            font-size: 13px;
+            padding: 8px 10px;
+            margin-top: 8px;
+            font-size: 12px;
         }
         .summary-item {
-            margin-bottom: 8px;
+            margin-bottom: 4px;
         }
         .summary-label {
             font-weight: bold;
@@ -153,31 +161,39 @@
         <!-- Section: Informasi Nasabah -->
         <div class="section">
             <div class="section-title">INFORMASI NASABAH</div>
-            <div class="info-grid">
-                <div class="info-item">
-                    <div class="info-label">Nama Nasabah</div>
-                    <div class="info-value">{{ $nasabah->nama }}</div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">No. Telepon</div>
-                    <div class="info-value">{{ $nasabah->no_telp ?? '-' }}</div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">Alamat</div>
-                    <div class="info-value" style="grid-column: 1 / -1;">{{ $nasabah->alamat ?? '-' }}</div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">ID Nasabah</div>
-                    <div class="info-value">#{{ $nasabah->id }}</div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">Tanggal Terdaftar</div>
-                    <div class="info-value">{{ $nasabah->created_at->format('d F Y H:i') }}</div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">Terakhir Diperbarui</div>
-                    <div class="info-value">{{ $nasabah->updated_at->format('d F Y H:i') }}</div>
-                </div>
+            <div class="info-card">
+                <table class="info-table">
+                    <tr>
+                        <td class="label">Nama Nasabah</td>
+                        <td class="sep">:</td>
+                        <td>{{ $nasabah->nama }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label">No. Telepon</td>
+                        <td class="sep">:</td>
+                        <td>{{ $nasabah->no_telp ?? '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Alamat</td>
+                        <td class="sep">:</td>
+                        <td>{{ $nasabah->alamat ?? '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label">ID Nasabah</td>
+                        <td class="sep">:</td>
+                        <td>#{{ $nasabah->id }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Tanggal Terdaftar</td>
+                        <td class="sep">:</td>
+                        <td>{{ $nasabah->created_at->format('d F Y H:i') }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Terakhir Diperbarui</td>
+                        <td class="sep">:</td>
+                        <td>{{ $nasabah->updated_at->format('d F Y H:i') }}</td>
+                    </tr>
+                </table>
             </div>
         </div>
 
@@ -201,14 +217,20 @@
                                 <td>
                                     @if($item->tipe === 'bayar')
                                         <span class="badge badge-simpan">Bayar</span>
+                                    @elseif($item->tipe === 'bayar_simpanan')
+                                         <span class="badge" style="background:#d1fae5;color:#065f46;">Bayar Dari Simpanan</span>
                                     @elseif($item->tipe === 'hutang')
                                          <span class="badge badge-pinjam">Hutang</span>
                                     @elseif($item->tipe === 'transaksi')
-                                         <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">{{ __('Transaksi') }}</span>
+                                         <span class="badge" style="background:#dbeafe;color:#1e40af;">Transaksi</span>
                                     @elseif($item->tipe === 'ambil')
-                                         <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark    :text-yellow-200">{{ __('Ambil') }}</span>
+                                         <span class="badge" style="background:#fef9c3;color:#854d0e;">Ambil</span>
+                                    @elseif($item->tipe === 'ambil_simpanan')
+                                         <span class="badge" style="background:#ffedd5;color:#9a3412;">Ambil Simpanan</span>
+                                    @elseif($item->tipe === 'simpan')
+                                         <span class="badge" style="background:#f3e8ff;color:#6b21a8;">Simpan</span>
                                     @else
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200">{{ ucfirst($item->tipe) }}</span>
+                                        <span class="badge" style="background:#f3f4f6;color:#374151;">{{ ucfirst($item->tipe) }}</span>
                                     @endif
                                 </td>
                                 <td class="text-right">Rp {{ number_format($item->nominal, 0, ',', '.') }}</td>
@@ -219,25 +241,43 @@
                 </table>
                 <div class="summary">
                     @php
-                        $totalBayar = $nasabah->simpanPinjam->where('tipe', 'bayar')->sum('nominal');
+                        $totalBayarManual = $nasabah->simpanPinjam->where('tipe', 'bayar')->sum('nominal');
+                        $totalBayarSimpanan = $nasabah->simpanPinjam->where('tipe', 'bayar_simpanan')->sum('nominal');
+                        $totalBayar = $totalBayarManual + $totalBayarSimpanan;
                         $totalHutang = $nasabah->simpanPinjam->where('tipe', 'hutang')->sum('nominal');
                         $totalTransaksi = $nasabah->simpanPinjam->where('tipe', 'transaksi')->sum('nominal');
                         $totalAmbil = $nasabah->simpanPinjam->where('tipe', 'ambil')->sum('nominal');
+                        $totalAmbilSimpanan = $nasabah->simpanPinjam->where('tipe', 'ambil_simpanan')->sum('nominal');
+                        $totalSimpan = $nasabah->simpanPinjam->where('tipe', 'simpan')->sum('nominal');
+                        $sisaHutang = max(0, $totalHutang - $totalBayar);
+                        $sisaSaldo = max(0, $totalSimpan - $totalAmbilSimpanan - $totalBayarSimpanan);
                     @endphp
                     <div class="summary-item">
-                        <span class="summary-label">Total Bayar:</span>{{ formatCurrency($totalBayar, 0, ',', '.') }}
+                        <span class="summary-label">Total Bayar:</span> {{ formatCurrency($totalBayar, 0, ',', '.') }}
                     </div>
                     <div class="summary-item">
-                        <span class="summary-label">Total Hutang:</span>{{ formatCurrency($totalHutang, 0, ',', '.') }}
+                        <span class="summary-label">Total Bayar Dari Simpanan:</span> {{ formatCurrency($totalBayarSimpanan, 0, ',', '.') }}
                     </div>
                     <div class="summary-item">
-                        <span class="summary-label">Total Transaksi:</span>{{ formatCurrency($totalTransaksi, 0, ',', '.') }}
+                        <span class="summary-label">Total Hutang:</span> {{ formatCurrency($totalHutang, 0, ',', '.') }}
                     </div>
                     <div class="summary-item">
-                        <span class="summary-label">Total Ambil:</span>{{ formatCurrency($totalAmbil, 0, ',', '.') }}
+                        <span class="summary-label">Total Transaksi:</span> {{ formatCurrency($totalTransaksi, 0, ',', '.') }}
                     </div>
                     <div class="summary-item">
-                        <span class="summary-label">Sisa Bayar:</span>{{ formatCurrency($totalBayar - $totalHutang , 0, ',', '.') }} 
+                        <span class="summary-label">Total Ambil:</span> {{ formatCurrency($totalAmbil, 0, ',', '.') }}
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Total Ambil Simpanan:</span> {{ formatCurrency($totalAmbilSimpanan, 0, ',', '.') }}
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Total Simpan:</span> {{ formatCurrency($totalSimpan, 0, ',', '.') }}
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Sisa Hutang:</span> {{ formatCurrency($sisaHutang, 0, ',', '.') }}
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Sisa Saldo Simpanan:</span> {{ formatCurrency($sisaSaldo, 0, ',', '.') }}
                     </div>
                 </div>
             @else
@@ -246,9 +286,8 @@
         </div>
 
         <!-- Section: Riwayat Pembelian -->
-        <div style="page-break-after: always;"></div>
         <div class="section">
-            <div class="section-title" style="margin-top: 20px;">🛒 RIWAYAT PEMBELIAN (PENJUALAN)</div>
+            <div class="section-title">RIWAYAT PEMBELIAN (PENJUALAN)</div>
             @if($nasabah->pembelian->count() > 0)
                 <table>
                     <thead>

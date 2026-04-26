@@ -22,10 +22,19 @@
                     satuan: '',
                     totalBerat: {{ old('total_berat', 0) }},
                     potongan: {{ old('potongan', 0) }},
+                    bayarNominal: {{ old('bayar_nominal', 0) }},
+                    simpanNominal: {{ old('simpan_nominal', 0) }},
+                    ambilNominal: {{ old('ambil_nominal', 0) }},
+                    rupiah(val) { return Math.round(Number(val) || 0); },
                     get beratSetelahPotong() { return this.totalBerat - (this.totalBerat * this.potongan / 100); },
-                    get totalHarga() { return this.hargaSatuan * this.totalBerat; },
-                    get biayaAdmin() { return this.totalHarga * this.potongan / 100; },
-                    get hargaAkhir() { return this.totalHarga - this.biayaAdmin; },
+                    get totalHarga() { return this.rupiah(this.hargaSatuan * this.totalBerat); },
+                    get biayaAdmin() { return this.rupiah(this.totalHarga * this.potongan / 100); },
+                    get hargaAkhir() { return Math.max(0, this.rupiah(this.totalHarga - this.biayaAdmin)); },
+                    get totalAlokasi() { return this.bayarNominal + this.simpanNominal + this.ambilNominal; },
+                    get sisaAlokasi() { return this.hargaAkhir - this.totalAlokasi; },
+                    get maxBayar() { return Math.max(0, this.hargaAkhir - this.simpanNominal - this.ambilNominal); },
+                    get maxSimpan() { return Math.max(0, this.hargaAkhir - this.bayarNominal - this.ambilNominal); },
+                    get maxAmbil() { return Math.max(0, this.hargaAkhir - this.bayarNominal - this.simpanNominal); },
                     onProductChange(el) {
                         const opt = el.options[el.selectedIndex];
                         this.hargaSatuan = parseFloat(opt.dataset.harga) || 0;
@@ -63,6 +72,15 @@
                         @endforeach
                     </select>
                     @error('produk_id')
+                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Harga Satuan Beli') }} *</label>
+                    <input type="number" name="harga_satuan_beli" x-model.number="hargaSatuan" value="{{ old('harga_satuan_beli', 0) }}" step="1" min="0" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100" required />
+                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ __('Harga produk hanya referensi. Admin bisa ubah harga satuan per transaksi.') }}</p>
+                    @error('harga_satuan_beli')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                     @enderror
                 </div>
@@ -107,6 +125,44 @@
                         </tbody>
                     </table>
                 </div>
+
+                <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg mb-6 border border-gray-200 dark:border-gray-700">
+                    <h3 class="text-sm font-semibold text-gray-800 dark:text-gray-100 mb-3">{{ __('Alokasi dari Harga Akhir (Masuk Riwayat)') }}</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Untuk Bayar') }}</label>
+                            <p class="mb-1 text-xs text-gray-500 dark:text-gray-400">{{ __('Maksimal') }}: <span class="font-semibold" x-text="fmt(maxBayar)">Rp 0</span></p>
+                            <input type="number" name="bayar_nominal" x-model.number="bayarNominal" :max="maxBayar" value="{{ old('bayar_nominal', 0) }}" step="1" min="0" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100" />
+                            @error('bayar_nominal')
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Untuk Simpan') }}</label>
+                            <p class="mb-1 text-xs text-gray-500 dark:text-gray-400">{{ __('Maksimal') }}: <span class="font-semibold" x-text="fmt(maxSimpan)">Rp 0</span></p>
+                            <input type="number" name="simpan_nominal" x-model.number="simpanNominal" :max="maxSimpan" value="{{ old('simpan_nominal', 0) }}" step="1" min="0" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100" />
+                            @error('simpan_nominal')
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Untuk Ambil') }}</label>
+                            <p class="mb-1 text-xs text-gray-500 dark:text-gray-400">{{ __('Maksimal') }}: <span class="font-semibold" x-text="fmt(maxAmbil)">Rp 0</span></p>
+                            <input type="number" name="ambil_nominal" x-model.number="ambilNominal" :max="maxAmbil" value="{{ old('ambil_nominal', 0) }}" step="1" min="0" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100" />
+                            @error('ambil_nominal')
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="mt-3 text-sm">
+                        <div class="text-gray-600 dark:text-gray-400">
+                            {{ __('Total Alokasi') }}: <span class="font-semibold text-gray-900 dark:text-gray-100" x-text="fmt(totalAlokasi)">Rp 0</span>
+                        </div>
+                        <div class="mt-1" :class="sisaAlokasi === 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'">
+                            {{ __('Sisa dari Harga Akhir') }}: <span class="font-semibold" x-text="fmt(sisaAlokasi)"></span>
+                        </div>
+                    </div>
+                </div>
                 
                 <div class="mb-6">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Keterangan') }}</label>
@@ -123,14 +179,13 @@
                     </label>
                 </div>
 
-                <input type="hidden" name="harga_satuan_beli" :value="hargaSatuan">
                 <input type="hidden" name="satuan" :value="satuan">
                 <input type="hidden" name="berat_setelah_potong" :value="beratSetelahPotong">
                 <input type="hidden" name="biaya_admin" :value="biayaAdmin">
                 <input type="hidden" name="harga_akhir" :value="hargaAkhir">
 
                 <div class="flex gap-3">
-                    <x-button type="primary" x-bind:disabled="formSubmitted" x-text="formSubmitted ? '{{ __('Menyimpan...') }}' : '{{ __('Simpan') }}'"></x-button>
+                    <x-button type="primary" x-bind:disabled="formSubmitted || sisaAlokasi !== 0" x-text="formSubmitted ? '{{ __('Menyimpan...') }}' : (sisaAlokasi !== 0 ? '{{ __('Sisa Harus 0') }}' : '{{ __('Simpan') }}')"></x-button>
                     <a href="{{ route('pembelian.index') }}">
                         <x-button type="secondary">{{ __('Batal') }}</x-button>
                     </a>

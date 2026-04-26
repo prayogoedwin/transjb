@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
 use App\Exports\NasabahExport;
@@ -120,7 +121,39 @@ class NasabahController extends Controller
             ->setPaper('a4')
             ->setOption('isHtml5ParserEnabled', true)
             ->setOption('isPhpEnabled', true);
-        
-        return $pdf->download('detail-nasabah-' . $nasabah->id . '-' . date('Y-m-d-His') . '.pdf');
+
+        $namaNasabah = Str::of($nasabah->nama)
+            ->ascii()
+            ->replaceMatches('/[^A-Za-z0-9]+/', '_')
+            ->trim('_')
+            ->toString();
+
+        $tanggalCetak = now()->format('Y-m-d');
+        $jamCetak = now()->format('H-i-s');
+        $filename = "{$namaNasabah}-ID{$nasabah->id}-{$tanggalCetak}-{$jamCetak}.pdf";
+
+        return $pdf->download($filename);
+    }
+
+    public function exportSummaryPdf(Nasabah $nasabah)
+    {
+        $nasabah->load('user', 'simpanPinjam', 'pembelian.product');
+
+        $pdf = Pdf::loadView('nasabah.summary_pdf', compact('nasabah'))
+            ->setPaper('a4')
+            ->setOption('isHtml5ParserEnabled', true)
+            ->setOption('isPhpEnabled', true);
+
+        $namaNasabah = Str::of($nasabah->nama)
+            ->ascii()
+            ->replaceMatches('/[^A-Za-z0-9]+/', '_')
+            ->trim('_')
+            ->toString();
+
+        $tanggalCetak = now()->format('Y-m-d');
+        $jamCetak = now()->format('H-i-s');
+        $filename = "Ringkasan-{$namaNasabah}-ID{$nasabah->id}-{$tanggalCetak}-{$jamCetak}.pdf";
+
+        return $pdf->download($filename);
     }
 }

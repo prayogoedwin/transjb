@@ -48,12 +48,16 @@
                             <div>
                                 @if($simpanPinjam->tipe === 'bayar')
                                     <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">{{ __('Bayar') }}</span>
+                                @elseif($simpanPinjam->tipe === 'bayar_simpanan')
+                                     <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200">{{ __('Bayar dari Simpanan') }}</span>
                                 @elseif($simpanPinjam->tipe === 'hutang')
                                      <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">{{ __('Hutang') }}</span>
                                 @elseif($simpanPinjam->tipe === 'transaksi')
                                      <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">{{ __('Transaksi') }}</span>
                                 @elseif($simpanPinjam->tipe === 'ambil')
                                      <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark    :text-yellow-200">{{ __('Ambil') }}</span>
+                                @elseif($simpanPinjam->tipe === 'ambil_simpanan')
+                                     <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200">{{ __('Ambil Simpanan') }}</span>
                                 @elseif($simpanPinjam->tipe === 'simpan')
                                      <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200">{{ __('Simpan') }}</span>
                                 @else
