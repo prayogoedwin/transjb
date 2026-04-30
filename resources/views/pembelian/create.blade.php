@@ -46,12 +46,17 @@
                         this.sisaHutangNasabah = this.rupiah(opt?.dataset?.sisaHutang || 0);
                     },
                     fmt(val) { return 'Rp ' + Math.round(val).toLocaleString('id-ID'); },
+                    fmt2(val) { return 'Rp ' + Math.round(val); },
                     fmtBerat(val) { return val.toLocaleString('id-ID', {maximumFractionDigits: 4}); },
                     init() {
                         const sel = this.$el.querySelector('[name=produk_id]');
                         if (sel && sel.value) this.onProductChange(sel);
                         const nasabahSel = this.$el.querySelector('[name=nasabah_id]');
                         if (nasabahSel) this.onNasabahChange(nasabahSel);
+
+                        this.$watch('hargaAkhir', (value) => {
+                            this.simpanNominal = value;
+                        });
                     }
                 }"
                 action="{{ route('pembelian.store') }}" method="POST" class="max-w-2xl" @submit="formSubmitted = true">
@@ -62,11 +67,11 @@
                     <select id="nasabah_id" name="nasabah_id" @change="onNasabahChange($el)" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100" required>
                         <option value="">{{ __('Pilih Nasabah') }}</option>
                         @foreach($nasabah as $nb)
-                            <option value="{{ $nb->id }}" data-sisa-hutang="{{ (int) round($nb->sisa_hutang ?? 0) }}" {{ old('nasabah_id') == $nb->id ? 'selected' : '' }}>{{ $nb->nama }}</option>
+                        <option value="{{ $nb->id }}" data-sisa-hutang="{{ (int) round($nb->sisa_hutang ?? 0) }}" {{ old('nasabah_id') == $nb->id ? 'selected' : '' }}>{{ $nb->nama }}</option>
                         @endforeach
                     </select>
                     @error('nasabah_id')
-                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                     @enderror
                 </div>
 
@@ -75,11 +80,11 @@
                     <select id="produk_id" name="produk_id" @change="onProductChange($el)" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100" required>
                         <option value="">{{ __('Pilih Produk') }}</option>
                         @foreach($products as $p)
-                            <option value="{{ $p->id }}" data-satuan="{{ $p->satuan }}" data-harga="{{ $p->harga_beli }}" {{ old('produk_id') == $p->id ? 'selected' : '' }}>{{ $p->nama_produk }} - {{ formatCurrency($p->harga_beli) }} / {{ $p->satuan }}</option>
+                        <option value="{{ $p->id }}" data-satuan="{{ $p->satuan }}" data-harga="{{ $p->harga_beli }}" {{ old('produk_id') == $p->id ? 'selected' : '' }}>{{ $p->nama_produk }} - {{ formatCurrency($p->harga_beli) }} / {{ $p->satuan }}</option>
                         @endforeach
                     </select>
                     @error('produk_id')
-                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                     @enderror
                 </div>
 
@@ -88,7 +93,7 @@
                     <input type="number" name="harga_satuan_beli" x-model.number="hargaSatuan" value="{{ old('harga_satuan_beli', 0) }}" step="1" min="0" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100" required />
                     <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ __('Harga produk hanya referensi. Admin bisa ubah harga satuan per transaksi.') }}</p>
                     @error('harga_satuan_beli')
-                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                     @enderror
                 </div>
 
@@ -96,7 +101,7 @@
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Total Berat') }} *</label>
                     <input type="number" name="total_berat" x-model.number="totalBerat" value="{{ old('total_berat', 0) }}" step="0.0001" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100" required />
                     @error('total_berat')
-                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                     @enderror
                 </div>
 
@@ -104,7 +109,7 @@
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Potongan (%)') }} *</label>
                     <input type="number" name="potongan" x-model.number="potongan" max="100" value="{{ old('potongan', 0) }}" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100" required />
                     @error('potongan')
-                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                     @enderror
                 </div>
 
@@ -125,7 +130,7 @@
                             </tr>
                             <tr class="border-t border-blue-200 dark:border-blue-700">
                                 <td class="pt-2 text-blue-900 dark:text-blue-100 font-semibold">{{ __('Harga Akhir') }}</td>
-                                <td class="pt-2 text-right font-bold text-lg text-blue-900 dark:text-blue-100" x-text="fmt(hargaAkhir)">Rp 0</td>
+                                <td class="pt-2 text-right font-bold text-lg text-blue-900 dark:text-blue-100" x-text="fmt2(hargaAkhir)">Rp 0</td>
                                 <td></td>
                                 <td></td>
                             </tr>
@@ -141,26 +146,26 @@
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Untuk Bayar') }}</label>
-                            <p class="mb-1 text-xs text-gray-500 dark:text-gray-400">{{ __('Maksimal') }}: <span class="font-semibold" x-text="fmt(maxBayar)">Rp 0</span></p>
+                            <p class="mb-1 text-xs text-gray-500 dark:text-gray-400">{{ __('Maksimal') }}: <span class="font-semibold" x-text="fmt2(maxBayar)">Rp 0</span></p>
                             <input type="number" name="bayar_nominal" x-model.number="bayarNominal" :max="maxBayar" value="{{ old('bayar_nominal', 0) }}" step="1" min="0" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100" />
                             @error('bayar_nominal')
-                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                             @enderror
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Untuk Simpan') }}</label>
-                            <p class="mb-1 text-xs text-gray-500 dark:text-gray-400">{{ __('Maksimal') }}: <span class="font-semibold" x-text="fmt(maxSimpan)">Rp 0</span></p>
+                            <p class="mb-1 text-xs text-gray-500 dark:text-gray-400">{{ __('Maksimal') }}: <span class="font-semibold" x-text="fmt2(maxSimpan)">Rp 0</span></p>
                             <input type="number" name="simpan_nominal" x-model.number="simpanNominal" :max="maxSimpan" value="{{ old('simpan_nominal', 0) }}" step="1" min="0" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100" />
                             @error('simpan_nominal')
-                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                             @enderror
                         </div>
-                        <div>
+                        <div hidden>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Untuk Ambil') }}</label>
-                            <p class="mb-1 text-xs text-gray-500 dark:text-gray-400">{{ __('Maksimal') }}: <span class="font-semibold" x-text="fmt(maxAmbil)">Rp 0</span></p>
+                            <p class="mb-1 text-xs text-gray-500 dark:text-gray-400">{{ __('Maksimal') }}: <span class="font-semibold" x-text="fmt2(maxAmbil)">Rp 0</span></p>
                             <input type="number" name="ambil_nominal" x-model.number="ambilNominal" :max="maxAmbil" value="{{ old('ambil_nominal', 0) }}" step="1" min="0" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100" />
                             @error('ambil_nominal')
-                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                             @enderror
                         </div>
                     </div>
@@ -173,12 +178,12 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="mb-6">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('Keterangan') }}</label>
                     <textarea name="keterangan" rows="3" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100" placeholder="{{ __('Catatan tambahan tentang pembelian ini') }}">{{ old('keterangan') }}</textarea>
                     @error('keterangan')
-                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                     @enderror
                 </div>
 
@@ -209,30 +214,37 @@
     <script>
         new TomSelect('#nasabah_id', {
             create: false,
-            sortField: { field: 'text', direction: 'asc' },
+            sortField: {
+                field: 'text',
+                direction: 'asc'
+            },
             placeholder: '{{ __("Pilih Nasabah") }}'
         });
 
-        document.getElementById('pembelian-form').addEventListener('submit', function (e) {
+        document.getElementById('pembelian-form').addEventListener('submit', function(e) {
             const printCheckbox = document.getElementById('print_invoice');
 
             if (printCheckbox.checked) {
                 e.preventDefault();
 
                 fetch(this.action, {
-                    method: 'POST',
-                    body: new FormData(this),
-                    headers: { 'Accept': 'application/json' }
-                })
-                .then(response => {
-                    if (!response.ok) throw new Error('Network response was not ok');
-                    return response.json();
-                })
-                .then(data => {
-                    window.open(data.print_url, '_blank');
-                    setTimeout(() => { window.location.href = data.redirect_url; }, 500);
-                })
-                .catch(() => alert('Terjadi kesalahan saat menyimpan data'));
+                        method: 'POST',
+                        body: new FormData(this),
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    })
+                    .then(response => {
+                        if (!response.ok) throw new Error('Network response was not ok');
+                        return response.json();
+                    })
+                    .then(data => {
+                        window.open(data.print_url, '_blank');
+                        setTimeout(() => {
+                            window.location.href = data.redirect_url;
+                        }, 500);
+                    })
+                    .catch(() => alert('Terjadi kesalahan saat menyimpan data'));
             }
         });
     </script>

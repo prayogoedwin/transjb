@@ -94,9 +94,9 @@ class RolePermissionSeeder extends Seeder
         // );
 
         $superAdmin = User::firstOrCreate(
-            ['email' => 'superadmin@example.com'],
+            ['email' => 'superadmintjb@example.com'],
             [
-                'name' => 'Super Admin',
+                'name' => 'Super Admin ',
                 'password' => Hash::make('passwordTransjb'),
             ]
         );
