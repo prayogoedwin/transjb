@@ -116,6 +116,8 @@ class NasabahController extends Controller
     public function exportPdf(Nasabah $nasabah)
     {
         $nasabah->load('user', 'simpanPinjam', 'pembelian.product');
+
+        // dd($nasabah->pembelian());
         
         $pdf = Pdf::loadView('nasabah.pdf', compact('nasabah'))
             ->setPaper('a4')

@@ -296,6 +296,7 @@
                         <tr>
                             <th>No.</th>
                             <th>Produk</th>
+                            <th>Harga / Kg</th>
                             <th>Jumlah (Kg)</th>
                             <th>Harga Akhir</th>
                             <th>Tanggal</th>
@@ -306,6 +307,7 @@
                             <tr>
                                 <td>{{ $index + 1 }}</td>
                                 <td>{{ $item->product->nama_produk ?? '-' }}</td>
+                                <td class="text-right">{{ number_format($item->harga_satuan_beli, 2, ',', '.') }}</td>
                                 <td class="text-right">{{ number_format($item->total_berat, 2, ',', '.') }}</td>
                                 <td class="text-right">Rp {{ number_format($item->harga_akhir, 0, ',', '.') }}</td>
                                 <td>{{ $item->created_at->format('d F Y H:i') }}</td>
