@@ -39,7 +39,26 @@ class LaporanController extends Controller
         $dateTo = $request->input('date_to', now()->toDateString());
         $data = $this->getLaporanData($dateFrom, $dateTo);
 
-        return view('laporan.print', array_merge($data, compact('dateFrom', 'dateTo')));
+        // dd($data);
+
+        $detailpenjualans = collect(); // Pastikan pakai collect() agar bisa ->take()
+
+        foreach ($data['penjualanDetail'] as $penjualan) {
+            foreach ($penjualan->details as $details) {
+                // Tambahkan (object) di sini
+                $detailpenjualans->push((object) [
+                    'tanggal'      => $penjualan->created_at->format('d/m/Y'),
+                    'pelanggan'    => $penjualan->nama_customer,
+                    'produk'       => $details->nama_produk,
+                    'satuan'       => $details->satuan,
+                    'jumlah'       => $details->jumlah,
+                    'harga_satuan' => $details->harga_satuan,
+                    'total'        => $details->harga_total,
+                ]);
+            }
+        }
+        // dd($detailpenjualans);
+        return view('laporan.print', array_merge($data, compact('dateFrom', 'dateTo', 'detailpenjualans')));
     }
 
     private function getLaporanData(string $dateFrom, string $dateTo): array

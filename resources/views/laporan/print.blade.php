@@ -192,7 +192,7 @@
             </div>
         @endif
 
-        @if($penjualanDetail->count() > 0)
+        @if($detailpenjualans->count() > 0)
             <div class="table-section">
                 <h3>Detail Penjualan</h3>
                 <table>
@@ -200,15 +200,21 @@
                         <tr>
                             <th>Tanggal</th>
                             <th>Pelanggan</th>
+                            <th>Produk</th>
+                            <th style="text-align: right;">Jumlah</th>
+                            <th style="text-align: right;">Harga satuan</th>
                             <th style="text-align: right;">Nominal</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($penjualanDetail->take(10) as $item)
+                        @foreach($detailpenjualans->take(10) as $item)
                             <tr>
-                                <td>{{ $item->created_at->format('d/m/Y') }}</td>
-                                <td>{{ $item->nama_customer ?? '-' }}</td>
-                                <td style="text-align: right;">{{ formatCurrencyRound($item->total_pembelian) }}</td>
+                                <td>{{ $item->tanggal }}</td>
+                                <td>{{ $item->pelanggan ?? '-' }}</td>
+                                <td>{{ $item->produk }}</td>
+                                <td style="text-align: right;">{{ formatDecimalSmart($item->jumlah) }} {{ $item->satuan }}</td>
+                                <td style="text-align: right;">{{ formatCurrencyRound($item->harga_satuan) }}</td>
+                                <td style="text-align: right;">{{ formatCurrencyRound($item->total) }}</td>
                             </tr>
                         @endforeach
                     </tbody>
