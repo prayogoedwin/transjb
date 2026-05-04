@@ -208,6 +208,7 @@
                             <th>Tipe</th>
                             <th>Nominal</th>
                             <th>Tanggal</th>
+                            <th>Keterangan</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -237,6 +238,7 @@
                                 </td>
                                 <td class="text-right">Rp {{ number_format($item->nominal, 0, ',', '.') }}</td>
                                 <td>{{ $item->created_at->format('d F Y H:i') }}</td>
+                                <td>{{ $item->keterangan }}</td>
                             </tr>
                         @endforeach
                     </tbody>
