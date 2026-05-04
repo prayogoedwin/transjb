@@ -54,6 +54,11 @@
                 </div>
 
                 <div class="mb-6">
+                    <x-forms.input label="Keterangan" name="keterangan" type="text" value="{{ old('keterangan') }}" />
+                    
+                </div>
+
+                <div class="mb-6">
                     <label class="flex items-center">
                         <input type="checkbox" id="print_receipt" name="print_receipt" value="1" class="w-4 h-4 text-blue-600 rounded focus:ring-2 focus:ring-blue-500" {{ old('print_receipt') ? 'checked' : '' }}>
                         <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">{{ __('Cetak struk langsung setelah simpan') }}</span>

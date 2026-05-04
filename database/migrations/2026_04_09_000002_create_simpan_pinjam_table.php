@@ -17,6 +17,7 @@ return new class extends Migration
             $table->enum('tipe', ['bayar', 'hutang', 'transaksi', 'ambil'])->nullable();
             $table->decimal('nominal', 15, 2);
             $table->unsignedBigInteger('pembelian_id')->nullable();
+            $table->string('keterangan');
             $table->timestamps();
             $table->softDeletes();
             $table->index('nasabah_id');

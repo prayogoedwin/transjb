@@ -53,6 +53,11 @@
                     <x-forms.input label="Nominal" name="nominal" type="number" step="0.01" min="0" value="{{ old('nominal', $simpanPinjam->nominal) }}" required />
                 </div>
 
+                <div class="mb-6">
+                    <x-forms.input label="Keterangan" name="keterangan" type="text" value="{{ old('keterangan', $simpanPinjam->keterangan) }}" />
+                    
+                </div>
+
                 <div class="flex gap-3">
                     <x-button type="primary">{{ __('Perbarui') }}</x-button>
                     <a href="{{ route('simpan_pinjam.index') }}">

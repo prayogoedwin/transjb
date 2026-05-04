@@ -110,6 +110,7 @@ class SimpanPinjamController extends Controller
             'tipe' => ['required', 'in:bayar,bayar_cash,bayar_simpanan,hutang,transaksi,ambil,simpan,ambil_simpanan'],
             'nominal' => ['required', 'numeric', 'min:0'],
             'print_receipt' => ['sometimes', 'boolean'],
+            'keterangan' => ['string']
         ]);
 
         if (in_array($validated['tipe'], ['bayar_simpanan', 'ambil_simpanan'], true)) {
@@ -160,6 +161,7 @@ class SimpanPinjamController extends Controller
             'nasabah_id' => ['required', 'exists:nasabah,id'],
             'tipe' => ['required', 'in:bayar,bayar_cash,bayar_simpanan,hutang,transaksi,ambil,simpan,ambil_simpanan'],
             'nominal' => ['required', 'numeric', 'min:0'],
+            'keterangan' => ['string'],
         ]);
 
         $simpanPinjam->update($validated);
