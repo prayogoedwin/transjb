@@ -201,14 +201,14 @@
         <div class="section">
             <div class="section-title">RIWAYAT SIMPAN PINJAM</div>
             @if($nasabah->simpanPinjam->count() > 0)
-                <table>
+                <table style="table-layout: fixed; width: 100%;">
                     <thead>
                         <tr>
                             <th>No.</th>
                             <th>Tipe</th>
                             <th>Nominal</th>
                             <th>Tanggal</th>
-                            <th>Keterangan</th>
+                            <th >Keterangan</th>
                         </tr>
                     </thead>
                     <tbody>
